@@ -171,6 +171,11 @@ export function methodBuilder( method: number) {
         if (descriptor.mime) {
           observable = observable.map(descriptor.mime);
         }
+        if (descriptor.timeout) {
+          descriptor.timeout.forEach((timeout:number) => {
+            observable = observable.timeout(timeout);
+          });
+        }
         if(descriptor.mappers){
           descriptor.mappers.forEach((mapper:(resp : any)=>any) => {
             observable = observable.map(mapper);

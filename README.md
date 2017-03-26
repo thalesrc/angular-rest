@@ -119,6 +119,7 @@ export class ToDoCmp {
 - `@Headers(headers: Object)`
 - `@Map(mapper:(resp : any)=>any)`
 - `@OnEmit(emitter:(resp : Observable<any>)=>Observable<any>)`
+- `@Timeout(timeout: number)`
 
 ### Parameter decorators:
 - `@Path(name: string, value?:any|{value?:any})`
