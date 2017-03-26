@@ -1,5 +1,5 @@
 {
-  "name": "@maxxton/angular-rest",
+  "name": "angular-rest",
   "version": "1.0.0",
   "description": "Angular2 HTTP client to consume RESTful services.",
   "typings": "index.d.ts",

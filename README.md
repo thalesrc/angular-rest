@@ -1,4 +1,4 @@
-# @maxxton/angular-rest
+# angular-rest
 Angular2 HTTP client to consume RESTful services. Built on @angular/http with TypeScript.  
 **Note:** Production Ready! (Well tested)
 
@@ -13,7 +13,7 @@ npm install git+https://github.com/Dmitry-Gorbenko/angular-rest --save
 ```ts
 
 import {Http, Request, Response} from '@angular/http';
-import {HttpClient, RESTClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType} from '@maxxton/angular-rest';
+import {HttpClient, RESTClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType} from 'angular-rest';
 
 import {Todo} from './models/Todo';
 import {SessionFactory} from './sessionFactory';
@@ -44,23 +44,28 @@ export class TodoClient extends RestClient {
     }
 
     @Get("todo/")
+    @Timeout(2000) //In milliseconds
     @Produces(MediaType.JSON)
     public getTodos( @Query("page") page:number, @Query("size", {default: 20}) size?:number, @Query("sort") sort?: string): Observable<Todo[]> { return null; };
 
     @Get("todo/{id}")
+    @Timeout(2000) //In milliseconds
     @Map(resp => new Todo(resp.json()))
     public getTodoById( @Path("id") id: number): Observable<Todo>{ return null; };
 
     @Post("todo")
+    @Timeout(2000) //In milliseconds
     @Headers({
         'content-type': 'application/json'
     })
     public postTodo( @Body todo: Todo): Observable<Response> { return null; };
 
     @Put("todo/{id}")
+    @Timeout(2000) //In milliseconds
     public putTodoById( @Path("id") id: string, @Body todo: Todo): Observable<Response> { return null; };
 
     @Delete("todo/{id}")
+    @Timeout(2000) //In milliseconds
     public deleteTodoById( @Path("id") id: string): Observable<Response> { return null; };
 
 }
