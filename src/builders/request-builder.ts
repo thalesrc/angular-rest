@@ -157,7 +157,8 @@ export function methodBuilder( method: number) {
           url: resUrl,
           headers,
           body,
-          search
+          search,
+          withCredentials: true
         });
 
         var req = new Request(options);
