@@ -51,6 +51,11 @@ export const Query = paramBuilder("Query");
  */
 export const Body = paramBuilder("Body")("Body");
 /**
+ * Body of a REST method, type: key-value pair string separated by '&'
+ * Only one body per method!
+ */
+export const PlainBody = paramBuilder("PlainBody")("PlainBody");
+/**
  * Custom header of a REST method, type: string
  * @param {string} key - header key to bind value
  */

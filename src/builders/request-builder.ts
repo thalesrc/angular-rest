@@ -18,6 +18,7 @@ export function methodBuilder( method: number) {
       var pPath = target[`${propertyKey}_Path_parameters`];
       var pQuery = target[`${propertyKey}_Query_parameters`];
       var pBody = target[`${propertyKey}_Body_parameters`];
+      var pPlainBody = target[`${propertyKey}_PlainBody_parameters`];
       var pHeader = target[`${propertyKey}_Header_parameters`];
 
       descriptor.value = function(...args: any[]) {
@@ -34,7 +35,16 @@ export function methodBuilder( method: number) {
           }
           body = JSON.stringify(value);
         }
-
+        if (pPlainBody) {
+            if (pPlainBody.length > 1) {
+                throw new Error("Only one @Body is allowed");
+            }
+            var value = args[pPlainBody[0].parameterIndex];
+            if (value === undefined && pPlainBody[0].value !== undefined) {
+                value = pPlainBody[0].value;
+            }
+            body = value;
+        }
         // Path
         var resUrl: string = url;
         if (pPath) {
