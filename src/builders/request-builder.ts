@@ -176,7 +176,7 @@ export function methodBuilder( method: number) {
         // intercept the request
         this.requestInterceptor(req);
         // make the request and store the observable for later transformation
-        var observable: Observable<Response> = this.httpClient.request(req);
+        var observable = this.httpClient.request(req);
 
         // transform the observable in accordance to the @Produces decorator
         if (descriptor.mime) {
