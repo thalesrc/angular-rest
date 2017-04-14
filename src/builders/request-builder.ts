@@ -201,6 +201,15 @@ export function methodBuilder( method: number) {
         // intercept the response
         observable = this.responseInterceptor(observable);
 
+        var returnType = Reflect.getMetadata("design:returntype", target, propertyKey);
+        if (returnType === Promise) {
+          if (observable.toPromise) {
+            observable = observable.toPromise();
+          } else {
+            observale = Observable.throw('To use Promise return type, you need to add rxjs toPromise operator');
+          }
+        }
+
         return observable;
       };
 

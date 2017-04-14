@@ -37,7 +37,7 @@ export class TodoClient extends RestClient {
             req.headers.append('jwt', SessionFactory.getInstance().credentials.jwt);
         }
     }
-    
+
     protected responseInterceptor(res: Observable<Response>): Observable<any> {
         // do anything with responses
         return res;
@@ -68,6 +68,9 @@ export class TodoClient extends RestClient {
     @Timeout(2000) //In milliseconds
     public deleteTodoById( @Path("id") id: string): Observable<Response> { return null; };
 
+    // You can return a promise insteadof an Observable
+    @Delete("todo/user/{user}")
+    public deleteTodoByUser( @Path("user") id: string): Promise<Response> { return null; };
 }
 ```
 
@@ -98,7 +101,7 @@ export class ToDoCmp {
 
   constructor(private todoClient: TodoClient) {
   }
-  
+
   //Use todoClient
 }
 ```
