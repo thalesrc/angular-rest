@@ -6,6 +6,7 @@ import {
   URLSearchParams,
 } from "@angular/http";
 
+import "reflect-metadata";
 import { RestClient } from "../rest-client";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
@@ -206,7 +207,7 @@ export function methodBuilder( method: number) {
           if (observable.toPromise) {
             observable = observable.toPromise();
           } else {
-            observale = Observable.throw('To use Promise return type, you need to add rxjs toPromise operator');
+            observable = Observable.throw('To use Promise return type, you need to add rxjs toPromise operator');
           }
         }
 
