@@ -1,4 +1,4 @@
-# angular-rest
+# angular-async-http
 Angular 4 Async HTTP client in typescript with promises, interceptors, and timeouts.
 **Note:** Production Ready! (Well tested)
 
@@ -147,3 +147,17 @@ Default value is ``Format.CSV``.
 # License
 
 MIT
+
+Brought to you by many contributors, including:
+
+TrustPortal Solutions Ltd  [http://trustportal.org](http://trustportal.org)
+Yavin Five
+deblockt
+Dmitry-Gorbenko
+Maxxton Group  [http://www.maxxton.com](http://www.maxxton.com)
+Domonkos Pal : Paldom
+Discountrobot
+TN-Kirontech
+LeFinc
+mmrath  [http://www.mmrath.com](http://www.mmrath.com)
+steven166
