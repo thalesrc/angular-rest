@@ -148,16 +148,16 @@ Default value is ``Format.CSV``.
 
 MIT
 
-Brought to you by many contributors, including:
-
-TrustPortal Solutions Ltd  [http://trustportal.org](http://trustportal.org)
-Yavin Five
-deblockt
-Dmitry-Gorbenko
-Maxxton Group  [http://www.maxxton.com](http://www.maxxton.com)
-Domonkos Pal : Paldom
-Discountrobot
-TN-Kirontech
-LeFinc
-mmrath  [http://www.mmrath.com](http://www.mmrath.com)
-steven166
+Brought to you by many contributors, including:  
+  
+TrustPortal Solutions Ltd  [http://trustportal.org](http://trustportal.org)  
+Yavin Five  
+deblockt  
+Dmitry-Gorbenko  
+Maxxton Group  [http://www.maxxton.com](http://www.maxxton.com)  
+Domonkos Pal : Paldom  
+Discountrobot  
+TN-Kirontech  
+LeFinc  
+mmrath  [http://www.mmrath.com](http://www.mmrath.com)  
+steven166  
