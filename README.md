@@ -1,5 +1,10 @@
 [![npm version](https://badge.fury.io/js/angular-async-http.svg)](https://badge.fury.io/js/angular-async-http)
 [![GitHub version](https://badge.fury.io/gh/yavin5%2Fangular-async-http.svg)](https://badge.fury.io/gh/yavin5%2Fangular-async-http)
+[![GitHub forks](https://img.shields.io/github/forks/badges/shields.svg?style=social&label=Fork&style=plastic)](https://github.com/yavin5/angular-async-http)
+[![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&style=plastic)](https://github.com/yavin5/angular-async-http)
+[![GitHub issues](https://img.shields.io/github/issues/badges/shields.svg?style=plastic)](https://github.com/yavin5/angular-async-http)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/cdnjs/cdnjs.svg?style=plastic)](https://github.com/yavin5/angular-async-http)
+[![npm](https://img.shields.io/npm/l/express.svg?style=plastic)](https://github.com/yavin5/angular-async-http)
 
 # angular-async-http
 Angular 4 Async HTTP client in typescript with promises, interceptors, and timeouts.
