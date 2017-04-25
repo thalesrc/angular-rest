@@ -1,8 +1,7 @@
 {
-  "name": "angular-rest",
+  "name": "angular-async-http",
   "version": "1.0.2",
-  "description": "Angular2 HTTP client to consume RESTful services.",
-  "typings": "index.d.ts",
+  "description": "Angular 4 Async HTTP client in typescript with promises, interceptors, and timeouts.",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/gulp test",
@@ -11,34 +10,38 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Dmitry-Gorbenko/angular2-rest.git"
+    "url": "git+https://github.com/yavin5/angular-async-http.git"
   },
   "keywords": [
-    "angular2",
+    "angular4",
     "angulario",
     "http",
     "rest",
     "client"
   ],
-  "author": "Dmitry Gorbenko <dima.gorbenko@gmail.com>",
+  "author": "Yavin Five <yavinfive464@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Dmitry-Gorbenko/angular2-rest/issues"
+    "url": "https://github.com/yavin5/angular-async-http/issues"
   },
-  "homepage": "https://github.com/Dmitry-Gorbenko/angular2-rest#readme",
+  "homepage": "https://github.com/yavin5/angular-async-http#readme",
   "dependencies": {
-    "@angular/core": "2.4.10",
-    "@angular/http": "2.4.10",
+    "@angular/common": "4.0.0",
+    "@angular/compiler": "4.0.0",
+    "@angular/core": "4.0.0",
+    "@angular/http": "4.0.0",
+    "@angular/platform-browser": "4.0.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.2.0",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
-    "@types/jasmine": "^2.5.40",
-    "@types/node": "^7.0.0",
-    "async": "^2.0.1",
+    "@types/jasmine": "^2.5.41",
+    "@types/node": "^6.0.45",
+    "async": "^2.1.1",
     "chai": "^3.5.0",
+    "codelyzer": "^2.0.1",
     "del": "^2.2.2",
     "gaze": "^1.1.2",
     "gulp": "^3.9.0",
@@ -48,7 +51,9 @@
     "gulp-typescript": "3.1.3",
     "gulp-util": "^3.0.7",
     "merge2": "^1.0.2",
-    "typings": "^2.0.0",
+    "ts-node": "^2.0.0",
+    "tslint": "^4.3.0",
+    "typescript": "^2.1.5",
     "vinyl-paths": "^2.1.0"
   }
 }

@@ -1,11 +1,11 @@
 # angular-rest
-Angular2 HTTP client to consume RESTful services. Built on @angular/http with TypeScript.  
+Angular 4 Async HTTP client in typescript with promises, interceptors, and timeouts.
 **Note:** Production Ready! (Well tested)
 
 ## Installation
 
 ```sh
-npm install git+https://github.com/Dmitry-Gorbenko/angular-rest --save
+npm install git+https://github.com/yavin5/angular-async-http --save
 ```
 
 ## Example

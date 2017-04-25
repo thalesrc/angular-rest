@@ -1,3 +1,4 @@
+///<reference path="../../node_modules/typescript/lib/lib.es6.d.ts"/> 
 import {
   Headers as AngularHeaders,
   Request,
