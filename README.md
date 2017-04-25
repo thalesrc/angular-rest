@@ -5,7 +5,7 @@ Angular 4 Async HTTP client in typescript with promises, interceptors, and timeo
 ## Installation
 
 ```sh
-npm install git+https://github.com/yavin5/angular-async-http --save
+npm install angular-async-http --save
 ```
 
 ## Example
