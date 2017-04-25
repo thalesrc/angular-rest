@@ -1,6 +1,6 @@
 {
   "name": "angular-async-http",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Angular 4 Async HTTP client in typescript with promises, interceptors, and timeouts.",
   "main": "index.js",
   "scripts": {
