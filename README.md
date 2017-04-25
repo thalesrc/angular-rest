@@ -1,3 +1,7 @@
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+[![GitHub version](https://badge.fury.io/gh/yavin5%2Fangular-async-http.svg)](https://badge.fury.io/gh/yavin5%2Fangular-async-http)
+
 # angular-async-http
 Angular 4 Async HTTP client in typescript with promises, interceptors, and timeouts.
 **Note:** Production Ready! (Well tested)
