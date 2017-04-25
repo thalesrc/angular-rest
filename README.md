@@ -1,5 +1,4 @@
-[![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
+[![npm version](https://badge.fury.io/js/angular-async-http.svg)](https://badge.fury.io/js/angular-async-http)
 [![GitHub version](https://badge.fury.io/gh/yavin5%2Fangular-async-http.svg)](https://badge.fury.io/gh/yavin5%2Fangular-async-http)
 
 # angular-async-http
