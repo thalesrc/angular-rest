@@ -3,7 +3,7 @@ import { Request, Response } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { HttpClient } from "./abstract/http-client";
 /**
- * Angular 2 RestClient class.
+ * Angular 4 RestClient class.
  *
  * @class RESTClient
  * @constructor

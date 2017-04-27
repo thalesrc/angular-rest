@@ -21,7 +21,7 @@ npm install angular-async-http --save
 ```ts
 
 import {Http, Request, Response} from '@angular/http';
-import {HttpClient, RESTClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType} from 'angular-rest';
+import {HttpClient, RESTClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType} from 'angular-http-client';
 
 import {Todo} from './models/Todo';
 import {SessionFactory} from './sessionFactory';
@@ -152,9 +152,7 @@ Determines the format of the array if type array is used. (used for ``@Query`` a
 
 Default value is ``Format.CSV``.
 
-# License
-
-MIT
+# Contributors
 
 Brought to you by many contributors, including:  
   
@@ -169,3 +167,7 @@ TN-Kirontech
 LeFinc  
 mmrath  [http://www.mmrath.com](http://www.mmrath.com)  
 steven166  
+
+# License
+
+MIT
