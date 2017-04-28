@@ -15,7 +15,7 @@ var tsConfig = require('./src/tsconfig.json');
 
 var settings = {
   distFolder: 'dist',
-  projectName: 'angular2-rest',
+  projectName: 'angular-async-http',
   tsConfig: tsConfig
 };
 
