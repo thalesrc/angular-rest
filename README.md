@@ -21,6 +21,7 @@ npm install angular-async-http --save
 ```ts
 
 import {Http, Request, Response} from '@angular/http';
+import { Observable } from 'rxjs';
 import {HttpClient, RESTClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType} from 'angular-async-http';
 
 import {Todo} from './models/Todo';
