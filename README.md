@@ -112,6 +112,11 @@ export class ToDoCmp {
   }
 
   //Use todoClient
+  sampleUsage(){
+    this.todoClient.getTodos( /* page */ 1).subscribe(data=>{
+      console.log(data)
+    })
+  }  
 }
 ```
 ## API Docs
@@ -168,6 +173,7 @@ TN-Kirontech
 LeFinc  
 mmrath  [http://www.mmrath.com](http://www.mmrath.com)  
 steven166  
+Mayur Patel : mayur-novus
 
 # License
 
