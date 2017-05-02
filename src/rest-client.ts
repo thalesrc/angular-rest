@@ -5,7 +5,7 @@ import { HttpClient } from "./abstract/http-client";
 /**
  * Angular 4 RestClient class.
  *
- * @class RESTClient
+ * @class RestClient
  * @constructor
  */
 export class RestClient {

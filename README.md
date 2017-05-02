@@ -20,12 +20,14 @@ npm install angular-async-http --save
 
 ```ts
 
-import {Http, Request, Response} from '@angular/http';
+import { Http, Request, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import {HttpClient, RESTClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType} from 'angular-async-http';
+import {
+  HttpClient, RestClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType
+} from 'angular-async-http';
 
-import {Todo} from './models/Todo';
-import {SessionFactory} from './sessionFactory';
+import { Todo } from './models/Todo';
+import { SessionFactory } from './sessionFactory';
 
 @Injectable()
 @Client({
@@ -103,6 +105,13 @@ export class AppModule { }
 ```
 **```todo.component.ts```**
 ``` ts
+// You need some or all of the following rxjs imports for Promise and Observable.
+import 'rxjs/add/observable/defer';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/timeout';
+import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Observable';
+
 @Component({
   selector: 'to-do',
 })
@@ -121,7 +130,7 @@ export class ToDoCmp {
 ```
 ## API Docs
 
-### RESTClient
+### RestClient
 #### Methods:
 - `getServiceId(): string`: returns the serviceId of the RestClient
 - `getBaseUrl(): string`: returns the base url of RestClient
