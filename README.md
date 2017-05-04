@@ -108,6 +108,7 @@ export class AppModule { }
 // You need some or all of the following rxjs imports for Promise and Observable.
 import 'rxjs/add/observable/defer';
 import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
