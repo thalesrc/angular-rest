@@ -1,4 +1,6 @@
-
+import 'zone.js';
+import 'reflect-metadata';
+import { Inject, Injectable} from '@angular/core';
 import { Request, Response } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { HttpClient } from "./abstract/http-client";
@@ -8,9 +10,10 @@ import { HttpClient } from "./abstract/http-client";
  * @class RestClient
  * @constructor
  */
+@Injectable()
 export class RestClient {
 
-  public constructor( protected httpClient: HttpClient) {
+  public constructor(private httpClient: HttpClient) {
   }
 
   public getServiceId(): string{
