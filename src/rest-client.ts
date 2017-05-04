@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { Inject, Injectable} from '@angular/core';
-import { Request, Response } from "@angular/http";
-import { Observable } from "rxjs/Observable";
-import { HttpClient } from "./abstract/http-client";
+import { Http, Request, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+
 /**
  * Angular 4 RestClient class.
  *
@@ -12,10 +12,10 @@ import { HttpClient } from "./abstract/http-client";
 @Injectable()
 export class RestClient {
 
-  public constructor(private httpClient: HttpClient) {
+  public constructor(private http: Http) {
   }
 
-  public getServiceId(): string{
+  public getServiceId(): string {
     return null;
   }
 

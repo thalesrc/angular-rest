@@ -1,19 +1,19 @@
 
 import {assert} from 'chai';
-import { Observable } from "rxjs";
-import { Request, Response, ResponseOptions, RequestMethod } from "@angular/http";
-import { RestClient } from "./rest-client";
-import { HttpClient } from "./abstract/http-client";
-import { Get } from "./decorators/request-methods";
-import { Client } from "./decorators/client";
+import { Observable } from 'rxjs';
+import { Http, Request, Response, ResponseOptions, RequestMethod } from '@angular/http';
+import { RestClient } from './rest-client';
+import { Get } from './decorators/request-methods';
+import { Client } from './decorators/client';
 
 describe('RestClient', () => {
   beforeEach(() => {
+    // Nothing here yet.
   });
 
   it('checkSetup', () => {
     // Arrange
-    let requestMock = new RequestMock((req:Request) => {
+    let requestMock = new HttpMock((req:Request) => {
       return Observable.of(new Response(new ResponseOptions()));
     });
     let testClient = new TestClient1(requestMock);
@@ -29,7 +29,7 @@ describe('RestClient', () => {
 
   it('call requestInterceptor', () => {
     // Arrange
-    let requestMock = new RequestMock((req:Request) => {
+    let requestMock = new HttpMock((req:Request) => {
       return Observable.of(new Response(new ResponseOptions()));
     });
     let testClient = new TestClient2(requestMock);
@@ -45,7 +45,7 @@ describe('RestClient', () => {
 
   it('call responseInterceptor', () => {
     // Arrange
-    let requestMock = new RequestMock((req:Request) => {
+    let requestMock = new HttpMock((req:Request) => {
       return Observable.of(new Response(new ResponseOptions({status: 200})));
     });
     let testClient = new TestClient3(requestMock);
@@ -59,12 +59,14 @@ describe('RestClient', () => {
   });
 });
 
-class RequestMock implements HttpClient{
-
-  constructor(private requestFunction:(req:Request) =>Observable<Response>){}
+class HttpMock extends Http {
 
   public callCount:number = 0;
   public lastRequest:Request;
+
+  constructor(private requestFunction: (req:Request) => Observable<Response>) {
+    super(null, null);
+  }
 
   public request(req:Request):Observable<Response> {
     this.callCount++;
@@ -75,12 +77,12 @@ class RequestMock implements HttpClient{
 
 class TestClient1 extends RestClient {
 
-  constructor(httpClient:HttpClient){
-    super(httpClient );
+  constructor(http: Http) {
+    super(http);
   }
 
   @Get('/test')
-  public getItems():Observable<Response>{
+  public getItems(): Observable<Response> {
     return null;
   }
 
@@ -91,16 +93,12 @@ class TestClient2 extends RestClient {
   public interceptorCallCount: number = 0;
   public interceptorRequest: Request;
 
-  constructor(httpClient:HttpClient){
-    super(httpClient );
-  }
-
   @Get('/test')
-  public getItems():Observable<Response>{
+  public getItems():Observable<Response> {
     return null;
   }
 
-  protected requestInterceptor(req:Request):void{
+  protected requestInterceptor(req: Request): void {
     this.interceptorCallCount++;
     this.interceptorRequest = req;
   }
@@ -112,12 +110,8 @@ class TestClient3 extends RestClient {
   public interceptorCallCount: number = 0;
   public interceptorResponse: Observable<Response>;
 
-  constructor(httpClient:HttpClient){
-    super(httpClient );
-  }
-
   @Get('/test')
-  public getItems():Observable<Response>{
+  public getItems(): Observable<Response> {
     return null;
   }
 

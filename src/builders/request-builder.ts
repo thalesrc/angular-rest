@@ -5,13 +5,13 @@ import {
   RequestOptions,
   Response,
   URLSearchParams,
-} from "@angular/http";
+} from '@angular/http';
 
-import "reflect-metadata";
-import { RestClient } from "../rest-client";
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/operator/map";
-import { Format } from "../decorators/parameters";
+import 'reflect-metadata';
+import { RestClient } from '../rest-client';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import { Format } from '../decorators/parameters';
 
 export function methodBuilder( method: number) {
   return function(url: string) {
@@ -28,18 +28,18 @@ export function methodBuilder( method: number) {
         // Body
         var body:any = null;
         if (pBody) {
-          if(pBody.length > 1){
-            throw new Error("Only one @Body is allowed");
+          if (pBody.length > 1) {
+            throw new Error('Only one @Body is allowed');
           }
           var value = args[pBody[0].parameterIndex];
-          if(value === undefined && pBody[0].value !== undefined) {
+          if (value === undefined && pBody[0].value !== undefined) {
             value = pBody[0].value;
           }
           body = JSON.stringify(value);
         }
         if (pPlainBody) {
             if (pPlainBody.length > 1) {
-                throw new Error("Only one @Body is allowed");
+                throw new Error('Only one @Body is allowed');
             }
             var value = args[pPlainBody[0].parameterIndex];
             if (value === undefined && pPlainBody[0].value !== undefined) {
@@ -57,16 +57,16 @@ export function methodBuilder( method: number) {
                 value = pPath[k].value;
               }
               if(value !== undefined && value !== null) {
-                resUrl = resUrl.replace( "{" + pPath[ k ].key + "}", value );
-              }else{
-                throw new Error("Missing path variable '" + pPath[k].key + "' in url '" + url + "'");
+                resUrl = resUrl.replace( '{' + pPath[ k ].key + '}', value );
+              } else {
+                throw new Error('Missing path variable \'' + pPath[k].key + '\' in url ' + url);
               }
             }
           }
         }
-        if(this.getBaseUrl() != null){
+        if (this.getBaseUrl() !== null) {
           var baseUrl = this.getBaseUrl();
-          if(baseUrl.indexOf("/") == baseUrl.length-1 && resUrl.indexOf("/") == 0){
+          if (baseUrl.indexOf('/') === baseUrl.length-1 && resUrl.indexOf('/') === 0) {
             baseUrl = baseUrl.substring(0, 1);
           }
           resUrl = baseUrl + resUrl;
@@ -76,17 +76,17 @@ export function methodBuilder( method: number) {
         var search = new URLSearchParams();
         if (pQuery) {
           pQuery
-            .filter((p:any) => args[p.parameterIndex] !== undefined || p.value !== undefined) // filter out optional parameters
-            .forEach((p:any) => {
+            .filter((p: any) => args[p.parameterIndex] !== undefined || p.value !== undefined) // filter out optional parameters
+            .forEach((p: any) => {
               var key = p.key;
-              let value:any = args[p.parameterIndex];
+              let value: any = args[p.parameterIndex];
               if(value === undefined && p.value !== undefined) {
                 value = p.value;
               }
 
               // if the value is a instance of Object, we stringify it
-              if(Array.isArray(value)){
-                switch(p.format){
+              if (Array.isArray(value)) {
+                switch(p.format) {
                   case Format.CSV:
                     value = value.join(',');
                     break;
@@ -108,9 +108,9 @@ export function methodBuilder( method: number) {
               }else if (value instanceof Object) {
                 value = JSON.stringify(value);
               }
-              if(Array.isArray(value)){
+              if(Array.isArray(value)) {
                 value.forEach(v => search.append(key, v));
-              }else {
+              } else {
                 search.set( key, value );
               }
             });
@@ -130,11 +130,11 @@ export function methodBuilder( method: number) {
           for (var k in pHeader) {
             if (pHeader.hasOwnProperty(k)) {
               let value:any = args[pHeader[k].parameterIndex];
-              if(value === undefined && pHeader[k].value !== undefined) {
+              if (value === undefined && pHeader[k].value !== undefined) {
                 value = pHeader[k].value;
               }
-              if(Array.isArray(value)){
-                switch(pHeader[k].format){
+              if (Array.isArray(value)) {
+                switch(pHeader[k].format) {
                   case Format.CSV:
                     value = value.join(',');
                     break;
@@ -154,10 +154,10 @@ export function methodBuilder( method: number) {
                     value = value.join(',');
                 }
               }
-              if(Array.isArray(value)){
+              if (Array.isArray(value)) {
                 value.forEach(v => headers.append(pHeader[k].key, v));
               }else {
-                headers.append( pHeader[k].key, value );
+                headers.append(pHeader[k].key, value);
               }
             }
           }
@@ -178,24 +178,24 @@ export function methodBuilder( method: number) {
         // intercept the request
         this.requestInterceptor(req);
         // make the request and store the observable for later transformation
-        var observable = this.httpClient.request(req);
+        var observable = this.http.request(req);
 
         // transform the observable in accordance to the @Produces decorator
         if (descriptor.mime) {
           observable = observable.map(descriptor.mime);
         }
         if (descriptor.timeout) {
-          descriptor.timeout.forEach((timeout:number) => {
+          descriptor.timeout.forEach((timeout: number) => {
             observable = observable.timeout(timeout);
           });
         }
-        if(descriptor.mappers){
-          descriptor.mappers.forEach((mapper:(resp : any)=>any) => {
+        if (descriptor.mappers) {
+          descriptor.mappers.forEach((mapper:(resp : any) => any) => {
             observable = observable.map(mapper);
           });
         }
-        if(descriptor.emitters){
-          descriptor.emitters.forEach((handler:(resp : Observable<any>)=>Observable<any>) => {
+        if (descriptor.emitters) {
+          descriptor.emitters.forEach((handler:(resp : Observable<any>) => Observable<any>) => {
             observable = handler(observable);
           });
         }
@@ -203,7 +203,7 @@ export function methodBuilder( method: number) {
         // intercept the response
         observable = this.responseInterceptor(observable);
 
-        var returnType = Reflect.getMetadata("design:returntype", target, propertyKey);
+        var returnType = Reflect.getMetadata('design:returntype', target, propertyKey);
         if (returnType === Promise) {
           if (observable.toPromise) {
             observable = observable.toPromise();

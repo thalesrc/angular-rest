@@ -1,6 +1,5 @@
 
 export {RestClient} from './rest-client';
-export {HttpClient} from './abstract/http-client';
 
 export {Client} from './decorators/client';
 export {Headers} from './decorators/headers';

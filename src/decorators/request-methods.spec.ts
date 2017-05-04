@@ -1,11 +1,9 @@
-
 import {assert} from 'chai';
-import { Observable } from "rxjs";
-import { Request, Response, ResponseOptions, RequestMethod } from "@angular/http";
-import { HttpClient } from "../abstract/http-client";
-import { RestClient } from "../rest-client";
-import { Get, Post } from "./request-methods";
-import { Client } from "./client";
+import { Observable } from 'rxjs';
+import { Http, Request, Response, ResponseOptions, RequestMethod } from '@angular/http';
+import { RestClient } from '../rest-client';
+import { Get, Post } from './request-methods';
+import { Client } from './client';
 
 describe('@Get', () => {
 
@@ -13,7 +11,7 @@ describe('@Get', () => {
     // Arrange
     var method;
     var url;
-    let requestMock = new RequestMock((req:Request) => {
+    let requestMock = new HttpMock((req: Request) => {
       method = req.method;
       url = req.url;
       return Observable.of(new Response(new ResponseOptions()));
@@ -25,7 +23,6 @@ describe('@Get', () => {
 
     assert.equal(method, RequestMethod.Get);
     assert.equal(url, '/test');
-
   });
 });
 
@@ -35,7 +32,7 @@ describe('@Post', () => {
     // Arrange
     var method;
     var url;
-    let requestMock = new RequestMock((req:Request) => {
+    let requestMock = new HttpMock((req: Request) => {
       method = req.method;
       url = req.url;
       return Observable.of(new Response(new ResponseOptions()));
@@ -47,18 +44,19 @@ describe('@Post', () => {
 
     assert.equal(method, RequestMethod.Post);
     assert.equal(url, '/test');
-
   });
 });
 
-class RequestMock implements HttpClient{
-
-  constructor(private requestFunction:(req:Request) =>Observable<Response>){}
+class HttpMock extends Http {
 
   public callCount:number = 0;
   public lastRequest:Request;
 
-  public request(req:Request):Observable<Response> {
+  constructor(private requestFunction: (req: Request) => Observable<Response>) {
+    super(null, null);
+  }
+
+  public request(req: Request): Observable<Response> {
     this.callCount++;
     this.lastRequest = req;
     return this.requestFunction(req);
@@ -67,17 +65,13 @@ class RequestMock implements HttpClient{
 
 class TestClient extends RestClient {
 
-  constructor(httpClient:HttpClient){
-    super(httpClient );
-  }
-
   @Get('/test')
-  public getItems():Observable<Response>{
+  public getItems(): Observable<Response> {
     return null;
   }
 
   @Post('/test')
-  public createItems():Observable<Response>{
+  public createItems(): Observable<Response> {
     return null;
   }
 

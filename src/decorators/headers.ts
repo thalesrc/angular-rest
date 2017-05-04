@@ -1,4 +1,4 @@
-import { RestClient } from "../rest-client";
+import { RestClient } from '../rest-client';
 
 /**
  * Set custom headers for a REST method
