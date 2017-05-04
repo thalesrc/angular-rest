@@ -1,5 +1,5 @@
 import 'zone.js';
-import 'reflect-metadata';
+require('zone.js/dist/zone');
 import { Inject, Injectable} from '@angular/core';
 import { Request, Response } from "@angular/http";
 import { Observable } from "rxjs/Observable";
