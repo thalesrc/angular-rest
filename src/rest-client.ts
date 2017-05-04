@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { Inject, Injectable} from '@angular/core';
 import { Http, Request, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
@@ -9,7 +8,6 @@ import { Observable } from 'rxjs/Observable';
  * @class RestClient
  * @constructor
  */
-@Injectable()
 export class RestClient {
 
   public constructor(private http: Http) {
