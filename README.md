@@ -78,10 +78,6 @@ export class TodoClient extends RestClient {
     @Delete("todo/{id}")
     @Timeout(2000) //In milliseconds
     public deleteTodoById( @Path("id") id: string): Observable<Response> { return null; };
-
-    // You can return a promise insteadof an Observable
-    @Delete("todo/user/{user}")
-    public deleteTodoByUser( @Path("user") id: string): Promise<Response> { return null; };
 }
 ```
 
@@ -121,12 +117,26 @@ export class ToDoCmp {
   constructor(private todoClient: TodoClient) {
   }
 
-  //Use todoClient
-  sampleUsage(){
+  // Use todoClient.
+  sampleUsage() {
     this.todoClient.getTodos( /* page */ 1).subscribe(data=>{
       console.log(data)
     })
-  }  
+  }
+
+  // Another example, using Promises.
+  sampleUsage2() {
+    this.todoClient.getTodos( /* page */ 1).toPromise()
+      .then((response: Response) => console.log(response.json()))
+      .catch(this.handleError);
+    })
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred', error);
+    console.log('ERROR');
+    return Promise.reject(error.message || error);
+  }
 }
 ```
 ## API Docs

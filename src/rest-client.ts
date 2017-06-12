@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Http, Request, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
