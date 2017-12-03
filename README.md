@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/angular-rest-client.svg)](https://badge.fury.io/js/angular-rest-client)
 [![Build Status](https://travis-ci.org/steven166/angular-rest-client.svg?branch=master)](https://travis-ci.org/steven166/angular-rest-client)
 [![codecov](https://codecov.io/gh/steven166/angular-rest-client/branch/master/graph/badge.svg)](https://codecov.io/gh/steven166/angular-rest-client)
 

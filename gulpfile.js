@@ -243,7 +243,7 @@ function _runMocha(cb) {
   return gulp.src(['dist/**/*.spec.js'], { read: false })
     .pipe(mocha({ reporter: 'list' }))
     .pipe(istanbul.writeReports({
-      reporters: ['lcovonly']
+      // reporters: ['lcovonly']
     }))
     .on('error', gutil.log)
     .on('finish', function () {
