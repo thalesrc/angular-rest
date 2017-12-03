@@ -10,6 +10,7 @@ var replace = require('gulp-replace');
 var fs = require('fs');
 var Gaze = require('gaze').Gaze;
 var mocha = require('gulp-mocha');
+var istanbul = require('gulp-istanbul');
 var vinylPaths = require('vinyl-paths');
 var tsConfig = require('./src/tsconfig.json');
 
@@ -203,6 +204,9 @@ function test(cb) {
       _compileSpecs(next);
     },
     function (next) {
+      _preTest(next);
+    },
+    function (next) {
       _runMocha(next);
     }
   ], cb);
@@ -223,9 +227,22 @@ function _compileSpecs(cb) {
   _compileTypescriptFromSrc(['src/**/*.spec.ts'], cb);
 }
 
+function _preTest(cb){
+  return gulp.src(['dist/**/*.js'])
+  // Covering files
+    .pipe(istanbul())
+    // Force `require` to return covered files
+    .pipe(istanbul.hookRequire())
+    .on('error', gutil.log)
+    .on('finish', function () {
+      cb();
+    });
+}
+
 function _runMocha(cb) {
   return gulp.src(['dist/**/*.spec.js'], { read: false })
     .pipe(mocha({ reporter: 'list' }))
+    .pipe(istanbul.writeReports())
     .on('error', gutil.log)
     .on('finish', function () {
       cb();

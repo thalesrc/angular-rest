@@ -1,6 +1,9 @@
 language: node_js
 node_js:
-  - "0.12"
-before_script:
-  - npm install -g gulp
-script: npm run prepublish
+  - "8"
+install:
+  - yarn run setup
+script:
+  - yarn test
+after_script:
+  - yarn run codecov
