@@ -1,7 +1,7 @@
 
 import {assert} from 'chai';
 import { Observable } from 'rxjs';
-import { Http, Request, Response, ResponseOptions } from '@angular/http';
+import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { OnEmit } from './on-emit';
 import { Get } from './request-methods';
@@ -10,9 +10,9 @@ describe('@OnEmit', () => {
 
   it('verify OnEmit function is called', (done: (e?: any) => void) => {
     // Arrange
-    let requestMock = new HttpMock((req: Request) => {
+    let requestMock = new HttpMock((req: HttpRequest<any>) => {
       let json: any = { name: 'itemName', desc: 'Some awesome item' };
-      return Observable.of(new Response(new ResponseOptions({body: JSON.stringify(json)})));
+      return Observable.of(new HttpResponse<any>({body: JSON.stringify(json)}));
     });
     let testClient = new TestClient(requestMock);
 
@@ -33,26 +33,31 @@ describe('@OnEmit', () => {
   });
 });
 
-class HttpMock extends Http {
+class HttpMock extends HttpClient {
 
-  public callCount:number = 0;
-  public lastRequest:Request;
+  public callCount: number = 0;
+  public lastRequest: HttpRequest<any>;
 
-  constructor(private requestFunction: (req: Request) => Observable<Response>) {
-    super(null, null);
+  constructor( private requestFunction: ( req: HttpRequest<any> ) => Observable<HttpResponse<any>> ) {
+    super(null);
   }
 
-  public request(req: Request): Observable<Response> {
+  request<R>(req: HttpRequest<any>|any, p2?:any, p3?:any, p4?:any): Observable<any> {
     this.callCount++;
     this.lastRequest = req;
     return this.requestFunction(req);
   }
+
 }
 
 class TestClient extends RestClient {
 
+  constructor( httpHandler: HttpClient ) {
+    super( httpHandler );
+  }
+
   @Get('/test')
-  @OnEmit(obs => obs.map(resp => new Item(resp.json())))
+  @OnEmit(obs => obs.map(resp => new Item(JSON.parse(resp.body))))
   public getItems(): Observable<Item> {
     return null;
   }

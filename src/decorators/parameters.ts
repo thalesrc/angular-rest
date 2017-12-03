@@ -31,35 +31,35 @@ export const Format = {
   MULTI: 'MULTI',
 };
 
-export function paramBuilder(paramName: string) {
-  return function(name: string, value?: any | { value?: any, format?: string}) {
-    return function(target: RestClient, propertyKey: string | symbol, parameterIndex: number) {
+export function paramBuilder( paramName: string ) {
+  return function ( name: string, value?: any | { value?: any, format?: string } ) {
+    return function ( target: RestClient, propertyKey: string | symbol, parameterIndex: number ) {
       let format;
-      if (value) {
-        if (typeof(value) === 'object') {
-          if (value.value !== undefined && value.value !== null) {
+      if ( value ) {
+        if ( typeof(value) === 'object' ) {
+          if ( value.value !== undefined && value.value !== null ) {
             value = value.value;
           }
-          if (value.format !== undefined && value.format !== null) {
-            if (Format[value.format] !== undefined) {
+          if ( value.format !== undefined && value.format !== null ) {
+            if ( Format[ value.format ] !== undefined ) {
               format = value.format;
             } else {
-              throw new Error('Unknown Collection Format: \'' + value.format + '\'');
+              throw new Error( 'Unknown Collection Format: \'' + value.format + '\'' );
             }
           }
         }
       }
-      var metadataKey = `${propertyKey}_${paramName}_parameters`;
+      var metadataKey   = `${propertyKey}_${paramName}_parameters`;
       var paramObj: any = {
         key: name,
         parameterIndex: parameterIndex,
         value: value,
         format: format
       };
-      if (Array.isArray(target[metadataKey])) {
-        target[metadataKey].push(paramObj);
+      if ( Array.isArray( target[ metadataKey ] ) ) {
+        target[ metadataKey ].push( paramObj );
       } else {
-        target[metadataKey] = [paramObj];
+        target[ metadataKey ] = [ paramObj ];
       }
     };
   };
@@ -69,28 +69,28 @@ export function paramBuilder(paramName: string) {
  * Path variable of a method's url, type: string
  * @param {string} key - path key to bind value
  */
-export const Path = paramBuilder('Path');
+export const Path = paramBuilder( 'Path' );
 
 /**
  * Query value of a method's url, type: string
  * @param {string} key - query key to bind value
  */
-export const Query = paramBuilder('Query');
+export const Query = paramBuilder( 'Query' );
 
 /**
  * Body of a REST method, type: key-value pair object
  * Only one body per method!
  */
-export const Body = paramBuilder('Body')('Body');
+export const Body = paramBuilder( 'Body' )( 'Body' );
 
 /**
  * Body of a REST method, type: key-value pair string separated by '&'
  * Only one body per method!
  */
-export const PlainBody = paramBuilder('PlainBody')('PlainBody');
+export const PlainBody = paramBuilder( 'PlainBody' )( 'PlainBody' );
 
 /**
  * Custom header of a REST method, type: string
  * @param {string} key - header key to bind value
  */
-export const Header = paramBuilder('Header');
+export const Header = paramBuilder( 'Header' );

@@ -1,67 +1,58 @@
 {
-  "name": "angular-async-http",
-  "version": "1.1.0",
-  "description": "Angular 4 Async HTTP client in typescript with promises, interceptors, and timeouts.",
+  "name": "angular-rest-client",
+  "version": "2.0.0",
+  "description": "Angular 5 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
   "main": "index.js",
   "scripts": {
+    "setup": "yarn --freeze-lockfile",
     "test": "node_modules/.bin/gulp test",
     "watch": "node_modules/.bin/gulp default",
-    "prepublish": "node_modules/.bin/gulp prepublish"
+    "prepublish": "node_modules/.bin/gulp prepublish",
+    "codecov": "./node_modules/.bin/codecov"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yavin5/angular-async-http.git"
+    "url": "git+https://github.com/steven166/angular-rest-client.git"
   },
   "keywords": [
-    "angular4",
+    "angular5",
     "angulario",
     "http",
     "rest",
     "client"
   ],
-  "author": "Yavin Five <yavinfive464@gmail.com>",
+  "author": "Steven Hermans <s.hermans@maxxton.com>",
   "contributors": [
     {
-      "name": "TrustPortal Solutions Ltd <info@trustportal.org> (http://trustportal.org)",
-      "name": "Yavin Five <yavin5>",
-      "name": "deblockt <deblockt>",
-      "name": "Dmitry Gorbenko <Dmitry-Gorbenko>",
-      "name": "Maxxton Group <Maxxton Group> (http://www.maxxton.com)",
-      "name": "Domonkos Pal <Paldom>",
-      "name": "Discountrobot <Discountrobot>",
-      "name": "TN-Kirontech <TN-Kirontech>",
-      "name": "LeFinc <LeFinc>",
-      "name": "mmrath <mmrath> (http://www.mmrath.com)",
-      "name": "steven166 <steven166>",
       "name": "Mayur Patel <mayur-novus>"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yavin5/angular-async-http/issues"
+    "url": "https://github.com/steven166/angular-rest-client/issues"
   },
-  "homepage": "https://github.com/yavin5/angular-async-http#readme",
+  "homepage": "https://github.com/steven166/angular-rest-client#readme",
   "dependencies": {
-    "@angular/common": "^4.0.0",
-    "@angular/compiler": "^4.0.0",
-    "@angular/core": "^4.0.0",
-    "@angular/http": "^4.0.0",
-    "@angular/platform-browser": "^4.0.0",
-    "reflect-metadata": "^0.1.8",
-    "rxjs": "^5.2.0",
-    "zone.js": "^0.8.4"
+    "@angular/common": "^5.0.0",
+    "@angular/core": "^5.0.0",
+    "@angular/platform-browser": "^5.0.0",
+    "rxjs": "5.5.0",
+    "zone.js": "0.8.4"
   },
   "devDependencies": {
+    "@angular/compiler": "^5.0.0",
     "@types/chai": "^3.4.34",
     "@types/jasmine": "^2.5.41",
     "@types/node": "^6.0.45",
     "async": "^2.1.1",
     "chai": "^3.5.0",
+    "codecov": "^3.0.0",
     "codelyzer": "^2.0.1",
     "del": "^2.2.2",
     "gaze": "^1.1.2",
     "gulp": "^3.9.0",
     "gulp-html-extend": "^1.1.6",
+    "gulp-istanbul": "^1.1.2",
     "gulp-mocha": "^3.0.1",
     "gulp-replace": "^0.5.4",
     "gulp-typescript": "3.1.3",
@@ -69,7 +60,7 @@
     "merge2": "^1.0.2",
     "ts-node": "^2.0.0",
     "tslint": "^4.3.0",
-    "typescript": "^2.1.5",
+    "typescript": "^2.6.2",
     "vinyl-paths": "^2.1.0"
   }
 }

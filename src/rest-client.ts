@@ -1,4 +1,4 @@
-import { Http, Request, Response } from '@angular/http';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 /**
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Observable';
  */
 export class RestClient {
 
-  public constructor(private http: Http) {
+  public constructor(private httpClient: HttpClient) {
   }
 
   public getServiceId(): string {
@@ -28,9 +28,9 @@ export class RestClient {
    * Request Interceptor
    *
    * @method requestInterceptor
-   * @param {Request} req - request object
+   * @param {HttpRequest} req - request object
    */
-  protected requestInterceptor(req: Request):void {
+  protected requestInterceptor(req: HttpRequest<any>):void {
     //
   }
 
@@ -38,10 +38,10 @@ export class RestClient {
    * Response Interceptor
    *
    * @method responseInterceptor
-   * @param {Response} res - response object
-   * @returns {Response} res - transformed response object
+   * @param {HttpResponse} res - response object
+   * @returns {any} res - transformed response object
    */
-  protected responseInterceptor(res: Observable<Response>): Observable<any> {
+  protected responseInterceptor(res: Observable<HttpResponse<any>>): Observable<any> {
     return res;
   }
 

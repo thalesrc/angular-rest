@@ -1,61 +1,62 @@
-
-import {assert} from 'chai';
+import { assert } from 'chai';
 import { Observable } from 'rxjs';
-import {Request, Response, ResponseOptions, RequestMethod, Http} from '@angular/http';
+import { HttpRequest, HttpResponse, HttpClient, HttpHandler } from '@angular/common/http';
 import { Client } from './client';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { Headers } from './headers';
 
-describe('@Headers', () => {
+describe( '@Headers', () => {
 
-  it('verify decorator attributes are set', () => {
+  it( 'verify decorator attributes are set', () => {
     // Arrange
-    let headers:{
+    let headers: {
       [name: string]: any;
     };
-    let requestMock = new HttpMock((req: Request) => {
-      headers = req.headers.toJSON();
-      return Observable.of(new Response(new ResponseOptions({status: 200})));
-    });
-    let testClient = new TestClient(requestMock);
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      headers = req.headers;
+      return Observable.of( new HttpResponse<any>( { status: 200 } ) );
+    } );
+    let testClient  = new TestClient( requestMock );
 
     // Act
     testClient.getItems();
 
     // Assert
-    assert.deepEqual(headers, {
-      accept: ['application/json'],
-      lang: ['en','nl']
-    });
+    assert.deepEqual(headers.get("accept"), "application/json");
+    assert.deepEqual(headers.get("lang"), 'en,nl');
 
-  });
-});
+  } );
+} );
 
-class HttpMock extends Http {
+class HttpMock extends HttpClient {
 
-  public callCount:number = 0;
-  public lastRequest:Request;
+  public callCount: number = 0;
+  public lastRequest: HttpRequest<any>;
 
-  constructor(private requestFunction: (req: Request) => Observable<Response>) {
-    super(null, null);
+  constructor( private requestFunction: ( req: HttpRequest<any> ) => Observable<HttpResponse<any>> ) {
+    super(null);
   }
 
-  public request(req: Request): Observable<Response> {
+  request<R>(req: HttpRequest<any>|any, p2?:any, p3?:any, p4?:any): Observable<any> {
     this.callCount++;
     this.lastRequest = req;
     return this.requestFunction(req);
   }
+
 }
 
 class TestClient extends RestClient {
 
-  @Get('/test')
-  @Headers({
+  constructor( httpHandler: HttpClient ) {
+    super( httpHandler );
+  }
+  @Get( '/test' )
+  @Headers( {
     'accept': 'application/json',
-    'lang': ['en','nl']
-  })
-  public getItems(): Observable<Response> {
+    'lang': [ 'en', 'nl' ]
+  } )
+  public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
 

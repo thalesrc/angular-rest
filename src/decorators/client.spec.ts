@@ -1,7 +1,7 @@
 
 import {assert} from 'chai';
 import { Observable } from 'rxjs';
-import { Http, Request, Response, ResponseOptions, RequestMethod } from '@angular/http';
+import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { Client } from './client';
@@ -10,8 +10,8 @@ describe('@Client', () => {
 
   it('verify decorator attributes are added to the request', () => {
     // Arrange
-    let requestMock = new HttpMock((req: Request) => {
-      return Observable.of(new Response(new ResponseOptions({status: 200})));
+    let requestMock = new HttpMock((req: HttpRequest<any>) => {
+      return Observable.of(new HttpResponse<any>({status: 200}));
     });
     let testClient = new TestClient(requestMock);
 
@@ -25,20 +25,21 @@ describe('@Client', () => {
   });
 });
 
-class HttpMock extends Http {
+class HttpMock extends HttpClient {
 
-  public callCount:number = 0;
-  public lastRequest:Request;
+  public callCount: number = 0;
+  public lastRequest: HttpRequest<any>;
 
-  constructor(private requestFunction:(req: Request) => Observable<Response>) {
-    super(null, null);
+  constructor( private requestFunction: ( req: HttpRequest<any> ) => Observable<HttpResponse<any>> ) {
+    super(null);
   }
 
-  public request(req: Request): Observable<Response> {
+  request<R>(req: HttpRequest<any>|any, p2?:any, p3?:any, p4?:any): Observable<any> {
     this.callCount++;
     this.lastRequest = req;
     return this.requestFunction(req);
   }
+
 }
 
 @Client({
@@ -50,8 +51,12 @@ class HttpMock extends Http {
 })
 class TestClient extends RestClient {
 
+  constructor( httpHandler: HttpClient ) {
+    super( httpHandler );
+  }
+
   @Get('/test')
-  public getItems(): Observable<Response> {
+  public getItems(): Observable<HttpResponse<any>> {
     return null;
   }
 

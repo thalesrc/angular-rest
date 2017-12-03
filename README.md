@@ -1,19 +1,16 @@
-[![npm version](https://badge.fury.io/js/angular-async-http.svg)](https://badge.fury.io/js/angular-async-http)
-[![GitHub version](https://badge.fury.io/gh/yavin5%2Fangular-async-http.svg)](https://badge.fury.io/gh/yavin5%2Fangular-async-http)
-[![GitHub forks](https://img.shields.io/github/forks/yavin5/angular-async-http.svg?style=social&label=Fork&style=plastic)](https://github.com/yavin5/angular-async-http)
-[![GitHub stars](https://img.shields.io/github/stars/yavin5/angular-async-http.svg?style=social&label=Star&style=plastic)](https://github.com/yavin5/angular-async-http)
-[![GitHub issues](https://img.shields.io/github/issues/yavin5/angular-async-http.svg?style=plastic)](https://github.com/yavin5/angular-async-http)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/yavin5/angular-async-http.svg?style=plastic)](https://github.com/yavin5/angular-async-http)
-[![license](https://img.shields.io/github/license/yavin5/angular-async-http.svg?style=plastic)](https://github.com/yavin5/angular-async-http)
 
-# angular-async-http
-Angular 4 Async HTTP client in typescript with promises, interceptors, and timeouts.
-**Note:** Production Ready! (Well tested)
+# angular-rest-client
+Angular 5 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.
+This package is production ready.
 
 ## Installation
 
 ```sh
-npm install angular-async-http --save
+yarn add angular-rest-client
+```
+or
+```sh
+npm install angular-rest-client --save
 ```
 
 ## Example
@@ -24,7 +21,7 @@ import { Http, Request, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import {
   HttpClient, RestClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType
-} from 'angular-async-http';
+} from 'angular-rest-client';
 
 import { Todo } from './models/Todo';
 import { SessionFactory } from './sessionFactory';

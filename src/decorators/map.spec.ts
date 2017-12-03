@@ -1,57 +1,61 @@
-
-import {assert} from 'chai';
+import { assert } from 'chai';
 import { Observable } from 'rxjs';
-import { Http, Request, Response, ResponseOptions } from '@angular/http';
+import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { Map } from './map';
 
-describe('@Map', () => {
+describe( '@Map', () => {
 
-  it('verify Map function is called', (done: (e?: any) => void) => {
+  it( 'verify Map function is called', ( done: ( e?: any ) => void ) => {
     // Arrange
-    let requestMock = new HttpMock((req:Request) => {
-      let json:any = {name: 'itemName', desc: 'Some awesome item'};
-      return Observable.of(new Response(new ResponseOptions({body: JSON.stringify(json)})));
-    });
-    let testClient = new TestClient(requestMock);
+    let requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
+      let json: any = { name: 'itemName', desc: 'Some awesome item' };
+      return Observable.of( new HttpResponse<any>( { body: JSON.stringify( json ) } ) );
+    } );
+    let testClient  = new TestClient( requestMock );
 
     // Act
     let result = testClient.getItems();
 
     // Assert
-    result.subscribe(item => {
+    result.subscribe( item => {
       try {
-        assert.equal(item.name, 'itemName');
-        assert.equal(item.desc, 'Some awesome item');
+        assert.equal( item.name, 'itemName' );
+        assert.equal( item.desc, 'Some awesome item' );
         done();
-      } catch(e) {
-        done(e);
+      } catch ( e ) {
+        done( e );
       }
-    });
-  });
-});
+    } );
+  } );
+} );
 
-class HttpMock extends Http {
+class HttpMock extends HttpClient {
 
-  public callCount:number = 0;
-  public lastRequest:Request;
+  public callCount: number = 0;
+  public lastRequest: HttpRequest<any>;
 
-  constructor(private requestFunction:(req: Request) => Observable<Response>) {
-    super(null, null);
+  constructor( private requestFunction: ( req: HttpRequest<any> ) => Observable<HttpResponse<any>> ) {
+    super(null);
   }
 
-  public request(req:Request): Observable<Response> {
+  request<R>(req: HttpRequest<any>|any, p2?:any, p3?:any, p4?:any): Observable<any> {
     this.callCount++;
     this.lastRequest = req;
     return this.requestFunction(req);
   }
+
 }
 
 class TestClient extends RestClient {
 
-  @Get('/test')
-  @Map(resp => new Item(resp.json()))
+  constructor( httpHandler: HttpClient ) {
+    super( httpHandler );
+  }
+
+  @Get( '/test' )
+  @Map( resp => new Item( JSON.parse(resp.body) ) )
   public getItems(): Observable<Item> {
     return null;
   }
@@ -63,7 +67,7 @@ class Item {
   public name: string;
   public desc: string;
 
-  constructor(props: {name: string, desc: string}) {
+  constructor( props: { name: string, desc: string } ) {
     this.name = props.name;
     this.desc = props.desc;
   }
