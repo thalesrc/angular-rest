@@ -1,9 +1,18 @@
 language: node_js
 node_js:
-  - "8"
-install:
-  - yarn run setup
-script:
-  - yarn test
-after_script:
-  - yarn run codecov
+  - '8'
+git:
+  depth: 5
+branches:
+  only:
+  - master
+  - /^(\d+\.){2}\d+$/
+before_script: node ./scripts/tag-update $TRAVIS_TAG
+deploy:
+  - provider: npm
+    skip_cleanup: true
+    email: alisahinozcelik@gmail.com
+    api_key: $NPM_TOKEN
+    on:
+      tags: true
+      repo: gen-tech/angular-rest

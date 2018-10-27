@@ -1,6 +1,6 @@
 {
-  "name": "angular-rest-client",
-  "version": "2.0.0",
+  "name": "@gen-tech/angular-rest",
+  "version": "0.0.0",
   "description": "Angular 5 HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.",
   "main": "index.js",
   "scripts": {
@@ -12,16 +12,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/steven166/angular-rest-client.git"
+    "url": "git+https://github.com/gen-tech/angular-rest.git"
   },
   "keywords": [
+    "angular",
     "angular5",
+    "angular6",
+    "angular7",
     "angulario",
     "http",
     "rest",
     "client"
   ],
-  "author": "Steven Hermans <s.hermans@maxxton.com>",
+  "author": "Ali Şahin Özçelik <alisahinozcelik@gmail.com>",
   "contributors": [
     {
       "name": "Mayur Patel <mayur-novus>"
@@ -29,9 +32,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/steven166/angular-rest-client/issues"
+    "url": "https://github.com/gen-tech/angular-rest/issues"
   },
-  "homepage": "https://github.com/steven166/angular-rest-client#readme",
+  "homepage": "https://github.com/gen-tech/angular-rest#readme",
   "dependencies": {
     "@angular/common": "^5.0.0",
     "@angular/core": "^5.0.0",
@@ -61,6 +64,7 @@
     "ts-node": "^2.0.0",
     "tslint": "^4.3.0",
     "typescript": "^2.6.2",
+    "update-json": "^1.0.0",
     "vinyl-paths": "^2.1.0"
   }
 }
