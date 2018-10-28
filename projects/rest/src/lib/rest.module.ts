@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
-import { RestComponent } from './rest.component';
+import { HttpClient } from '@angular/common/http';
 
 @NgModule({
   imports: [
+    HttpClient
   ],
-  declarations: [RestComponent],
-  exports: [RestComponent]
 })
 export class RestModule { }

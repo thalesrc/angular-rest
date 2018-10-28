@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 
 /**
  * Angular 4 RestClient class.
- *
  */
 export class RestClient {
 

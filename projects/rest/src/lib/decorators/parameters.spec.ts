@@ -1,10 +1,7 @@
-import { assert } from 'chai';
 import { Observable, of } from 'rxjs';
-import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get, Post } from './request-methods';
-import { Map } from './map';
-import { Produces, MediaType } from './produces';
 import { Path, Query, Format, Header, Body } from './parameters';
 
 describe( '@Path', () => {
@@ -22,7 +19,7 @@ describe( '@Path', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/items/5' );
+        expect( resp.url ).toBe( '/items/5' );
         done();
       } catch ( e ) {
         done( e );
@@ -41,10 +38,9 @@ describe( '@Path', () => {
       // Act
       const result = testClient.getItem();
 
-      // Assert
-      assert.fail();
+      throw null;
     } catch ( e ) {
-      assert.equal( e.message, 'Missing path variable \'id\' in url /items/{id}' );
+      expect( e.message).toBe('Missing path variable \'id\' in url /items/{id}');
     }
 
   } );
@@ -62,7 +58,7 @@ describe( '@Path', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/items2/7' );
+        expect( resp.url).toBe( '/items2/7' );
         done();
       } catch ( e ) {
         done( e );
@@ -84,7 +80,7 @@ describe( '@Path', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/items3/20/status/status-done.json' );
+        expect( resp.url ).toBe( '/items3/20/status/status-done.json' );
         done();
       } catch ( e ) {
         done( e );
@@ -109,7 +105,7 @@ describe( '@Query', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/items?page=5' );
+        expect( resp.url).toBe( '/items?page=5' );
         done();
       } catch ( e ) {
         done( e );
@@ -131,7 +127,7 @@ describe( '@Query', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/items' );
+        expect( resp.url).toBe( '/items' );
         done();
       } catch ( e ) {
         done( e );
@@ -152,7 +148,7 @@ describe( '@Query', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/items2?page=20' );
+        expect( resp.url).toBe( '/items2?page=20' );
         done();
       } catch ( e ) {
         done( e );
@@ -173,7 +169,7 @@ describe( '@Query', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/items3?sort=asc&size=20&page=3' );
+        expect( resp.url).toBe( '/items3?sort=asc&size=20&page=3' );
         done();
       } catch ( e ) {
         done( e );
@@ -195,7 +191,7 @@ describe( '@Query', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/itemsCSV?field=name,desc' );
+        expect( resp.url).toBe( '/itemsCSV?field=name,desc' );
         done();
       } catch ( e ) {
         done( e );
@@ -217,7 +213,7 @@ describe( '@Query', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/itemsSSV?field=name%20desc' );
+        expect( resp.url).toBe( '/itemsSSV?field=name%20desc' );
         done();
       } catch ( e ) {
         done( e );
@@ -238,7 +234,7 @@ describe( '@Query', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/itemsTSV?field=name%09desc' );
+        expect( resp.url).toBe( '/itemsTSV?field=name%09desc' );
         done();
       } catch ( e ) {
         done( e );
@@ -260,7 +256,7 @@ describe( '@Query', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/itemsPIPES?field=name%7Cdesc' );
+        expect( resp.url).toBe( '/itemsPIPES?field=name%7Cdesc' );
         done();
       } catch ( e ) {
         done( e );
@@ -282,7 +278,7 @@ describe( '@Query', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.url, '/itemsMULTI?field=name&field=desc' );
+        expect( resp.url).toBe( '/itemsMULTI?field=name&field=desc' );
         done();
       } catch ( e ) {
         done( e );
@@ -307,7 +303,7 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.deepEqual( <any> resp.headers.getAll( 'page' ), [ '5' ] );
+        expect( <any> resp.headers.getAll( 'page' ) ).toEqual( [ '5' ] );
         done();
       } catch ( e ) {
         done( e );
@@ -329,7 +325,7 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.isFalse( resp.headers.has( 'path' ) );
+        expect( resp.headers.has( 'path' ) ).toBeFalsy();
         done();
       } catch ( e ) {
         done( e );
@@ -350,7 +346,7 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.deepEqual( resp.headers.getAll( 'page' ), [ '20' ] );
+        expect( resp.headers.getAll( 'page' )).toEqual( [ '20' ] );
         done();
       } catch ( e ) {
         done( e );
@@ -372,9 +368,9 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.deepEqual( <any> resp.headers.getAll( 'page' ), [ '3' ] );
-        assert.deepEqual( resp.headers.getAll( 'sort' ), [ 'asc' ] );
-        assert.deepEqual( resp.headers.getAll( 'size' ), [ '20' ] );
+        expect( <any> resp.headers.getAll( 'page' )).toEqual( [ '3' ] );
+        expect( resp.headers.getAll( 'sort' )).toEqual( [ 'asc' ] );
+        expect( resp.headers.getAll( 'size' )).toEqual( [ '20' ] );
         done();
       } catch ( e ) {
         done( e );
@@ -396,7 +392,7 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.headers.get( 'field' ), 'name,desc' );
+        expect( resp.headers.get( 'field' )).toBe('name,desc' );
         done();
       } catch ( e ) {
         done( e );
@@ -417,7 +413,7 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.headers.get( 'field' ), 'name,desc' );
+        expect( resp.headers.get( 'field' )).toBe( 'name,desc' );
         done();
       } catch ( e ) {
         done( e );
@@ -439,7 +435,7 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.headers.get( 'field' ), 'name desc' );
+        expect( resp.headers.get( 'field' )).toBe( 'name desc' );
         done();
       } catch ( e ) {
         done( e );
@@ -461,7 +457,7 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.headers.get( 'field' ), 'name\tdesc' );
+        expect( resp.headers.get( 'field' )).toBe( 'name\tdesc' );
         done();
       } catch ( e ) {
         done( e );
@@ -482,7 +478,7 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.equal( resp.headers.get( 'field' ), 'name|desc' );
+        expect( resp.headers.get( 'field' )).toBe( 'name|desc' );
         done();
       } catch ( e ) {
         done( e );
@@ -503,7 +499,7 @@ describe( '@Header', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.deepEqual( resp.headers.getAll( 'field' ), [ 'name', 'desc' ] );
+        expect( resp.headers.getAll( 'field' )).toEqual( [ 'name', 'desc' ] );
         done();
       } catch ( e ) {
         done( e );
@@ -528,7 +524,7 @@ describe( '@Body', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.deepEqual( JSON.parse(resp.body), { name: 'Awesome Item' } );
+        expect( JSON.parse(resp.body)).toEqual( { name: 'Awesome Item' } );
         done();
       } catch ( e ) {
         done( e );
@@ -549,7 +545,7 @@ describe( '@Body', () => {
     // Assert
     result.subscribe( resp => {
       try {
-        assert.deepEqual( resp.body, null );
+        expect( resp.body).toBeNull();
         done();
       } catch ( e ) {
         done( e );
@@ -567,9 +563,9 @@ describe( '@Body', () => {
     // Act
     try {
       testClient.createItem2( { name: 'first' }, { name: 'second' } );
-      assert.fail();
+      throw null;
     } catch ( e ) {
-      assert.equal( e.message, 'Only one @Body is allowed' );
+      expect( e.message).toBe('Only one @Body is allowed' );
     }
   } );
 } );

@@ -1,6 +1,5 @@
-import { assert } from 'chai';
 import { Observable, of } from 'rxjs';
-import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get, Post, RequestMethod } from './request-methods';
 
@@ -20,8 +19,8 @@ describe( '@Get', () => {
     // Act
     testClient.getItems();
 
-    assert.equal( method, RequestMethod.GET );
-    assert.equal( url, '/test' );
+    expect( method ).toBe( RequestMethod.GET );
+    expect( url ).toBe( '/test' );
   } );
 } );
 
@@ -41,8 +40,8 @@ describe( '@Post', () => {
     // Act
     testClient.createItems();
 
-    assert.equal( method, RequestMethod.POST );
-    assert.equal( url, '/test' );
+    expect( method ).toBe( RequestMethod.POST );
+    expect( url ).toBe( '/test' );
   } );
 } );
 

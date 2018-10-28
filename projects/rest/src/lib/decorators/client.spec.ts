@@ -1,7 +1,6 @@
 
-import { assert } from 'chai';
 import { of, Observable } from 'rxjs';
-import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { Client } from './client';
@@ -16,12 +15,11 @@ describe('@Client', () => {
     const testClient = new TestClient(requestMock);
 
     // Assert
-    assert.equal(testClient.getServiceId(), 'customer-service');
-    assert.equal(testClient.getBaseUrl(), '/api/v1/customers');
-    assert.deepEqual(<any> testClient.getDefaultHeaders(), {
+    expect(testClient.getServiceId()).toBe('customer-service');
+    expect(testClient.getBaseUrl()).toBe('/api/v1/customers');
+    expect(testClient.getDefaultHeaders()).toEqual({
       'content-type': 'application/json'
     });
-
   });
 });
 

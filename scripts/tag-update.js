@@ -3,7 +3,7 @@ const updateJson = require('update-json');
 const [, , version] = process.argv;
 
 if (version) {
-  updateJson("./package.json", {version}, error => {
+  updateJson("./dist/rest/package.json", {version}, error => {
     if (error) {
       throw error;
     }

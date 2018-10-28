@@ -4,10 +4,19 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
+    "build": "ng build rest",
+    "test": "ng test rest",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "copy:license": "cpy '.LICENSE' './dist/rest'",
+    "copy:readme": "cpy 'README.md' './dist/rest'",
+    "copy:files": "npm run copy:license && npm run copy:readme",
+    "pack:library": "cd dist/rest && npm pack",
+    "prepare:tag-update": "node ./scripts/tag-update $TRAVIS_TAG",
+    "prepare:npm-config": "node ./scripts/npm-config $NPM_EMAIL $NPM_TOKEN",
+    "prepare:package": "npm run build && npm run copy:files && npm run pack:tag-update && npm run pack:npm-config && npm run pack:library",
+    "publish:package": "npm publish ./dist/rest/gen-tech-angular-rest-$TRAVIS_TAG.tgz",
+    "preapare-and-publish": "npm run prepare:package && npm run publish:package"
   },
   "private": true,
   "dependencies": {
@@ -33,8 +42,8 @@
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
-    "chai": "^4.2.0",
     "codelyzer": "~4.5.0",
+    "cpy-cli": "^2.0.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.0.0",
@@ -48,6 +57,7 @@
     "tsickle": ">=0.29.0",
     "tslib": "^1.9.0",
     "tslint": "~5.11.0",
-    "typescript": "~3.1.1"
+    "typescript": "~3.1.1",
+    "update-json": "^1.0.0"
   }
 }

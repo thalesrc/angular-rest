@@ -1,6 +1,5 @@
-import { assert } from 'chai';
 import { Observable, of } from 'rxjs';
-import { HttpClient, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { Map } from './map';
@@ -21,8 +20,8 @@ describe( '@Map', () => {
     // Assert
     result.subscribe( item => {
       try {
-        assert.equal( item.name, 'itemName' );
-        assert.equal( item.desc, 'Some awesome item' );
+        expect(item.name).toBe('itemName');
+        expect(item.desc).toBe('Some awesome item');
         done();
       } catch ( e ) {
         done( e );

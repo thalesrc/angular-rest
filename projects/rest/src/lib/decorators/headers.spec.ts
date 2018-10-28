@@ -1,6 +1,5 @@
-import { assert } from 'chai';
 import { Observable, of } from 'rxjs';
-import { HttpRequest, HttpResponse, HttpClient, HttpHandler } from '@angular/common/http';
+import { HttpRequest, HttpResponse, HttpClient } from '@angular/common/http';
 import { RestClient } from '../rest-client';
 import { Get } from './request-methods';
 import { Headers } from './headers';
@@ -22,8 +21,8 @@ describe( '@Headers', () => {
     testClient.getItems();
 
     // Assert
-    assert.deepEqual(headers.get('accept'), 'application/json');
-    assert.deepEqual(headers.get('lang'), 'en,nl');
+    expect(headers.get('accept')).toBe('application/json');
+    expect(headers.get('lang')).toBe('en,nl');
 
   } );
 } );
