@@ -1,6 +1,7 @@
-[![npm version](https://badge.fury.io/js/angular-rest-client.svg)](https://badge.fury.io/js/angular-rest-client)
-[![Build Status](https://travis-ci.org/steven166/angular-rest-client.svg?branch=master)](https://travis-ci.org/steven166/angular-rest-client)
-[![codecov](https://codecov.io/gh/steven166/angular-rest-client/branch/master/graph/badge.svg)](https://codecov.io/gh/steven166/angular-rest-client)
+[![travis](https://travis-ci.org/gen-tech/angular-rest.svg)](https://travis-ci.org/gen-tech/angular-rest)
+[![npm](https://img.shields.io/npm/v/@gen-tech/angular-rest.svg)](https://www.npmjs.com/package/@gen-tech/angular-rest)
+[![npm](https://img.shields.io/npm/dw/@gen-tech/angular-rest.svg)](https://www.npmjs.com/package/@gen-tech/angular-rest)
+[![TypeScript](https://badges.frapsoft.com/typescript/version/typescript-next.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
 
 # @gen-tech/angular-rest
 Angular HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.
