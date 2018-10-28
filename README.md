@@ -9,11 +9,11 @@ This package is production ready.
 ## Installation
 
 ```sh
-yarn add angular-rest-client
+yarn add @gen-tech/angular-rest
 ```
 or
 ```sh
-npm install angular-rest-client --save
+npm install @gen-tech/angular-rest --save
 ```
 
 ## Example
