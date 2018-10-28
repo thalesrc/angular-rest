@@ -21,10 +21,10 @@ npm install @gen-tech/angular-rest --save
 ```ts
 
 import { Http, Request, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {
   HttpClient, RestClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType
-} from 'angular-rest-client';
+} from '@gen-tech/angular-rest';
 
 import { Todo } from './models/Todo';
 import { SessionFactory } from './sessionFactory';
@@ -180,8 +180,10 @@ Default value is ``Format.CSV``.
 
 # Contributors
 
-Brought to you by many contributors, including:  
-  
+Ali Şahin Özçelik
+
+_This repository is a fork of [steven166/angular-rest-client](https://github.com/steven166/angular-rest-client)_
+
 TrustPortal Solutions Ltd  [http://trustportal.org](http://trustportal.org)  
 Yavin Five  
 deblockt  
