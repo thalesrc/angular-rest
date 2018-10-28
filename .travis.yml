@@ -1,9 +1,24 @@
 language: node_js
 node_js:
-  - "8"
-install:
-  - yarn run setup
-script:
-  - yarn test
-after_script:
-  - yarn run codecov
+  - '8'
+git:
+  depth: 5
+branches:
+  only:
+  - master
+  - /^(\d+\.){2}\d+$/
+before_script: node ./scripts/tag-update $TRAVIS_TAG
+# after_success: npm run cover
+# before_deploy: npm run prepare-github-pages
+deploy:
+#  - provider: pages
+#    skip-cleanup: true
+#    github-token: $GITHUB_TOKEN
+#    keep-history: true
+#    local-dir: docs
+#    on:
+#      branch: master
+  - provider: script
+    script: npm run preapare-and-publish
+    on:
+      tags: true
