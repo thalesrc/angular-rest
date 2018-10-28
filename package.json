@@ -14,7 +14,7 @@
     "pack:library": "cd dist/rest && npm pack",
     "prepare:tag-update": "node ./scripts/tag-update $TRAVIS_TAG",
     "prepare:npm-config": "node ./scripts/npm-config $NPM_EMAIL $NPM_TOKEN",
-    "prepare:package": "npm run build && npm run copy:files && npm run pack:tag-update && npm run pack:npm-config && npm run pack:library",
+    "prepare:package": "npm run build && npm run copy:files && npm run prepare:tag-update && npm run prepare:npm-config && npm run pack:library",
     "publish:package": "npm publish ./dist/rest/gen-tech-angular-rest-$TRAVIS_TAG.tgz",
     "preapare-and-publish": "npm run prepare:package && npm run publish:package"
   },
