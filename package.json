@@ -8,7 +8,7 @@
     "test": "ng test rest --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "copy:license": "cpy '.LICENSE' './dist/rest'",
+    "copy:license": "cpy 'LICENSE' './dist/rest'",
     "copy:readme": "cpy 'README.md' './dist/rest'",
     "copy:files": "npm run copy:license && npm run copy:readme",
     "pack:library": "cd dist/rest && npm pack",
