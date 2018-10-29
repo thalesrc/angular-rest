@@ -1,6 +1,14 @@
 {
   "name": "@gen-tech/angular-rest",
   "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gen-tech/angular-rest.git"
+  },
+  "author": {
+    "email": "alisahinozcelik@gmail.com",
+    "name": "Ali Şahin Özçelik"
+  },
   "peerDependencies": {
     "@angular/common": "^7.0.0",
     "@angular/core": "^7.0.0"

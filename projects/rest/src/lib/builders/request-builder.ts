@@ -3,13 +3,15 @@ import {
   HttpHeaders as AngularHeaders,
   HttpParams,
   HttpRequest,
-  HttpResponse
+  HttpResponse,
+  HttpEventType
 } from '@angular/common/http';
 
 import { RestClient } from '../rest-client';
 import { Observable, of } from 'rxjs';
-import { map, timeout } from 'rxjs/operators';
+import { map, timeout, filter } from 'rxjs/operators';
 import { Format } from '../decorators/parameters';
+import { PROGRESS_EVENTS_TOKEN } from '../decorators/progress-events';
 
 export function methodBuilder( method: string ) {
   return function ( url: string ) {
@@ -170,7 +172,8 @@ export function methodBuilder( method: string ) {
         let req: HttpRequest<any> = new HttpRequest( method, resUrl, body, {
           headers: headers,
           params: search,
-          withCredentials: true
+          withCredentials: true,
+          reportProgress: true
         } );
 
         // intercept the request
@@ -204,6 +207,11 @@ export function methodBuilder( method: string ) {
             observable = handler( observable );
           } );
         }
+
+        // Filter Progress Events
+        const progressEvents = (<Set<HttpEventType>>descriptor[PROGRESS_EVENTS_TOKEN]) || new Set<HttpEventType>();
+        progressEvents.add(HttpEventType.Response);
+        observable = observable.pipe(filter(event => progressEvents.has(event.type)));
 
         // intercept the response
         observable = this.responseInterceptor( observable );
