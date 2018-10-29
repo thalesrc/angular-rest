@@ -27,8 +27,7 @@ export class RestClient {
    * @method requestInterceptor
    * @param req - request object
    */
-  protected requestInterceptor(req: HttpRequest<any>): void {
-    //
+  protected requestInterceptor<T = any, U = any>(req: HttpRequest<T>): void | HttpRequest<T> | HttpResponse<U> {
   }
 
   /**

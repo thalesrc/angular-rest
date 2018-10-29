@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 
 import { RestClient } from '../rest-client';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, timeout } from 'rxjs/operators';
 import { Format } from '../decorators/parameters';
 
@@ -167,14 +167,21 @@ export function methodBuilder( method: string ) {
         }
 
         // Build Request
-        const req: HttpRequest<any> = new HttpRequest( method, resUrl, body, {
+        let req: HttpRequest<any> = new HttpRequest( method, resUrl, body, {
           headers: headers,
           params: search,
           withCredentials: true
         } );
 
         // intercept the request
-        this.requestInterceptor( req );
+        const interceptedRequest = this.requestInterceptor( req );
+
+        if (interceptedRequest instanceof HttpResponse) {
+          return of(interceptedRequest);
+        } else if (interceptedRequest instanceof HttpRequest) {
+          req = interceptedRequest;
+        }
+
         // make the request and store the observable for later transformation
         let observable: Observable<HttpEvent<any>> = (<HttpClient>this.httpClient).request( req );
 
