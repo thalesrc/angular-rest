@@ -11,7 +11,7 @@ export const PROGRESS_EVENTS_TOKEN = Symbol('[Angular Rest] Progress Events');
  *
  * @param events Http Progress Events to Listen
  */
-export function ProgressEvents<T = any>(...events: HttpEventType[]) {
+export function ProgressEvents(...events: HttpEventType[]) {
   return function(target: RestClient, propertyKey: string, descriptor: any) {
     if (!descriptor[PROGRESS_EVENTS_TOKEN]) {
       descriptor[PROGRESS_EVENTS_TOKEN] = new Set<HttpEventType>();

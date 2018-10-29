@@ -10,6 +10,7 @@ branches:
 # before_script: node ./scripts/tag-update $TRAVIS_TAG
 # after_success: npm run cover
 # before_deploy: npm run prepare-github-pages
+script: npm run test:travis
 deploy:
 #  - provider: pages
 #    skip-cleanup: true

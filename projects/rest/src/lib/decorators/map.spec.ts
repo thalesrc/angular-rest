@@ -6,7 +6,7 @@ import { Map } from './map';
 
 describe( '@Map', () => {
 
-  it( 'verify Map function is called', ( done: ( e?: any ) => void ) => {
+  it( 'verify Map function is called', done => {
     // Arrange
     const requestMock = new HttpMock( ( req: HttpRequest<any> ) => {
       const json: any = { name: 'itemName', desc: 'Some awesome item' };
@@ -19,13 +19,9 @@ describe( '@Map', () => {
 
     // Assert
     result.subscribe( item => {
-      try {
-        expect(item.name).toBe('itemName');
-        expect(item.desc).toBe('Some awesome item');
-        done();
-      } catch ( e ) {
-        done( e );
-      }
+      expect(item.name).toBe('itemName');
+      expect(item.desc).toBe('Some awesome item');
+      done();
     } );
   } );
 } );

@@ -188,6 +188,11 @@ export function methodBuilder( method: string ) {
         // make the request and store the observable for later transformation
         let observable: Observable<HttpEvent<any>> = (<HttpClient>this.httpClient).request( req );
 
+        // Filter Progress Events
+        const progressEvents = (<Set<HttpEventType>>descriptor[PROGRESS_EVENTS_TOKEN]) || new Set<HttpEventType>();
+        progressEvents.add(HttpEventType.Response);
+        observable = observable.pipe(filter(event => progressEvents.has(event.type)));
+
         // transform the observable in accordance to the @Produces decorator
         if ( descriptor.mime ) {
           observable = observable.pipe(map( descriptor.mime ));
@@ -207,11 +212,6 @@ export function methodBuilder( method: string ) {
             observable = handler( observable );
           } );
         }
-
-        // Filter Progress Events
-        const progressEvents = (<Set<HttpEventType>>descriptor[PROGRESS_EVENTS_TOKEN]) || new Set<HttpEventType>();
-        progressEvents.add(HttpEventType.Response);
-        observable = observable.pipe(filter(event => progressEvents.has(event.type)));
 
         // intercept the response
         observable = this.responseInterceptor( observable );
