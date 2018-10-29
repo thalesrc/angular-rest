@@ -5,7 +5,8 @@ export { RestClient } from './lib/rest-client';
 
 export { Client } from './lib/decorators/client';
 export { Headers } from './lib/decorators/headers';
-export { Map } from './lib/decorators/map';
+export { MapResponse } from './lib/decorators/map-response';
+export { Mapper } from './lib/decorators/mapper';
 export { Timeout } from './lib/decorators/timeout';
 export { OnEmit } from './lib/decorators/on-emit';
 export { ProgressEvents } from './lib/decorators/progress-events';

@@ -12,6 +12,8 @@ import { Observable, of } from 'rxjs';
 import { map, timeout, filter } from 'rxjs/operators';
 import { Format } from '../decorators/parameters';
 import { PROGRESS_EVENTS_TOKEN } from '../decorators/progress-events';
+import { MAP_RESPONSE_TOKEN } from '../decorators/map-response';
+import { MAPPER_TOKEN } from '../decorators/mapper';
 
 export function methodBuilder( method: string ) {
   return function ( url: string ) {
@@ -202,11 +204,18 @@ export function methodBuilder( method: string ) {
             observable = observable.pipe(timeout( _timeout ));
           } );
         }
-        if ( descriptor.mappers ) {
-          descriptor.mappers.forEach( ( mapper: ( resp: any ) => any ) => {
-            observable = observable.pipe(map( mapper ));
-          } );
-        }
+
+        // Response Mappers
+        observable = (descriptor[MAP_RESPONSE_TOKEN] || [])
+          .map(mapper => {
+            if (mapper[MAPPER_TOKEN]) {
+              mapper = mapper.bind(target);
+            }
+
+            return mapper;
+          })
+          .reduce((prev, next) => prev.pipe(map(value => next(value))), observable);
+
         if ( descriptor.emitters ) {
           descriptor.emitters.forEach( ( handler: ( resp: Observable<any> ) => Observable<any> ) => {
             observable = handler( observable );
