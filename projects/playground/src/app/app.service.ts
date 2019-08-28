@@ -1,14 +1,18 @@
 import { Client, Get, Guards } from '@rest';
 import { HttpRequest } from '@angular/common/http';
 
-@Client()
+@Client<AppService>({
+  guards: 'checkNonAuthorized',
+  baseUrl: 'https://httpbin.org'
+})
 export class AppService {
+
   public checkNonAuthorized(): boolean {
-    return true;
+    return false;
   }
 
-  @Get()
-  @Guards<AppService>(['checkNonAuthorized'])
+  @Get('get')
+  // @Guards<AppService>(['checkNonAuthorized'])
   async login(): Promise<string> {
     return null;
   }

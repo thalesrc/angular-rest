@@ -4,8 +4,8 @@ export function Guards<T>(guardFunctions: Guard<T>): (target: T, property: strin
   return function(target: T, property: string, descriptor: PropertyDescriptor): PropertyDescriptor {
     const guards = guardFunctions instanceof Array ? [...guardFunctions] : [guardFunctions];
 
-    target[GUARDS] = {
-      ...target[GUARDS],
+    target.constructor[GUARDS] = {
+      ...target.constructor[GUARDS],
       [property]: guards
     };
 

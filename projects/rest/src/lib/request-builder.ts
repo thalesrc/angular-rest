@@ -1,5 +1,5 @@
 import { RequestMethod } from './request-methods.interface';
-import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor } from './client.interface';
+import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor, CLIENT_GUARDS } from './client.interface';
 import { HttpRequest } from '@angular/common/http';
 import { RestPropertyDecorator } from './rest-property-decorator.interface';
 import { Observable } from 'rxjs';
@@ -19,6 +19,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
         const url = path !== undefined ? path : methodName;
         const request = new HttpRequest(type as any, `${this[BASE_URL]}/${url}`);
 
+        // Run guard process
         try {
           const guardsResult = await startGuardCheck(target, methodName, request, this);
           if (!guardsResult) { throw false; }
@@ -31,7 +32,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
           throw error;
         }
 
-
+        // Response
         return await this[HTTP_CLIENT].request(request).toPromise();
       };
 
@@ -46,7 +47,9 @@ async function startGuardCheck(
   request: HttpRequest<unknown>,
   context: ClientInstance
 ): Promise<boolean> {
-  return await target[GUARDS][methodName].reduce((prev, next) => {
+  const allGuards = [...target.constructor[GUARDS][CLIENT_GUARDS], ...(target.constructor[GUARDS][methodName] || [])];
+
+  return await allGuards.reduce((prev, next) => {
     return prev.then(passed => {
       if (!passed) {
         throw false;
