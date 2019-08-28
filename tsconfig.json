@@ -20,11 +20,8 @@
       "dom"
     ],
     "paths": {
-      "rest": [
-        "dist/rest"
-      ],
-      "rest/*": [
-        "dist/rest/*"
+      "@rest": [
+        "projects/rest/src/public_api.ts"
       ]
     }
   }
