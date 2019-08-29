@@ -1,20 +1,20 @@
-[![travis](https://travis-ci.org/gen-tech/angular-rest.svg)](https://travis-ci.org/gen-tech/angular-rest)
-[![npm](https://img.shields.io/npm/v/@gen-tech/angular-rest.svg)](https://www.npmjs.com/package/@gen-tech/angular-rest)
-[![npm](https://img.shields.io/npm/dw/@gen-tech/angular-rest.svg)](https://www.npmjs.com/package/@gen-tech/angular-rest)
+[![travis](https://travis-ci.org/thalesrc/angular-rest.svg)](https://travis-ci.org/thalesrc/angular-rest)
+[![npm](https://img.shields.io/npm/v/@thalesrc/angular-rest.svg)](https://www.npmjs.com/package/@thalesrc/angular-rest)
+[![npm](https://img.shields.io/npm/dw/@thalesrc/angular-rest.svg)](https://www.npmjs.com/package/@thalesrc/angular-rest)
 [![TypeScript](https://badges.frapsoft.com/typescript/version/typescript-next.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
 
-# @gen-tech/angular-rest
+# @thalesrc/angular-rest
 Angular HTTP client with Typescript Declarative Annotations, Observables, Interceptors and Timeouts.
 This package is production ready.
 
 ## Installation
 
 ```sh
-yarn add @gen-tech/angular-rest
+yarn add @thalesrc/angular-rest
 ```
 or
 ```sh
-npm install @gen-tech/angular-rest --save
+npm install @thalesrc/angular-rest --save
 ```
 
 ## Example
@@ -25,7 +25,7 @@ import { Http, Request, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import {
   HttpClient, RestClient, Client, GET, PUT, POST, DELETE, Headers, Path, Body, Query, Produces, MediaType
-} from '@gen-tech/angular-rest';
+} from '@thalesrc/angular-rest';
 
 import { Todo } from './models/Todo';
 import { SessionFactory } from './sessionFactory';
