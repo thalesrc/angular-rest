@@ -10,7 +10,8 @@ export function Client<T>({ baseUrl, guards, providedIn = 'root' }: ClientOption
 
     class RestClient {
       constructor(injector: Injector) {
-        const newTarget = new (<any>Target)(...(params || []).map(param => injector.get(param)));
+        const _params: any[] = Reflect.getMetadata('design:paramtypes', Target);
+        const newTarget = new (<any>Target)(...(_params || []).map(param => injector.get(param)));
 
         newTarget[INJECTOR] = injector;
         newTarget[HTTP_CLIENT] = injector.get(HttpClient);
