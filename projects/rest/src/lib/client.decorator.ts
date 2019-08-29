@@ -4,7 +4,7 @@ import { INJECTOR, HTTP_CLIENT, BASE_URL, ClientOptions, GUARDS, CLIENT_GUARDS }
 import { BASE_URL as BASE_URL_TOKEN } from './base-url.token';
 
 
-export function Client<T>({ baseUrl, guards }: ClientOptions<T> = {}) {
+export function Client<T>({ baseUrl, guards, providedIn = 'root' }: ClientOptions<T> = {}) {
   return function ( Target: new (...args: any[]) => T ): any {
     const params: any[] = Reflect.getMetadata('design:paramtypes', Target);
 
@@ -27,7 +27,7 @@ export function Client<T>({ baseUrl, guards }: ClientOptions<T> = {}) {
 
     Reflect.defineMetadata('design:paramtypes', [Injector], RestClient);
 
-    Injectable()(RestClient);
+    Injectable({ providedIn, deps: [...params]})(RestClient);
 
     return <any>RestClient;
   };

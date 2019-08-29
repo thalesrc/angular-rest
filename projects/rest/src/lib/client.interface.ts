@@ -1,4 +1,4 @@
-import { Injector } from '@angular/core';
+import { Injector, Type } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -35,5 +35,6 @@ export interface ClientConstructor<T = unknown> extends Object {
 export interface ClientOptions<T> {
   baseUrl?: string;
   guards?: Guard<T>;
+  providedIn?: Type<any> | 'root';
 }
 
