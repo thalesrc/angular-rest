@@ -17,3 +17,4 @@ export { Client } from './lib/client.decorator';
 // export { MediaType, Produces } from './lib/decorators/produces';
 export { Get, Post, Patch, Put, Delete, Head } from './lib/request.decorator';
 export { Guards } from './lib/guards.decorator';
+export { Body } from './lib/body.decorator';

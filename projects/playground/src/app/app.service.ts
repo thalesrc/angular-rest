@@ -1,4 +1,4 @@
-import { Client, Get, Guards } from '@rest';
+import { Client, Get, Guards, Body, Post } from '@rest';
 import { HttpRequest } from '@angular/common/http';
 
 @Client<AppService>({
@@ -6,14 +6,17 @@ import { HttpRequest } from '@angular/common/http';
   baseUrl: 'https://httpbin.org'
 })
 export class AppService {
-
-  public checkNonAuthorized(): boolean {
-    return false;
+  constructor() {
+    console.log(this);
   }
 
-  @Get('get')
+  public checkNonAuthorized(): boolean {
+    return true;
+  }
+
+  @Post('post')
   // @Guards<AppService>(['checkNonAuthorized'])
-  async login(): Promise<string> {
+  async login(test, @Body() body: any): Promise<string> {
     return null;
   }
 }

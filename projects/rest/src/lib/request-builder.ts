@@ -1,5 +1,5 @@
 import { RequestMethod } from './request-methods.interface';
-import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor, CLIENT_GUARDS } from './client.interface';
+import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor, CLIENT_GUARDS, BODIES } from './client.interface';
 import { HttpRequest } from '@angular/common/http';
 import { RestPropertyDecorator } from './rest-property-decorator.interface';
 import { Observable } from 'rxjs';
@@ -17,7 +17,14 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
     return function (target: ClientConstructor, methodName: string, descriptor: PropertyDescriptor): PropertyDescriptor {
       descriptor.value = async function(this: ClientInstance) {
         const url = path !== undefined ? path : methodName;
-        const request = new HttpRequest(type as any, `${this[BASE_URL]}/${url}`);
+        const bodyParamIndex = (target.constructor[BODIES] || {})[methodName];
+        let body: any = null;
+
+        if (typeof bodyParamIndex === 'number') {
+          body = [...arguments][bodyParamIndex];
+        }
+
+        const request = requestFactory(type as any, `${this[BASE_URL]}/${url}`, { body });
 
         // Run guard process
         try {
@@ -39,6 +46,36 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
       return descriptor;
     };
   };
+}
+
+interface RequestConfig {
+}
+
+function requestFactory<T = unknown>(
+  method: RequestMethod.POST | RequestMethod.PUT | RequestMethod.PATCH,
+  url: string,
+  config: RequestConfig
+): HttpRequest<T>;
+function requestFactory<T = unknown>(
+  method: RequestMethod.GET | RequestMethod.DELETE | RequestMethod.HEAD | RequestMethod.JSONP | RequestMethod.OPTIONS,
+  url: string,
+  config: RequestConfig & { body?: T }
+): HttpRequest<T>;
+function requestFactory<T = unknown>(
+  method: RequestMethod,
+  url: string,
+  config: { body?: T }
+): HttpRequest<T> {
+  switch (method) {
+    case RequestMethod.POST:
+    case RequestMethod.PUT:
+    case RequestMethod.PATCH:
+      const body = config.body;
+      delete config.body;
+      return new HttpRequest<T>(method, url, body, <RequestConfig>config);
+    default:
+      return new HttpRequest<T>(<'GET'>method, url, <RequestConfig>config);
+  }
 }
 
 async function startGuardCheck(
