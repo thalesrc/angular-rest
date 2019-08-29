@@ -9,7 +9,7 @@ export function Client<T>({ baseUrl, guards, providedIn = 'root' }: ClientOption
     let params: Type<any>[];
 
     if ('ctorParameters' in Target) {
-      params = (<{type: Type<any>}[]>Target['ctorParameters'] || []).map(p => p.type);
+      params = ((<() => {type: Type<any>}[]>Target['ctorParameters'])() || []).map(p => p.type);
     } else {
       params = Reflect.getMetadata('design:paramtypes', Target) || [];
     }
