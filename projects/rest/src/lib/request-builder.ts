@@ -15,15 +15,19 @@ class GuardForbid {
 export function requestBuilder(type: RequestMethod): (path?: string) => RestPropertyDecorator {
   return function (path?: string): RestPropertyDecorator {
     return function (target: ClientConstructor, methodName: string, descriptor: PropertyDescriptor): PropertyDescriptor {
-      descriptor.value = async function(this: ClientInstance) {
+      descriptor.value = async function(this: ClientInstance, ...args: any[]) {
+        // Configure full url
         const url = path !== undefined ? path : methodName;
+
+        // Configure request body
         const bodyParamIndex = (target.constructor[BODIES] || {})[methodName];
         let body: any = null;
 
         if (typeof bodyParamIndex === 'number') {
-          body = [...arguments][bodyParamIndex];
+          body = args[bodyParamIndex];
         }
 
+        // Create request object
         const request = requestFactory(type as any, `${this[BASE_URL]}/${url}`, { body });
 
         // Run guard process
