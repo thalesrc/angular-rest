@@ -27,7 +27,7 @@ export function Client<T>({ baseUrl, guards, providedIn = 'root' }: ClientOption
 
     Reflect.defineMetadata('design:paramtypes', [Injector], RestClient);
 
-    Injectable({ providedIn, deps: [...params]})(RestClient);
+    Injectable({ providedIn, deps: [...(params || [])]})(RestClient);
 
     return <any>RestClient;
   };
