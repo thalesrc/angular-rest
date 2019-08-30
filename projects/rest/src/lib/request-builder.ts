@@ -1,8 +1,10 @@
-import { RequestMethod } from './request-methods.interface';
-import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor, CLIENT_GUARDS, BODIES } from './client.interface';
-import { HttpRequest } from '@angular/common/http';
-import { RestPropertyDecorator } from './rest-property-decorator.interface';
+import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
+          CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf, ERROR_HANDLER, RequestMethod } from './types';
+import { HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { REST_HANDLERS } from './tokens';
+
+type RestPropertyDecorator = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
 
 class GuardForbid {
   public message = 'A guard function forbad the request';
@@ -43,8 +45,18 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
           throw error;
         }
 
-        // Response
-        return await this[HTTP_CLIENT].request(request).toPromise();
+
+        // Handlers
+        const globalHandlers: HandlersOf<any> = (<any[]>this[INJECTOR].get(REST_HANDLERS)).reduce((prev, next) => [...prev, ...next], []);
+        const clientHandlers: HandlersOf<any> = target.constructor[HANDLERS][CLIENT_HANDLERS];
+        const methodHandlers: HandlersOf<any> = target.constructor[HANDLERS][methodName] || [];
+
+        // Result
+        return await chainHandlers(
+          [...globalHandlers, ...clientHandlers, ...methodHandlers],
+          this,
+          <Promise<HttpResponse<any>>>this[HTTP_CLIENT].request(request).toPromise()
+        );
       };
 
       return descriptor;
@@ -105,4 +117,37 @@ async function startGuardCheck(
       return result;
     });
   }, Promise.resolve(true));
+}
+
+function chainHandlers<T>(
+  handlers: HandlersOf<any>,
+  context: ClientInstance,
+  source: Promise<HttpResponse<any>>
+): Promise<T> {
+  let original: HttpResponse<any>;
+
+  return handlers.reduce((prev: PromiseLike<any>, next, index: number) => {
+    let handler: Function;
+    let method: 'then' | 'catch';
+
+    if (typeof next === 'string') {
+      method = context[next][ERROR_HANDLER] ? 'catch' : 'then';
+      handler = (<Function>context[next]).bind(context);
+    } else if ('handle' in next.prototype) {
+      const injectable = context[INJECTOR].get(next);
+      method = injectable.handle[ERROR_HANDLER] ? 'catch' : 'then';
+      handler = injectable.handle.bind(injectable);
+    } else {
+      method = 'then';
+      handler = next;
+    }
+
+    return prev[method](res => {
+      if (index === 0) {
+        original = res;
+      }
+
+      return handler(original, res);
+    });
+  }, source);
 }

@@ -1,5 +1,5 @@
 import { requestBuilder } from './request-builder';
-import { RequestMethod } from './request-methods.interface';
+import { RequestMethod } from './types';
 
 export const Get = requestBuilder(RequestMethod.GET);
 export const Post = requestBuilder(RequestMethod.POST);

@@ -1,22 +1,24 @@
-import { Client, Get, Guards, Body, Post } from '@rest';
-import { HttpRequest } from '@angular/common/http';
+import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler } from '@rest';
+import { HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Client<AppService>({
-  guards: 'checkNonAuthorized',
-  baseUrl: 'https://httpbin.org'
+  baseUrl: 'http://localhost:3000'
 })
 export class AppService {
   constructor() {
     console.log(this);
   }
 
-  public checkNonAuthorized(): boolean {
-    return true;
+  @ErrorHandler()
+  public handle400(original: HttpErrorResponse, current: any): boolean {
+    console.warn(original, current);
+
+    return original.error;
   }
 
-  @Post('post')
-  // @Guards<AppService>(['checkNonAuthorized'])
-  async login(test, @Body() body: any): Promise<string> {
+  @Post('login')
+  @Handlers<AppService>(['handle400'])
+  async login(@Body() body: any): Promise<string> {
     return null;
   }
 }

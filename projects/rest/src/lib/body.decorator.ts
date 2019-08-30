@@ -1,4 +1,4 @@
-import { ClientConstructor, ClientInstance, BODIES } from './client.interface';
+import { ClientConstructor, BODIES } from './types';
 
 export function Body(): ParameterDecorator {
   return function(target: {constructor: ClientConstructor} & Object, propertyKey: string | symbol, parameterIndex: number): void {
