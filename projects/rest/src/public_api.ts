@@ -13,5 +13,6 @@ export { Get, Post, Patch, Put, Delete, Head } from './lib/request.decorator';
 export { Guards } from './lib/guards.decorator';
 export { Body } from './lib/body.decorator';
 export { Handlers } from './lib/handlers.decorator';
+export { Header } from './lib/header.decorator';
 
 export { ErrorHandler } from './lib/error-handler.decorator';

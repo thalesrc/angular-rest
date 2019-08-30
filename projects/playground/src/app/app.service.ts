@@ -1,4 +1,4 @@
-import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler } from '@rest';
+import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header } from '@rest';
 import { HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Client<AppService>({
@@ -18,7 +18,11 @@ export class AppService {
 
   @Post('login')
   @Handlers<AppService>(['handle400'])
-  async login(@Body() body: any): Promise<string> {
+  async login(
+    @Body() body: any,
+    @Header('Authorization') token: string,
+    @Header('Test-Header') testHeader: string
+  ): Promise<string> {
     return null;
   }
 }

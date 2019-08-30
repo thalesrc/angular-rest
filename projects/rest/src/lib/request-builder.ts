@@ -1,6 +1,7 @@
 import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
-          CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf, ERROR_HANDLER, RequestMethod } from './types';
-import { HttpRequest, HttpResponse } from '@angular/common/http';
+          CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf,
+          ERROR_HANDLER, RequestMethod, PARAM_HEADERS } from './types';
+import { HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { REST_HANDLERS } from './tokens';
 
@@ -29,8 +30,17 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
           body = args[bodyParamIndex];
         }
 
+        // Configure Headers
+        let headers = new HttpHeaders();
+
+        for (const [name, [replace, index]] of Object.entries((target.constructor[PARAM_HEADERS] || {})[methodName] || {})) {
+          const method: 'set' | 'append' = replace ? 'set' : 'append';
+
+          headers = headers[method](name, args[index]);
+        }
+
         // Create request object
-        const request = requestFactory(type as any, `${this[BASE_URL]}/${url}`, { body });
+        const request = requestFactory(type as any, `${this[BASE_URL]}/${url}`, { body, headers });
 
         // Run guard process
         try {
@@ -44,7 +54,6 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
 
           throw error;
         }
-
 
         // Handlers
         const globalHandlers: HandlersOf<any> = (<any[]>this[INJECTOR].get(REST_HANDLERS)).reduce((prev, next) => [...prev, ...next], []);
@@ -65,6 +74,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
 }
 
 interface RequestConfig {
+  headers: HttpHeaders;
 }
 
 function requestFactory<T = unknown>(
@@ -80,7 +90,7 @@ function requestFactory<T = unknown>(
 function requestFactory<T = unknown>(
   method: RequestMethod,
   url: string,
-  config: { body?: T }
+  config: RequestConfig & { body?: T }
 ): HttpRequest<T> {
   switch (method) {
     case RequestMethod.POST:

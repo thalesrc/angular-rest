@@ -10,6 +10,7 @@ export const BODIES: unique symbol = Symbol('BODIES');
 export const HANDLERS: unique symbol = Symbol('HANDLERS');
 export const CLIENT_HANDLERS: unique symbol = Symbol('CLIENT_HANDLERS');
 export const ERROR_HANDLER: unique symbol = Symbol('ERROR_HANDLER');
+export const PARAM_HEADERS: unique symbol = Symbol('PARAM_HEADERS');
 
 export enum RequestMethod {
   GET = 'GET',
@@ -56,6 +57,11 @@ export interface ClientConstructor<T = unknown> extends Object {
       [CLIENT_HANDLERS]: HandlersOf<T>;
       [key: string]: HandlersOf<T>;
     };
+    [PARAM_HEADERS]: {
+      [key: string]: {
+        [key: string]: [boolean, number];
+      }
+    }
   };
 }
 
