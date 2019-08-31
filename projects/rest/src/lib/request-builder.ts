@@ -1,28 +1,31 @@
 import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
           CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf,
-          ERROR_HANDLER, RequestMethod, PARAM_HEADERS } from './types';
+          ERROR_HANDLER, RequestMethod, PARAM_HEADERS, HeadersParam, HeadersInjector,
+          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam } from './types';
 import { HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { REST_HANDLERS } from './tokens';
+import { REST_HANDLERS, BASE_HEADERS } from './tokens';
 
 type RestPropertyDecorator = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
 
-class GuardForbid {
-  public message = 'A guard function forbad the request';
-
+class GuardForbid extends Error {
   constructor(
     public request: HttpRequest<unknown>
-  ) {}
+  ) {
+    super('A guard function forbad the request');
+  }
 }
 
 export function requestBuilder(type: RequestMethod): (path?: string) => RestPropertyDecorator {
   return function (path?: string): RestPropertyDecorator {
     return function (target: ClientConstructor, methodName: string, descriptor: PropertyDescriptor): PropertyDescriptor {
       descriptor.value = async function(this: ClientInstance, ...args: any[]) {
-        // Configure full url
+        // > Configure full url
+        // _____________________________________________________________________________
         const url = path !== undefined ? path : methodName;
 
-        // Configure request body
+        // > Configure request body
+        // _____________________________________________________________________________
         const bodyParamIndex = (target.constructor[BODIES] || {})[methodName];
         let body: any = null;
 
@@ -30,19 +33,60 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
           body = args[bodyParamIndex];
         }
 
-        // Configure Headers
+        // > Configure Headers
+        // _____________________________________________________________________________
         let headers = new HttpHeaders();
 
+        // >> Base Headers
+        const baseHeaders: HeadersParam[] = <HeadersParam[]> this[INJECTOR].get(BASE_HEADERS);
+
+        for (const set of baseHeaders) {
+          for (const header of set) {
+            let _headers: HeadersObject = <HeadersObject> header;
+
+            if (typeof header === 'function') {
+              const instance: HeadersInjector = this[INJECTOR].get(header);
+              _headers = await instance.inject();
+            }
+
+            for (const key of Object.keys(_headers)) {
+              headers = headers.append(key, _headers[key]);
+            }
+          }
+        }
+
+        // >> Client Headers & Method Headers
+        const clientHeaders: HeadersClientParam<any> = (target.constructor[HEADERS] || {})[CLIENT_HEADERS] || [];
+        const methodHeaders: HeadersClientParam<any> = (target.constructor[HEADERS] || {})[methodName] || [];
+
+        for (let header of [...clientHeaders, ...methodHeaders]) {
+          if (typeof header === 'function') {
+            const instance: HeadersInjector = this[INJECTOR].get(header);
+            header = await instance.inject();
+          }
+
+          if (typeof header === 'string') {
+            header = await this[header]();
+          }
+
+          for (const key of Object.keys(header)) {
+            headers = headers.append(key, header[key]);
+          }
+        }
+
+        // >> Parameter Headers
         for (const [name, [replace, index]] of Object.entries((target.constructor[PARAM_HEADERS] || {})[methodName] || {})) {
           const method: 'set' | 'append' = replace ? 'set' : 'append';
 
           headers = headers[method](name, args[index]);
         }
 
-        // Create request object
+        // > Create request object
+        // _____________________________________________________________________________
         const request = requestFactory(type as any, `${this[BASE_URL]}/${url}`, { body, headers });
 
-        // Run guard process
+        // > Run guard process
+        // _____________________________________________________________________________
         try {
           const guardsResult = await startGuardCheck(target, methodName, request, this);
           if (!guardsResult) { throw false; }
@@ -55,12 +99,14 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
           throw error;
         }
 
-        // Handlers
+        // > Handlers
+        // _____________________________________________________________________________
         const globalHandlers: HandlersOf<any> = (<any[]>this[INJECTOR].get(REST_HANDLERS)).reduce((prev, next) => [...prev, ...next], []);
         const clientHandlers: HandlersOf<any> = target.constructor[HANDLERS][CLIENT_HANDLERS];
         const methodHandlers: HandlersOf<any> = target.constructor[HANDLERS][methodName] || [];
 
-        // Result
+        // > Result
+        // _____________________________________________________________________________
         return await chainHandlers(
           [...globalHandlers, ...clientHandlers, ...methodHandlers],
           this,
@@ -136,7 +182,13 @@ function chainHandlers<T>(
 ): Promise<T> {
   let original: HttpResponse<any>;
 
-  return handlers.reduce((prev: PromiseLike<any>, next, index: number) => {
+  source.then(res => {
+    original = res;
+  }, error => {
+    original = error;
+  });
+
+  return handlers.reduce((prev: PromiseLike<any>, next) => {
     let handler: Function;
     let method: 'then' | 'catch';
 
@@ -152,12 +204,6 @@ function chainHandlers<T>(
       handler = next;
     }
 
-    return prev[method](res => {
-      if (index === 0) {
-        original = res;
-      }
-
-      return handler(original, res);
-    });
+    return prev[method](res => handler(original, res));
   }, source);
 }

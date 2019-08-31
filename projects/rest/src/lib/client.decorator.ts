@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector, Type } from '@angular/core';
-import { INJECTOR, HTTP_CLIENT, BASE_URL, ClientOptions, GUARDS, CLIENT_GUARDS, HANDLERS, CLIENT_HANDLERS } from './types';
+
+import { INJECTOR, HTTP_CLIENT, BASE_URL, ClientOptions, GUARDS, CLIENT_GUARDS,
+          HANDLERS, CLIENT_HANDLERS, HEADERS, CLIENT_HEADERS } from './types';
 import { BASE_URL as BASE_URL_TOKEN } from './tokens';
 
 
-export function Client<T>({ baseUrl, guards, providedIn = 'root', handlers = [] }: ClientOptions<T> = {}) {
+export function Client<T>({ baseUrl, guards, providedIn = 'root', handlers = [], baseHeaders = [] }: ClientOptions<T> = {}) {
   return function ( Target: new (...args: any[]) => T ): any {
     let params: Type<any>[];
 
@@ -34,6 +36,11 @@ export function Client<T>({ baseUrl, guards, providedIn = 'root', handlers = [] 
     Target[HANDLERS] = {
       ...Target[HANDLERS],
       [CLIENT_HANDLERS]: [...handlers]
+    };
+
+    Target[HEADERS] = {
+      ...Target[HEADERS],
+      [CLIENT_HEADERS]: baseHeaders
     };
 
     Reflect.defineMetadata('design:paramtypes', [Injector], RestClient);

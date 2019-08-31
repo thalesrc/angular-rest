@@ -1,8 +1,9 @@
-import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header } from '@rest';
+import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers } from '@rest';
 import { HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Client<AppService>({
-  baseUrl: 'http://localhost:3000'
+  baseUrl: 'http://localhost:3000',
+  baseHeaders: [{client: 'x'}]
 })
 export class AppService {
   constructor() {
@@ -16,8 +17,13 @@ export class AppService {
     return original.error;
   }
 
+  public setLoginHeaders() {
+    return {'method': 'headers'};
+  }
+
   @Post('login')
   @Handlers<AppService>(['handle400'])
+  @Headers<AppService>(['setLoginHeaders'])
   async login(
     @Body() body: any,
     @Header('Authorization') token: string,

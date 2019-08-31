@@ -11,6 +11,8 @@ export const HANDLERS: unique symbol = Symbol('HANDLERS');
 export const CLIENT_HANDLERS: unique symbol = Symbol('CLIENT_HANDLERS');
 export const ERROR_HANDLER: unique symbol = Symbol('ERROR_HANDLER');
 export const PARAM_HEADERS: unique symbol = Symbol('PARAM_HEADERS');
+export const HEADERS: unique symbol = Symbol('HEADERS');
+export const CLIENT_HEADERS: unique symbol = Symbol('CLIENT_HEADERS');
 
 export enum RequestMethod {
   GET = 'GET',
@@ -32,6 +34,20 @@ export type Guard<T> = Array<GuardFunctionsOf<T> | GuardFunction> | GuardFunctio
 export type HandlerFunction = (original: HttpResponse<any> | HttpErrorResponse, current: any) => any | Promise<any>;
 export type HandlerFunctionsOf<T> = FunctionsOf<T, HandlerFunction>;
 export type HandlersOf<T> = Array<HandlerFunctionsOf<T> | HandlerFunction | (new (...args: any[]) => Handler)>;
+
+export interface HeadersObject {
+  [key: string]: string | string[];
+}
+
+type HeaderInjectorResponse = HeadersObject | Promise<HeadersObject>;
+
+export abstract class HeadersInjector {
+  abstract inject(): HeaderInjectorResponse;
+}
+
+export type HeaderInjectorType = new (...args: any[]) => HeadersInjector;
+export type HeadersParam = Array<HeadersObject | HeaderInjectorType>;
+export type HeadersClientParam<T> = Array<HeadersObject | HeaderInjectorType | FunctionsOf<T, () => HeaderInjectorResponse>>;
 
 export interface Handler {
   handle: HandlerFunction;
@@ -61,6 +77,10 @@ export interface ClientConstructor<T = unknown> extends Object {
       [key: string]: {
         [key: string]: [boolean, number];
       }
+    };
+    [HEADERS]: {
+      [CLIENT_HEADERS]: HeadersClientParam<T>;
+      [key: string]: HeadersClientParam<T>;
     }
   };
 }
@@ -69,6 +89,7 @@ export interface ClientOptions<T> {
   baseUrl?: string;
   guards?: Guard<T>;
   handlers?: HandlersOf<T>;
+  baseHeaders?: HeadersClientParam<T>;
   providedIn?: Type<any> | 'root';
 }
 
