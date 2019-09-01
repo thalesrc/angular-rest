@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders, Provider } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { BASE_URL, REST_HANDLERS, BASE_HEADERS } from './tokens';
-import { HandlersOf, HeadersParam } from './types';
+import { HandlersOf, HeadersParam, HeadersInjector } from './types';
 
 interface RootConfiguration {
   baseUrl?: string;
@@ -24,19 +24,14 @@ interface RootConfiguration {
   ]
 })
 export class RestModule {
-  public static forRoot({ baseUrl, handlers = [], baseHeaders = [] }: RootConfiguration = {}): ModuleWithProviders {
-    const providers: Provider[] = [];
-
-    if (baseUrl) {
-      providers.push({provide: BASE_URL, useValue: baseUrl});
-    }
-
-    providers.push({provide: REST_HANDLERS, useValue: [...handlers], multi: true});
-    providers.push({provide: BASE_HEADERS, useValue: [...baseHeaders], multi: true});
-
+  public static forRoot({ baseUrl = '', handlers = [], baseHeaders = [] }: RootConfiguration = {}): ModuleWithProviders {
     return {
       ngModule: RestModule,
-      providers
+      providers: [
+        {provide: BASE_URL, useValue: baseUrl},
+        {provide: REST_HANDLERS, useValue: handlers, multi: true},
+        {provide: BASE_HEADERS, useValue: baseHeaders, multi: true}
+      ]
     };
   }
 }

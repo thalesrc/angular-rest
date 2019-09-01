@@ -1,6 +1,7 @@
 {
   "name": "angular-rest-app",
   "version": "0.0.0",
+  "description": "Angular HTTP client with Typescript Declarative Annotations, Guards, Handlers and more",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -8,9 +8,11 @@ import { BASE_URL as BASE_URL_TOKEN } from './tokens';
 export function Client<T>({ baseUrl, guards, providedIn, handlers = [], baseHeaders = [], onReady }: ClientOptions<T> = {}) {
   return function ( Target: new (...args: any[]) => T ): any {
     let params: Type<any>[];
+    let ctorParameters: () => {type: Type<any>}[];
 
     if ('ctorParameters' in Target) {
-      params = ((<() => {type: Type<any>}[]>Target['ctorParameters'])() || []).map(p => p.type);
+      ctorParameters = Target['ctorParameters'];
+      params = (ctorParameters() || []).map(p => p.type);
     } else {
       params = Reflect.getMetadata('design:paramtypes', Target) || [];
     }
@@ -52,7 +54,7 @@ export function Client<T>({ baseUrl, guards, providedIn, handlers = [], baseHead
 
     Reflect.defineMetadata('design:paramtypes', [Injector], RestClient);
 
-    Injectable({ providedIn, deps: [...params]})(RestClient);
+    Injectable({ providedIn, deps: [...params, Injector]})(RestClient);
 
     return <any>RestClient;
   };

@@ -1,12 +1,13 @@
 import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers } from '@rest';
 import { HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { Injector } from '@angular/core';
 
 @Client<AppService>({
   baseUrl: 'http://localhost:3000',
   baseHeaders: [{client: 'x'}]
 })
 export class AppService {
-  constructor() {
+  constructor(injector: Injector) {
     console.log(this);
   }
 

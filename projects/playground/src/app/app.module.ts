@@ -6,9 +6,16 @@ import { RestModule, HeadersInjector, BASE_HEADERS } from '@rest';
 import { AppService } from './app.service';
 
 @Injectable()
-class HeaderParser extends HeadersInjector {
+export class HeaderParser extends HeadersInjector {
   inject() {
     return {injected: ['a', 'b']};
+  }
+}
+
+@Injectable()
+export class HeaderParserAli extends HeadersInjector {
+  inject() {
+    return {ali: 'sahin'};
   }
 }
 
@@ -18,12 +25,13 @@ class HeaderParser extends HeadersInjector {
   ],
   imports: [
     BrowserModule,
-    RestModule.forRoot({baseUrl: '', baseHeaders: [{'ali': 'sahin'}]})
+    RestModule.forRoot({baseUrl: '', baseHeaders: [{'in-root': 'yep it works'}]})
   ],
   providers: [
     AppService,
-    {provide: BASE_HEADERS, useValue: [HeaderParser], multi: true},
-    HeaderParser
+    {provide: BASE_HEADERS, useValue: [HeaderParser, {'ali': 'sahin'}], multi: true},
+    HeaderParser,
+    HeaderParserAli
   ],
   bootstrap: [AppComponent]
 })
