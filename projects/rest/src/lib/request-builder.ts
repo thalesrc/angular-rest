@@ -200,7 +200,7 @@ function chainHandlers<T>(
       method = injectable.handle[ERROR_HANDLER] ? 'catch' : 'then';
       handler = injectable.handle.bind(injectable);
     } else {
-      method = 'then';
+      method = next[ERROR_HANDLER] ? 'catch' : 'then';
       handler = next;
     }
 
