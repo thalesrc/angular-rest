@@ -195,7 +195,7 @@ function chainHandlers<T>(
     if (typeof next === 'string') {
       method = context[next][ERROR_HANDLER] ? 'catch' : 'then';
       handler = (<Function>context[next]).bind(context);
-    } else if ('handle' in next.prototype) {
+    } else if (next.prototype && 'handle' in next.prototype) {
       const injectable = context[INJECTOR].get(next);
       method = injectable.handle[ERROR_HANDLER] ? 'catch' : 'then';
       handler = injectable.handle.bind(injectable);

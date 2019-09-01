@@ -6,7 +6,7 @@ import { INJECTOR, HTTP_CLIENT, BASE_URL, ClientOptions, GUARDS, CLIENT_GUARDS,
 import { BASE_URL as BASE_URL_TOKEN } from './tokens';
 
 
-export function Client<T>({ baseUrl, guards, providedIn = 'root', handlers = [], baseHeaders = [] }: ClientOptions<T> = {}) {
+export function Client<T>({ baseUrl, guards, providedIn, handlers = [], baseHeaders = [] }: ClientOptions<T> = {}) {
   return function ( Target: new (...args: any[]) => T ): any {
     let params: Type<any>[];
 
