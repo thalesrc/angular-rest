@@ -1,0 +1,397 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-rest-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">angular-rest-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Interfaces</li>
+  <li>RequestConfig</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>projects/rest/src/lib/request-builder.ts</code>
+        </p>
+
+
+
+        <section>
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#headers">headers</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="headers"></a>
+                                        <span class="name"><b>headers</b><a href="#headers"><span class="icon ion-ios-link"></span></a></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>headers:         <code><a href="../miscellaneous/variables.html#Head" target="_self" >HttpHeaders</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../miscellaneous/variables.html#Head" target="_self" >HttpHeaders</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
+          CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf,
+          ERROR_HANDLER, RequestMethod, PARAM_HEADERS, HeadersParam, HeadersInjector,
+          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam } from &#x27;./types&#x27;;
+import { HttpRequest, HttpResponse, HttpHeaders } from &#x27;@angular/common/http&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+import { REST_HANDLERS, BASE_HEADERS } from &#x27;./tokens&#x27;;
+
+type RestPropertyDecorator &#x3D; (target: any, propertyKey: string, descriptor: PropertyDescriptor) &#x3D;&gt; PropertyDescriptor;
+
+class GuardForbid extends Error {
+  constructor(
+    public request: HttpRequest&lt;unknown&gt;
+  ) {
+    super(&#x27;A guard function forbad the request&#x27;);
+  }
+}
+
+export function requestBuilder(type: RequestMethod): (path?: string) &#x3D;&gt; RestPropertyDecorator {
+  return function (path?: string): RestPropertyDecorator {
+    return function (target: ClientConstructor, methodName: string, descriptor: PropertyDescriptor): PropertyDescriptor {
+      descriptor.value &#x3D; async function(this: ClientInstance, ...args: any[]) {
+        // &gt; Configure full url
+        // _____________________________________________________________________________
+        const url &#x3D; path !&#x3D;&#x3D; undefined ? path : methodName;
+
+        // &gt; Configure request body
+        // _____________________________________________________________________________
+        const bodyParamIndex &#x3D; (target.constructor[BODIES] || {})[methodName];
+        let body: any &#x3D; null;
+
+        if (typeof bodyParamIndex &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
+          body &#x3D; args[bodyParamIndex];
+        }
+
+        // &gt; Configure Headers
+        // _____________________________________________________________________________
+        let headers &#x3D; new HttpHeaders();
+
+        // &gt;&gt; Base Headers
+        const baseHeaders: HeadersParam[] &#x3D; &lt;HeadersParam[]&gt; this[INJECTOR].get(BASE_HEADERS);
+
+        for (const set of baseHeaders) {
+          for (const header of set) {
+            let _headers: HeadersObject &#x3D; &lt;HeadersObject&gt; header;
+
+            if (typeof header &#x3D;&#x3D;&#x3D; &#x27;function&#x27;) {
+              const instance: HeadersInjector &#x3D; this[INJECTOR].get(header);
+              _headers &#x3D; await instance.inject();
+            }
+
+            for (const key of Object.keys(_headers)) {
+              headers &#x3D; headers.append(key, _headers[key]);
+            }
+          }
+        }
+
+        // &gt;&gt; Client Headers &amp; Method Headers
+        const clientHeaders: HeadersClientParam&lt;any&gt; &#x3D; (target.constructor[HEADERS] || {})[CLIENT_HEADERS] || [];
+        const methodHeaders: HeadersClientParam&lt;any&gt; &#x3D; (target.constructor[HEADERS] || {})[methodName] || [];
+
+        for (let header of [...clientHeaders, ...methodHeaders]) {
+          if (typeof header &#x3D;&#x3D;&#x3D; &#x27;function&#x27;) {
+            const instance: HeadersInjector &#x3D; this[INJECTOR].get(header);
+            header &#x3D; await instance.inject();
+          }
+
+          if (typeof header &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            header &#x3D; await this[header]();
+          }
+
+          for (const key of Object.keys(header)) {
+            headers &#x3D; headers.append(key, header[key]);
+          }
+        }
+
+        // &gt;&gt; Parameter Headers
+        for (const [name, [replace, index]] of Object.entries((target.constructor[PARAM_HEADERS] || {})[methodName] || {})) {
+          const method: &#x27;set&#x27; | &#x27;append&#x27; &#x3D; replace ? &#x27;set&#x27; : &#x27;append&#x27;;
+
+          headers &#x3D; headers[method](name, args[index]);
+        }
+
+        // &gt; Create request object
+        // _____________________________________________________________________________
+        const request &#x3D; requestFactory(type as any, &#x60;${this[BASE_URL]}/${url}&#x60;, { body, headers });
+
+        // &gt; Run guard process
+        // _____________________________________________________________________________
+        try {
+          const guardsResult &#x3D; await startGuardCheck(target, methodName, request, this);
+          if (!guardsResult) { throw false; }
+
+        } catch (error) {
+          if (error &#x3D;&#x3D;&#x3D; false) {
+            throw new GuardForbid(request);
+          }
+
+          throw error;
+        }
+
+        // &gt; Handlers
+        // _____________________________________________________________________________
+        const globalHandlers: HandlersOf&lt;any&gt; &#x3D; (&lt;any[]&gt;this[INJECTOR].get(REST_HANDLERS)).reduce((prev, next) &#x3D;&gt; [...prev, ...next], []);
+        const clientHandlers: HandlersOf&lt;any&gt; &#x3D; target.constructor[HANDLERS][CLIENT_HANDLERS];
+        const methodHandlers: HandlersOf&lt;any&gt; &#x3D; target.constructor[HANDLERS][methodName] || [];
+
+        // &gt; Result
+        // _____________________________________________________________________________
+        return await chainHandlers(
+          [...globalHandlers, ...clientHandlers, ...methodHandlers],
+          this,
+          &lt;Promise&lt;HttpResponse&lt;any&gt;&gt;&gt;this[HTTP_CLIENT].request(request).toPromise()
+        );
+      };
+
+      return descriptor;
+    };
+  };
+}
+
+interface RequestConfig {
+  headers: HttpHeaders;
+}
+
+function requestFactory&lt;T &#x3D; unknown&gt;(
+  method: RequestMethod.POST | RequestMethod.PUT | RequestMethod.PATCH,
+  url: string,
+  config: RequestConfig
+): HttpRequest&lt;T&gt;;
+function requestFactory&lt;T &#x3D; unknown&gt;(
+  method: RequestMethod.GET | RequestMethod.DELETE | RequestMethod.HEAD | RequestMethod.JSONP | RequestMethod.OPTIONS,
+  url: string,
+  config: RequestConfig &amp; { body?: T }
+): HttpRequest&lt;T&gt;;
+function requestFactory&lt;T &#x3D; unknown&gt;(
+  method: RequestMethod,
+  url: string,
+  config: RequestConfig &amp; { body?: T }
+): HttpRequest&lt;T&gt; {
+  switch (method) {
+    case RequestMethod.POST:
+    case RequestMethod.PUT:
+    case RequestMethod.PATCH:
+      const body &#x3D; config.body;
+      delete config.body;
+      return new HttpRequest&lt;T&gt;(method, url, body, &lt;RequestConfig&gt;config);
+    default:
+      return new HttpRequest&lt;T&gt;(&lt;&#x27;GET&#x27;&gt;method, url, &lt;RequestConfig&gt;config);
+  }
+}
+
+async function startGuardCheck(
+  target: ClientConstructor,
+  methodName: string,
+  request: HttpRequest&lt;unknown&gt;,
+  context: ClientInstance
+): Promise&lt;boolean&gt; {
+  const allGuards &#x3D; [...target.constructor[GUARDS][CLIENT_GUARDS], ...(target.constructor[GUARDS][methodName] || [])];
+
+  return await allGuards.reduce((prev, next) &#x3D;&gt; {
+    return prev.then(passed &#x3D;&gt; {
+      if (!passed) {
+        throw false;
+      }
+
+      let result &#x3D; typeof next &#x3D;&#x3D;&#x3D; &#x27;function&#x27; ? next(request) : (&lt;any&gt;context)[next](request);
+
+      if (result instanceof Observable) {
+        result &#x3D; result.toPromise();
+      }
+
+      return result;
+    });
+  }, Promise.resolve(true));
+}
+
+function chainHandlers&lt;T&gt;(
+  handlers: HandlersOf&lt;any&gt;,
+  context: ClientInstance,
+  source: Promise&lt;HttpResponse&lt;any&gt;&gt;
+): Promise&lt;T&gt; {
+  let original: HttpResponse&lt;any&gt;;
+
+  source.then(res &#x3D;&gt; {
+    original &#x3D; res;
+  }, error &#x3D;&gt; {
+    original &#x3D; error;
+  });
+
+  return handlers.reduce((prev: PromiseLike&lt;any&gt;, next) &#x3D;&gt; {
+    let handler: Function;
+    let method: &#x27;then&#x27; | &#x27;catch&#x27;;
+
+    if (typeof next &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+      method &#x3D; context[next][ERROR_HANDLER] ? &#x27;catch&#x27; : &#x27;then&#x27;;
+      handler &#x3D; (&lt;Function&gt;context[next]).bind(context);
+    } else if (next.prototype &amp;&amp; &#x27;handle&#x27; in next.prototype) {
+      const injectable &#x3D; context[INJECTOR].get(next);
+      method &#x3D; injectable.handle[ERROR_HANDLER] ? &#x27;catch&#x27; : &#x27;then&#x27;;
+      handler &#x3D; injectable.handle.bind(injectable);
+    } else {
+      method &#x3D; next[ERROR_HANDLER] ? &#x27;catch&#x27; : &#x27;then&#x27;;
+      handler &#x3D; next;
+    }
+
+    return prev[method](res &#x3D;&gt; handler(original, res));
+  }, source);
+}
+</code></pre>
+    </div>
+</div>
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'RequestConfig.html';
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,313 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-rest-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">angular-rest-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Classes</li>
+  <li>HeadersInjector</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>projects/rest/src/lib/types.ts</code>
+        </p>
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Abstract</span>
+                                <a href="#inject">inject</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inject"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Abstract</span>
+                            inject
+                        </b>
+                        <a href="#inject"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>inject()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="45"
+                            class="link-to-prism">projects/rest/src/lib/types.ts:45</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#Head" target="_self" >HeaderInjectorResponse</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injector, Type } from &#x27;@angular/core&#x27;;
+import { HttpClient, HttpRequest, HttpResponse, HttpErrorResponse } from &#x27;@angular/common/http&#x27;;
+
+export const INJECTOR: unique symbol &#x3D; Symbol(&#x27;INJECTOR&#x27;);
+export const HTTP_CLIENT: unique symbol &#x3D; Symbol(&#x27;HTTP_CLIENT&#x27;);
+export const BASE_URL: unique symbol &#x3D; Symbol(&#x27;BASE_URL&#x27;);
+export const GUARDS: unique symbol &#x3D; Symbol(&#x27;GUARDS&#x27;);
+export const CLIENT_GUARDS: unique symbol &#x3D; Symbol(&#x27;CLIENT_GUARDS&#x27;);
+export const BODIES: unique symbol &#x3D; Symbol(&#x27;BODIES&#x27;);
+export const HANDLERS: unique symbol &#x3D; Symbol(&#x27;HANDLERS&#x27;);
+export const CLIENT_HANDLERS: unique symbol &#x3D; Symbol(&#x27;CLIENT_HANDLERS&#x27;);
+export const ERROR_HANDLER: unique symbol &#x3D; Symbol(&#x27;ERROR_HANDLER&#x27;);
+export const PARAM_HEADERS: unique symbol &#x3D; Symbol(&#x27;PARAM_HEADERS&#x27;);
+export const HEADERS: unique symbol &#x3D; Symbol(&#x27;HEADERS&#x27;);
+export const CLIENT_HEADERS: unique symbol &#x3D; Symbol(&#x27;CLIENT_HEADERS&#x27;);
+
+export enum RequestMethod {
+  GET &#x3D; &#x27;GET&#x27;,
+  POST &#x3D; &#x27;POST&#x27;,
+  PUT &#x3D; &#x27;PUT&#x27;,
+  DELETE &#x3D; &#x27;DELETE&#x27;,
+  PATCH &#x3D; &#x27;PATCH&#x27;,
+  HEAD &#x3D; &#x27;HEAD&#x27;,
+  OPTIONS &#x3D; &#x27;OPTIONS&#x27;,
+  JSONP &#x3D; &#x27;JSONP&#x27;
+}
+
+type FunctionsOf&lt;T, U&gt; &#x3D; {[P in keyof T]: T[P] extends U ? P : never}[keyof T];
+
+export type GuardFunction &#x3D; &lt;T &#x3D; any&gt;(request: HttpRequest&lt;T&gt;) &#x3D;&gt; boolean | Promise&lt;boolean&gt;;
+export type GuardFunctionsOf&lt;T&gt; &#x3D; FunctionsOf&lt;T, GuardFunction&gt;;
+export type Guard&lt;T&gt; &#x3D; Array&lt;GuardFunctionsOf&lt;T&gt; | GuardFunction&gt; | GuardFunctionsOf&lt;T&gt; | GuardFunction;
+
+export type HandlerFunction &#x3D; (original: HttpResponse&lt;any&gt; | HttpErrorResponse, current: any) &#x3D;&gt; any | Promise&lt;any&gt;;
+export type HandlerFunctionsOf&lt;T&gt; &#x3D; FunctionsOf&lt;T, HandlerFunction&gt;;
+export type HandlersOf&lt;T&gt; &#x3D; Array&lt;HandlerFunctionsOf&lt;T&gt; | HandlerFunction | (new (...args: any[]) &#x3D;&gt; Handler)&gt;;
+
+export interface HeadersObject {
+  [key: string]: string | string[];
+}
+
+type HeaderInjectorResponse &#x3D; HeadersObject | Promise&lt;HeadersObject&gt;;
+
+export abstract class HeadersInjector {
+  abstract inject(): HeaderInjectorResponse;
+}
+
+export type HeaderInjectorType &#x3D; new (...args: any[]) &#x3D;&gt; HeadersInjector;
+export type HeadersParam &#x3D; Array&lt;HeadersObject | HeaderInjectorType&gt;;
+export type HeadersClientParam&lt;T&gt; &#x3D; Array&lt;HeadersObject | HeaderInjectorType | FunctionsOf&lt;T, () &#x3D;&gt; HeaderInjectorResponse&gt;&gt;;
+
+export interface Handler {
+  handle: HandlerFunction;
+}
+
+export interface ClientInstance {
+  [INJECTOR]: Injector;
+  [HTTP_CLIENT]: HttpClient;
+  [BASE_URL]: string;
+}
+
+export interface ClientConstructor&lt;T &#x3D; unknown&gt; extends Object {
+  constructor: {
+    new (...args: any[]): any;
+    [GUARDS]: {
+      [CLIENT_GUARDS]: Array&lt;GuardFunctionsOf&lt;T&gt; | GuardFunction&gt;;
+      [key: string]: Array&lt;GuardFunctionsOf&lt;T&gt; | GuardFunction&gt;
+    };
+    [BODIES]: {
+      [key: string]: number;
+    };
+    [HANDLERS]: {
+      [CLIENT_HANDLERS]: HandlersOf&lt;T&gt;;
+      [key: string]: HandlersOf&lt;T&gt;;
+    };
+    [PARAM_HEADERS]: {
+      [key: string]: {
+        [key: string]: [boolean, number];
+      }
+    };
+    [HEADERS]: {
+      [CLIENT_HEADERS]: HeadersClientParam&lt;T&gt;;
+      [key: string]: HeadersClientParam&lt;T&gt;;
+    }
+  };
+}
+
+export interface ClientOptions&lt;T&gt; {
+  baseUrl?: string;
+  guards?: Guard&lt;T&gt;;
+  handlers?: HandlersOf&lt;T&gt;;
+  baseHeaders?: HeadersClientParam&lt;T&gt;;
+  providedIn?: Type&lt;any&gt; | &#x27;root&#x27;;
+  onReady?: FunctionsOf&lt;T, Function&gt;;
+}
+
+</code></pre>
+    </div>
+</div>
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'HeadersInjector.html';
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

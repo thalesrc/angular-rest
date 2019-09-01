@@ -1,0 +1,308 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-rest-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	      <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/material.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="./" class="navbar-brand">angular-rest-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content getting-started">
+                   <div class="content-data">
+
+<p><a href="https://travis-ci.org/thalesrc/angular-rest"><img src="https://travis-ci.org/thalesrc/angular-rest.svg" alt="travis" class="img-responsive"></a>
+<a href="https://www.npmjs.com/package/@thalesrc/angular-rest"><img src="https://img.shields.io/npm/v/@thalesrc/angular-rest.svg" alt="npm" class="img-responsive"></a>
+<a href="https://www.npmjs.com/package/@thalesrc/angular-rest"><img src="https://img.shields.io/npm/dw/@thalesrc/angular-rest.svg" alt="npm" class="img-responsive"></a>
+<a href="https://github.com/ellerbrock/typescript-badges/"><img src="https://badges.frapsoft.com/typescript/version/typescript-next.svg?v=101" alt="TypeScript" class="img-responsive"></a></p>
+<h1 id="thalesrcangular-rest">@thalesrc/angular-rest</h1>
+<p>Angular Rest Http Module with Typescript Declarative Annotations, Guards, Handlers and more</p>
+<p><em>This package is under development. Use in caution!</em></p>
+<hr>
+<h2 id="1-installation">1. Installation</h2>
+<div><pre class="line-numbers"><code class="language-sh">yarn add &#64;thalesrc/angular-rest</code></pre></div><p>or</p>
+<div><pre class="line-numbers"><code class="language-sh">npm install &#64;thalesrc/angular-rest --save</code></pre></div><hr>
+<h2 id="2-basic-example">2. Basic Example</h2>
+<div><pre class="line-numbers"><code class="language-ts">// app.module.ts
+
+import { NgModule } from &#39;&#64;angular/core&#39;;
+import { RestModule } from &#39;&#64;thalesrc/angular-rest&#39;;
+
+import { TodoClient } from &#39;./todo.client&#39;;
+import { TodoComponent } from &#39;./todo.component&#39;;
+
+&#64;NgModule({
+  imports: [
+    RestModule.forRoot({baseUrl: &#39;http://localhost:3000&#39;})
+  ],
+  providers: [
+    TodoClient
+  ],
+  declarations: [
+    TodoComponent
+  ]
+})
+export class AppModule {}
+</code></pre></div><div><pre class="line-numbers"><code class="language-ts">// todo.client.ts
+
+import { HttpRequest } from &#39;&#64;angular/common/http&#39;;
+import { Client, Get, Post, Body } from &#39;&#64;thalesrc/angular-rest&#39;;
+
+&#64;Client()
+export class TodoClient {
+
+  &#64;Get()
+  public todos(): Promise&lt;Todo&gt; {
+    return null;
+  }
+
+  &#64;Post(&#39;todos&#39;)
+  public insertTodo(&#64;Body() todo: Todo): Promise&lt;void&gt; {
+    return null;
+  }
+}
+</code></pre></div><div><pre class="line-numbers"><code class="language-ts">// todo.component.ts
+
+import { Component } from &#39;&#64;angular/core&#39;;
+
+&#64;Component({
+  selector: &#39;app-todo&#39;,
+  template: &#39;Hello World&#39;
+})
+export class TodoComponent {
+  constructor(private client: TodoClient) {
+    this.client.todos().then(todos =&gt; {
+      // Make something with todos
+    });
+  }
+
+  async postTodo(todo: Todo): Promise&lt;void&gt; {
+    return await this.client.insertTodo(todo);
+  }
+}
+</code></pre></div><hr>
+<h2 id="3-api-docs">3. API Docs</h2>
+<h3 id="31-client-decorator">3.1. Client Decorator</h3>
+<p><code>@Client()</code> decorator marks a class as RestClient and provides functionality to make Http calls with its marked methods.</p>
+<p>This decorator also marks the class as <code>Injectable()</code> and makes it to function as an Angular Service.</p>
+<p>It can be configured by defining a <code>ClientOptions</code> object as a parameter</p>
+<h4 id="311-clientoptions">3.1.1. ClientOptions</h4>
+<p>A <code>ClientOptions</code> object configures base options for the rest methods declared inside a <code>@Client()</code> class</p>
+<div><pre class="line-numbers"><code class="language-ts">interface ClientOptions&lt;T&gt; {
+  baseUrl?: string;
+  guards?: Guard&lt;T&gt;;
+  handlers?: HandlersOf&lt;T&gt;;
+  baseHeaders?: HeadersClientParam&lt;T&gt;;
+  providedIn?: Type&lt;any&gt; | &#39;root&#39;;
+  onReady?: FunctionsOf&lt;T, Function&gt;;
+}</code></pre></div><div><pre class="line-numbers"><code class="language-ts">&#64;Client({
+  baseUrl: &#39;http://localhost:3000&#39;,
+  baseHeaders: [{&#39;Secret-Key&#39;: &#39;The best rest util is &#64;thalesrc/angular-rest&#39;}]
+  ...
+})
+export class TodoClient {
+  ...
+}</code></pre></div><h3 id="32-request-method-decorators">3.2. Request Method Decorators</h3>
+<p>All of these decorators marks a method in a <code>@Client()</code> as a request builder. <code>path</code> can be specified to define the endpoint path. Otherwise, the method name is going to be used as path.</p>
+<p>The method return type should be defined as <code>Promise</code> and function should be empty but only returning <code>null</code>. Decorators will handle all the rest.</p>
+<ul>
+<li><code>@Get(path?: string)</code></li>
+<li><code>@Post(path?: string)</code></li>
+<li><code>@Put(path?: string)</code></li>
+<li><code>@Delete(path?: string)</code></li>
+<li><code>@Patch(path?: string)</code></li>
+<li><code>@Options(path?: string)</code></li>
+<li><code>@Head(path?: string)</code></li>
+<li><code>@Jsonp(path?: string)</code></li>
+</ul>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">&#64;Client()
+export class TodoClient {
+  &#64;Get()
+  public todos(): Promise&lt;Todo&gt; {
+    return null;
+  }
+
+  &#64;Post(&#39;todos&#39;)
+  public postTodo(&#64;Body() todo: Todo): Promise&lt;Todo&gt; {
+    return null;
+  }
+}</code></pre></div><h3 id="33-headers">3.3. Headers</h3>
+<p>To be determined</p>
+<h4 id="331-header-declaration-methods">3.3.1. Header Declaration Methods</h4>
+<p>To be determined</p>
+<h5 id="3311-headerinjector">3.3.1.1 HeaderInjector</h5>
+<p>To be determined</p>
+<h5 id="3312-headersobject">3.3.1.2 HeadersObject</h5>
+<p>To be determined</p>
+<h5 id="3313-headers-as-client-method">3.3.1.3 Headers as Client Method</h5>
+<p>To be determined</p>
+<h4 id="332-base-headers">3.3.2. Base Headers</h4>
+<p>To be determined</p>
+<h4 id="333-client-headers">3.3.3. Client Headers</h4>
+<p>To be determined</p>
+<h4 id="334-parameter-headers">3.3.4. Parameter Headers</h4>
+<p>To be determined</p>
+<h3 id="34-guards">3.4. Guards</h3>
+<p>To be determined</p>
+<h4 id="341-guard-declaration-methods">3.4.1. Guard Declaration Methods</h4>
+<p>To be determined</p>
+<h5 id="3411-restguard">3.4.1.1 RestGuard</h5>
+<p>To be developed</p>
+<h5 id="3412-guard-function">3.4.1.2. Guard Function</h5>
+<p>To be determined</p>
+<h5 id="3413-guard-method">3.4.1.3. Guard Method</h5>
+<p>To be determined</p>
+<h4 id="342-base-guards">3.4.2. Base Guards</h4>
+<p>To be determined</p>
+<h4 id="343-client-guards">3.4.3. Client Guards</h4>
+<p>To be determined</p>
+<h4 id="344-method-guards">3.4.4. Method Guards</h4>
+<p>To be determined</p>
+<h3 id="45-handlers">4.5. Handlers</h3>
+<p>To be determined</p>
+<h4 id="451-errorhandlers">4.5.1 ErrorHandlers</h4>
+<p>To be determined</p>
+<h4 id="452-handler-declaration-methods">4.5.2 Handler Declaration Methods</h4>
+<p>To be determined</p>
+<h5 id="4521-handler">4.5.2.1 Handler</h5>
+<p>To be determined</p>
+<h5 id="4522-handler-function">4.5.2.2 Handler Function</h5>
+<p>To be determined</p>
+<h5 id="4523-handler-method">4.5.2.3 Handler Method</h5>
+<p>To be determined</p>
+<h4 id="453-base-handlers">4.5.3 Base Handlers</h4>
+<p>To be determined</p>
+<h4 id="454-client-handlers">4.5.4 Client Handlers</h4>
+<p>To be determined</p>
+<h4 id="455-method-handlers">4.5.5 Method Handlers</h4>
+<p>To be determined</p>
+<h3 id="46-restmodule">4.6. RestModule</h3>
+<p>To be determined</p>
+<h3 id="47-on-ready-method">4.7 On Ready Method</h3>
+<p>To be determined</p>
+<hr>
+<h2 id="4-aot-limitations">4. Aot Limitations</h2>
+<p>This package supports aot builds, however there are some limitations.</p>
+<ul>
+<li>The <code>Injector</code> should have been defined as the first parameter for every <code>@Client</code> constructor.</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-ts">import { Injector } from &#39;&#64;angular/core&#39;;
+
+&#64;Client()
+export class TodoClient {
+  constructor(injector: Injector, otherServices: Etc) {
+
+  }
+}</code></pre></div><ul>
+<li>Base handlers and base headers shouldn&#39;t be defined in <code>RestModule.forRoot</code> static method. All of these should be provided in module providers</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-ts">import { NgModule } from &#39;&#64;angular/core&#39;;
+import { RestModule, BASE_HEADERS, BASE_HANDLERS } from &#39;&#64;thalesrc/angular-rest&#39;;
+
+import { BaseHeaders, BaseHandler } from &#39;./services&#39;;
+
+&#64;NgModule({
+  imports: [RestModule],
+  providers: [
+    BaseHeaders,
+    BaseHandler,
+    {provide: BASE_HEADERS, useValue: [BaseHeaders, {&#39;Secret-Key&#39;: &#39;topsecret&#39;}], multi: true},
+    {provide: BASE_HANDLERS, useValue: [BaseHandler], multi: true},
+  ]
+})
+export class AppModule {}</code></pre></div><hr>
+<h2 id="5-contributors">5. Contributors</h2>
+<p>Ali Şahin Özçelik</p>
+<p><em>This repository is started as a fork of <a href="https://github.com/steven166/angular-rest-client">steven166/angular-rest-client</a> and completely refactored now</em></p>
+<hr>
+<h2 id="6-license">6. License</h2>
+<p>MIT</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'getting-started';
+            var COMPODOC_CURRENT_PAGE_URL = 'index.html';
+       </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="./js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="./js/menu-wc.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+       <script src="./js/libs/zepto.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
