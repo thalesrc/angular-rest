@@ -18,7 +18,8 @@
     "prepare:npm-config": "node ./scripts/npm-config $NPM_EMAIL $NPM_TOKEN",
     "prepare:package": "npm run build && npm run copy:files && npm run prepare:tag-update && npm run prepare:npm-config && npm run pack:library",
     "publish:package": "npm publish ./dist/rest/thalesrc-angular-rest-$TRAVIS_TAG.tgz",
-    "preapare-and-publish": "npm run prepare:package && npm run publish:package"
+    "preapare-and-publish": "npm run prepare:package && npm run publish:package",
+    "document": "compodoc -p projects/rest/tsconfig.lib.json -s --theme material --disablePrivate"
   },
   "private": true,
   "dependencies": {
