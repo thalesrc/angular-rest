@@ -28,6 +28,10 @@ export function Client<T>({ baseUrl, guards, providedIn, handlers = [], baseHead
       }
     }
 
+    for (const [key, value] of Object.entries(Target)) {
+      RestClient[key] = value;
+    }
+
     Target[GUARDS] = {
       ...Target[GUARDS],
       [CLIENT_GUARDS]: guards ? guards instanceof Array ? guards : [guards] : []
