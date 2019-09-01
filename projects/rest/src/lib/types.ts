@@ -91,5 +91,6 @@ export interface ClientOptions<T> {
   handlers?: HandlersOf<T>;
   baseHeaders?: HeadersClientParam<T>;
   providedIn?: Type<any> | 'root';
+  onReady?: FunctionsOf<T, Function>;
 }
 

@@ -5,8 +5,7 @@ import { INJECTOR, HTTP_CLIENT, BASE_URL, ClientOptions, GUARDS, CLIENT_GUARDS,
           HANDLERS, CLIENT_HANDLERS, HEADERS, CLIENT_HEADERS } from './types';
 import { BASE_URL as BASE_URL_TOKEN } from './tokens';
 
-
-export function Client<T>({ baseUrl, guards, providedIn, handlers = [], baseHeaders = [] }: ClientOptions<T> = {}) {
+export function Client<T>({ baseUrl, guards, providedIn, handlers = [], baseHeaders = [], onReady }: ClientOptions<T> = {}) {
   return function ( Target: new (...args: any[]) => T ): any {
     let params: Type<any>[];
 
@@ -23,6 +22,10 @@ export function Client<T>({ baseUrl, guards, providedIn, handlers = [], baseHead
         newTarget[INJECTOR] = injector;
         newTarget[HTTP_CLIENT] = injector.get(HttpClient);
         newTarget[BASE_URL] = baseUrl || injector.get(BASE_URL_TOKEN);
+
+        if (onReady) {
+          newTarget[onReady]();
+        }
 
         return newTarget;
       }
