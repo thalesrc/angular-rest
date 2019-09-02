@@ -13,6 +13,9 @@ export const ERROR_HANDLER: unique symbol = Symbol('ERROR_HANDLER');
 export const PARAM_HEADERS: unique symbol = Symbol('PARAM_HEADERS');
 export const HEADERS: unique symbol = Symbol('HEADERS');
 export const CLIENT_HEADERS: unique symbol = Symbol('CLIENT_HEADERS');
+export const WITH_CREDENTIALS: unique symbol = Symbol('WITH_CREDENTIALS');
+export const CLIENT_WITH_CREDENTIALS: unique symbol = Symbol('CLIENT_WITH_CREDENTIALS');
+export const ON_CLIENT_READY: unique symbol = Symbol('ON_CLIENT_READY');
 
 export enum RequestMethod {
   GET = 'GET',
@@ -81,7 +84,12 @@ export interface ClientConstructor<T = unknown> extends Object {
     [HEADERS]: {
       [CLIENT_HEADERS]: HeadersClientParam<T>;
       [key: string]: HeadersClientParam<T>;
-    }
+    };
+    [WITH_CREDENTIALS]: {
+      [CLIENT_WITH_CREDENTIALS]: boolean;
+      [key: string]: boolean;
+    };
+    [ON_CLIENT_READY]: string;
   };
 }
 
@@ -91,6 +99,6 @@ export interface ClientOptions<T> {
   handlers?: HandlersOf<T>;
   baseHeaders?: HeadersClientParam<T>;
   providedIn?: Type<any> | 'root';
-  onReady?: FunctionsOf<T, Function>;
+  withCredentials?: boolean;
 }
 

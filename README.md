@@ -95,6 +95,7 @@ ____________________________________________________________________________
 
 ## 3. API Docs
 
+____________________________________________________________________________
 ### 3.1. Client Decorator
 
 `@Client()` decorator marks a class as RestClient and provides functionality to make Http calls with its marked methods.
@@ -128,7 +129,7 @@ export class TodoClient {
   ...
 }
 ```
-
+____________________________________________________________________________
 ### 3.2. Request Method Decorators
 
 All of these decorators marks a method in a `@Client()` as a request builder. `path` can be specified to define the endpoint path. Otherwise, the method name is going to be used as path.
@@ -160,7 +161,7 @@ export class TodoClient {
   }
 }
 ```
-
+____________________________________________________________________________
 ### 3.3. Headers
 To be determined
 
@@ -184,7 +185,7 @@ To be determined
 
 #### 3.3.4. Parameter Headers
 To be determined
-
+____________________________________________________________________________
 ### 3.4. Guards
 To be determined
 
@@ -208,7 +209,7 @@ To be determined
 
 #### 3.4.4. Method Guards
 To be determined
-
+____________________________________________________________________________
 ### 4.5. Handlers
 To be determined
 
@@ -235,12 +236,116 @@ To be determined
 
 #### 4.5.5 Method Handlers
 To be determined
-
+____________________________________________________________________________
 ### 4.6. RestModule
 To be determined
+____________________________________________________________________________
+### 4.7 OnClientReady Decorator
 
-### 4.7 On Ready Method
-To be determined
+In client constructor functions, calling a rest call is forbidden. Because the client dependencies have not been set yet when the constructor function called.
+
+To run some code when client instance created, `@OnClientReady()` decorator can be used. It will mark a method of a client to be called right after construction.
+
+*Example:*
+```ts
+import { Client, OnClientReady } from '@thalesrc/angular-rest';
+import { TodoCacheService } from './todo-cache.service';
+
+@Client()
+export class TodoClient {
+  constructor(
+    private todoCacheService: TodoCacheService
+  ) {}
+
+  @OnClientReady()
+  private onReady() {
+    const todos = await this.todos();
+
+    this.todoCacheService.cacheTodos(todos);
+  }
+
+  @Get()
+  public todos(): Promise<Todo[]> {
+    return null;
+  }
+}
+```
+____________________________________________________________________________
+### 4.8 WithCredentials Option
+Defines whether a request should be sent with outgoing credentials (cookies). Default `true`
+
+#### 4.8.1. As Module Config
+It can be set in module config as base option. That would configure for all requests unless it is declared especially by other methods.
+
+*Example:*
+```ts
+import { NgModule } from '@angular/core';
+import { RestModule } from '@thalesrc/angular-rest';
+
+@NgModule({
+  imports: [
+    RestModule.forRoot({withCredentials: false})
+    ...
+  ],
+})
+export class AppModule {}
+```
+
+#### 4.8.2. As Provider
+It can be provided with the `BASE_WITH_CREDENTIALS` token as base option. That would also configure for all requests like [As Module Config](#481-as-module-config) unless it is declared especially by other methods.
+
+*Example:*
+```ts
+import { NgModule } from '@angular/core';
+import { RestModule, BASE_WITH_CREDENTIALS } from '@thalesrc/angular-rest';
+
+@NgModule({
+  imports: [
+    RestModule
+    ...
+  ],
+  providers: [
+    {provide: BASE_WITH_CREDENTIALS, useValue: false},
+    ...
+  ]
+})
+export class AppModule {}
+```
+
+#### 4.8.3. As Client Config
+It can be set in `@Client()` decorator as an option. That would configure withCredentials option for all the calls in that client.
+
+*Example:*
+```ts
+import { Client } from '@thalesrc/angular-rest';
+
+@Client({
+  withCredentials: true
+})
+export class TodoClient {
+  ...
+}
+```
+
+#### 4.8.4. WithCredentials Decorator
+It can be set by `@WithCredentials()` decorator on top a rest call. That would configure withCredentials option for only that call.
+
+*Example:*
+```ts
+import { Client, WithCredentials } from '@thalesrc/angular-rest';
+
+@Client()
+export class TodoClient {
+  @Get()
+  @WithCredentials(true)
+  public todos(): Promise<Todo[]> {
+    return null;
+  }
+}
+```
+
+#### 4.8.5. WithCredentialsParam Decorator
+to be developed
 
 ____________________________________________________________________________
 ## 4. Aot Limitations

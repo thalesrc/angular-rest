@@ -1,10 +1,10 @@
 import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
           CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf,
           ERROR_HANDLER, RequestMethod, PARAM_HEADERS, HeadersParam, HeadersInjector,
-          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam } from './types';
+          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS } from './types';
 import { HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { REST_HANDLERS, BASE_HEADERS } from './tokens';
+import { REST_HANDLERS, BASE_HEADERS, BASE_WITH_CREDENTIALS } from './tokens';
 
 type RestPropertyDecorator = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
 
@@ -81,9 +81,23 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
           headers = headers[method](name, args[index]);
         }
 
+        // > With Credentials
+        // _____________________________________________________________________________
+        let withCredentials: boolean = <boolean> this[INJECTOR].get(BASE_WITH_CREDENTIALS);
+
+        if (target.constructor[WITH_CREDENTIALS]) {
+          if (typeof target.constructor[WITH_CREDENTIALS][CLIENT_WITH_CREDENTIALS] !== 'undefined') {
+            withCredentials = target.constructor[WITH_CREDENTIALS][CLIENT_WITH_CREDENTIALS];
+          }
+
+          if (typeof target.constructor[WITH_CREDENTIALS][methodName] !== 'undefined') {
+            withCredentials = target.constructor[WITH_CREDENTIALS][methodName];
+          }
+        }
+
         // > Create request object
         // _____________________________________________________________________________
-        const request = requestFactory(type as any, `${this[BASE_URL]}/${url}`, { body, headers });
+        const request = requestFactory(type as any, `${this[BASE_URL]}/${url}`, { body, headers, withCredentials });
 
         // > Run guard process
         // _____________________________________________________________________________
@@ -121,6 +135,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
 
 interface RequestConfig {
   headers: HttpHeaders;
+  withCredentials: boolean;
 }
 
 function requestFactory<T = unknown>(
@@ -136,17 +151,15 @@ function requestFactory<T = unknown>(
 function requestFactory<T = unknown>(
   method: RequestMethod,
   url: string,
-  config: RequestConfig & { body?: T }
+  {body, ...rest}: RequestConfig & { body?: T }
 ): HttpRequest<T> {
   switch (method) {
     case RequestMethod.POST:
     case RequestMethod.PUT:
     case RequestMethod.PATCH:
-      const body = config.body;
-      delete config.body;
-      return new HttpRequest<T>(method, url, body, <RequestConfig>config);
+      return new HttpRequest<T>(method, url, body, rest);
     default:
-      return new HttpRequest<T>(<'GET'>method, url, <RequestConfig>config);
+      return new HttpRequest<T>(<'GET'>method, url, rest);
   }
 }
 

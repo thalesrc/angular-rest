@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injectable } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { RestModule, HeadersInjector, BASE_HEADERS } from '@rest';
+import { RestModule, HeadersInjector, BASE_HEADERS, BASE_WITH_CREDENTIALS } from '@rest';
 import { AppService } from './app.service';
 
 @Injectable()
@@ -25,11 +25,12 @@ export class HeaderParserAli extends HeadersInjector {
   ],
   imports: [
     BrowserModule,
-    RestModule.forRoot({baseUrl: '', baseHeaders: [{'in-root': 'yep it works'}]})
+    RestModule.forRoot({baseUrl: '', baseHeaders: [{'in-root': 'yep it works'}], withCredentials: false})
   ],
   providers: [
     AppService,
     {provide: BASE_HEADERS, useValue: [HeaderParser, {'ali': 'sahin'}], multi: true},
+    { provide: BASE_WITH_CREDENTIALS, useValue: true },
     HeaderParser,
     HeaderParserAli
   ],
