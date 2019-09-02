@@ -206,6 +206,9 @@ export const ERROR_HANDLER: unique symbol &#x3D; Symbol(&#x27;ERROR_HANDLER&#x27
 export const PARAM_HEADERS: unique symbol &#x3D; Symbol(&#x27;PARAM_HEADERS&#x27;);
 export const HEADERS: unique symbol &#x3D; Symbol(&#x27;HEADERS&#x27;);
 export const CLIENT_HEADERS: unique symbol &#x3D; Symbol(&#x27;CLIENT_HEADERS&#x27;);
+export const WITH_CREDENTIALS: unique symbol &#x3D; Symbol(&#x27;WITH_CREDENTIALS&#x27;);
+export const CLIENT_WITH_CREDENTIALS: unique symbol &#x3D; Symbol(&#x27;CLIENT_WITH_CREDENTIALS&#x27;);
+export const ON_CLIENT_READY: unique symbol &#x3D; Symbol(&#x27;ON_CLIENT_READY&#x27;);
 
 export enum RequestMethod {
   GET &#x3D; &#x27;GET&#x27;,
@@ -274,7 +277,12 @@ export interface ClientConstructor&lt;T &#x3D; unknown&gt; extends Object {
     [HEADERS]: {
       [CLIENT_HEADERS]: HeadersClientParam&lt;T&gt;;
       [key: string]: HeadersClientParam&lt;T&gt;;
-    }
+    };
+    [WITH_CREDENTIALS]: {
+      [CLIENT_WITH_CREDENTIALS]: boolean;
+      [key: string]: boolean;
+    };
+    [ON_CLIENT_READY]: string;
   };
 }
 
@@ -284,7 +292,7 @@ export interface ClientOptions&lt;T&gt; {
   handlers?: HandlersOf&lt;T&gt;;
   baseHeaders?: HeadersClientParam&lt;T&gt;;
   providedIn?: Type&lt;any&gt; | &#x27;root&#x27;;
-  onReady?: FunctionsOf&lt;T, Function&gt;;
+  withCredentials?: boolean;
 }
 
 </code></pre>

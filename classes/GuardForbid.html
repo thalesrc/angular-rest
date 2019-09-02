@@ -200,10 +200,10 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
           CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf,
           ERROR_HANDLER, RequestMethod, PARAM_HEADERS, HeadersParam, HeadersInjector,
-          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam } from &#x27;./types&#x27;;
+          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS } from &#x27;./types&#x27;;
 import { HttpRequest, HttpResponse, HttpHeaders } from &#x27;@angular/common/http&#x27;;
 import { Observable } from &#x27;rxjs&#x27;;
-import { REST_HANDLERS, BASE_HEADERS } from &#x27;./tokens&#x27;;
+import { REST_HANDLERS, BASE_HEADERS, BASE_WITH_CREDENTIALS } from &#x27;./tokens&#x27;;
 
 type RestPropertyDecorator &#x3D; (target: any, propertyKey: string, descriptor: PropertyDescriptor) &#x3D;&gt; PropertyDescriptor;
 
@@ -280,9 +280,23 @@ export function requestBuilder(type: RequestMethod): (path?: string) &#x3D;&gt; 
           headers &#x3D; headers[method](name, args[index]);
         }
 
+        // &gt; With Credentials
+        // _____________________________________________________________________________
+        let withCredentials: boolean &#x3D; &lt;boolean&gt; this[INJECTOR].get(BASE_WITH_CREDENTIALS);
+
+        if (target.constructor[WITH_CREDENTIALS]) {
+          if (typeof target.constructor[WITH_CREDENTIALS][CLIENT_WITH_CREDENTIALS] !&#x3D;&#x3D; &#x27;undefined&#x27;) {
+            withCredentials &#x3D; target.constructor[WITH_CREDENTIALS][CLIENT_WITH_CREDENTIALS];
+          }
+
+          if (typeof target.constructor[WITH_CREDENTIALS][methodName] !&#x3D;&#x3D; &#x27;undefined&#x27;) {
+            withCredentials &#x3D; target.constructor[WITH_CREDENTIALS][methodName];
+          }
+        }
+
         // &gt; Create request object
         // _____________________________________________________________________________
-        const request &#x3D; requestFactory(type as any, &#x60;${this[BASE_URL]}/${url}&#x60;, { body, headers });
+        const request &#x3D; requestFactory(type as any, &#x60;${this[BASE_URL]}/${url}&#x60;, { body, headers, withCredentials });
 
         // &gt; Run guard process
         // _____________________________________________________________________________
@@ -320,6 +334,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) &#x3D;&gt; 
 
 interface RequestConfig {
   headers: HttpHeaders;
+  withCredentials: boolean;
 }
 
 function requestFactory&lt;T &#x3D; unknown&gt;(
@@ -335,17 +350,15 @@ function requestFactory&lt;T &#x3D; unknown&gt;(
 function requestFactory&lt;T &#x3D; unknown&gt;(
   method: RequestMethod,
   url: string,
-  config: RequestConfig &amp; { body?: T }
+  {body, ...rest}: RequestConfig &amp; { body?: T }
 ): HttpRequest&lt;T&gt; {
   switch (method) {
     case RequestMethod.POST:
     case RequestMethod.PUT:
     case RequestMethod.PATCH:
-      const body &#x3D; config.body;
-      delete config.body;
-      return new HttpRequest&lt;T&gt;(method, url, body, &lt;RequestConfig&gt;config);
+      return new HttpRequest&lt;T&gt;(method, url, body, rest);
     default:
-      return new HttpRequest&lt;T&gt;(&lt;&#x27;GET&#x27;&gt;method, url, &lt;RequestConfig&gt;config);
+      return new HttpRequest&lt;T&gt;(&lt;&#x27;GET&#x27;&gt;method, url, rest);
   }
 }
 

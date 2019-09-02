@@ -102,6 +102,7 @@ export class TodoComponent {
 }
 </code></pre></div><hr>
 <h2 id="3-api-docs">3. API Docs</h2>
+<hr>
 <h3 id="31-client-decorator">3.1. Client Decorator</h3>
 <p><code>@Client()</code> decorator marks a class as RestClient and provides functionality to make Http calls with its marked methods.</p>
 <p>This decorator also marks the class as <code>Injectable()</code> and makes it to function as an Angular Service.</p>
@@ -122,7 +123,8 @@ export class TodoComponent {
 })
 export class TodoClient {
   ...
-}</code></pre></div><h3 id="32-request-method-decorators">3.2. Request Method Decorators</h3>
+}</code></pre></div><hr>
+<h3 id="32-request-method-decorators">3.2. Request Method Decorators</h3>
 <p>All of these decorators marks a method in a <code>@Client()</code> as a request builder. <code>path</code> can be specified to define the endpoint path. Otherwise, the method name is going to be used as path.</p>
 <p>The method return type should be defined as <code>Promise</code> and function should be empty but only returning <code>null</code>. Decorators will handle all the rest.</p>
 <ul>
@@ -147,7 +149,8 @@ export class TodoClient {
   public postTodo(&#64;Body() todo: Todo): Promise&lt;Todo&gt; {
     return null;
   }
-}</code></pre></div><h3 id="33-headers">3.3. Headers</h3>
+}</code></pre></div><hr>
+<h3 id="33-headers">3.3. Headers</h3>
 <p>To be determined</p>
 <h4 id="331-header-declaration-methods">3.3.1. Header Declaration Methods</h4>
 <p>To be determined</p>
@@ -163,6 +166,7 @@ export class TodoClient {
 <p>To be determined</p>
 <h4 id="334-parameter-headers">3.3.4. Parameter Headers</h4>
 <p>To be determined</p>
+<hr>
 <h3 id="34-guards">3.4. Guards</h3>
 <p>To be determined</p>
 <h4 id="341-guard-declaration-methods">3.4.1. Guard Declaration Methods</h4>
@@ -179,6 +183,7 @@ export class TodoClient {
 <p>To be determined</p>
 <h4 id="344-method-guards">3.4.4. Method Guards</h4>
 <p>To be determined</p>
+<hr>
 <h3 id="45-handlers">4.5. Handlers</h3>
 <p>To be determined</p>
 <h4 id="451-errorhandlers">4.5.1 ErrorHandlers</h4>
@@ -197,10 +202,89 @@ export class TodoClient {
 <p>To be determined</p>
 <h4 id="455-method-handlers">4.5.5 Method Handlers</h4>
 <p>To be determined</p>
+<hr>
 <h3 id="46-restmodule">4.6. RestModule</h3>
 <p>To be determined</p>
-<h3 id="47-on-ready-method">4.7 On Ready Method</h3>
-<p>To be determined</p>
+<hr>
+<h3 id="47-onclientready-decorator">4.7 OnClientReady Decorator</h3>
+<p>In client constructor functions, calling a rest call is forbidden. Because the client dependencies have not been set yet when the constructor function called.</p>
+<p>To run some code when client instance created, <code>@OnClientReady()</code> decorator can be used. It will mark a method of a client to be called right after construction.</p>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">import { Client, OnClientReady } from &#39;&#64;thalesrc/angular-rest&#39;;
+import { TodoCacheService } from &#39;./todo-cache.service&#39;;
+
+&#64;Client()
+export class TodoClient {
+  constructor(
+    private todoCacheService: TodoCacheService
+  ) {}
+
+  &#64;OnClientReady()
+  private onReady() {
+    const todos = await this.todos();
+
+    this.todoCacheService.cacheTodos(todos);
+  }
+
+  &#64;Get()
+  public todos(): Promise&lt;Todo[]&gt; {
+    return null;
+  }
+}</code></pre></div><hr>
+<h3 id="48-withcredentials-option">4.8 WithCredentials Option</h3>
+<p>Defines whether a request should be sent with outgoing credentials (cookies). Default <code>true</code></p>
+<h4 id="481-as-module-config">4.8.1. As Module Config</h4>
+<p>It can be set in module config as base option. That would configure for all requests unless it is declared especially by other methods.</p>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">import { NgModule } from &#39;&#64;angular/core&#39;;
+import { RestModule } from &#39;&#64;thalesrc/angular-rest&#39;;
+
+&#64;NgModule({
+  imports: [
+    RestModule.forRoot({withCredentials: false})
+    ...
+  ],
+})
+export class AppModule {}</code></pre></div><h4 id="482-as-provider">4.8.2. As Provider</h4>
+<p>It can be provided with the <code>BASE_WITH_CREDENTIALS</code> token as base option. That would also configure for all requests like <a href="#481-as-module-config">As Module Config</a> unless it is declared especially by other methods.</p>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">import { NgModule } from &#39;&#64;angular/core&#39;;
+import { RestModule, BASE_WITH_CREDENTIALS } from &#39;&#64;thalesrc/angular-rest&#39;;
+
+&#64;NgModule({
+  imports: [
+    RestModule
+    ...
+  ],
+  providers: [
+    {provide: BASE_WITH_CREDENTIALS, useValue: false},
+    ...
+  ]
+})
+export class AppModule {}</code></pre></div><h4 id="483-as-client-config">4.8.3. As Client Config</h4>
+<p>It can be set in <code>@Client()</code> decorator as an option. That would configure withCredentials option for all the calls in that client.</p>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">import { Client } from &#39;&#64;thalesrc/angular-rest&#39;;
+
+&#64;Client({
+  withCredentials: true
+})
+export class TodoClient {
+  ...
+}</code></pre></div><h4 id="484-withcredentials-decorator">4.8.4. WithCredentials Decorator</h4>
+<p>It can be set by <code>@WithCredentials()</code> decorator on top a rest call. That would configure withCredentials option for only that call.</p>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">import { Client, WithCredentials } from &#39;&#64;thalesrc/angular-rest&#39;;
+
+&#64;Client()
+export class TodoClient {
+  &#64;Get()
+  &#64;WithCredentials(true)
+  public todos(): Promise&lt;Todo[]&gt; {
+    return null;
+  }
+}</code></pre></div><h4 id="485-withcredentialsparam-decorator">4.8.5. WithCredentialsParam Decorator</h4>
+<p>to be developed</p>
 <hr>
 <h2 id="4-aot-limitations">4. Aot Limitations</h2>
 <p>This package supports aot builds, however there are some limitations.</p>

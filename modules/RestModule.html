@@ -95,8 +95,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="27"
-                            class="link-to-prism">projects/rest/src/lib/rest.module.ts:27</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="29"
+                            class="link-to-prism">projects/rest/src/lib/rest.module.ts:29</a></div>
                 </td>
             </tr>
 
@@ -154,13 +154,14 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { NgModule, ModuleWithProviders, Provider } from &#x27;@angular/core&#x27;;
 import { HttpClientModule } from &#x27;@angular/common/http&#x27;;
 
-import { BASE_URL, REST_HANDLERS, BASE_HEADERS } from &#x27;./tokens&#x27;;
+import { BASE_URL, REST_HANDLERS, BASE_HEADERS, BASE_WITH_CREDENTIALS } from &#x27;./tokens&#x27;;
 import { HandlersOf, HeadersParam, HeadersInjector } from &#x27;./types&#x27;;
 
 interface RootConfiguration {
   baseUrl?: string;
   handlers?: HandlersOf&lt;null&gt;;
   baseHeaders?: HeadersParam;
+  withCredentials?: boolean;
 }
 
 @NgModule({
@@ -170,20 +171,27 @@ interface RootConfiguration {
   providers: [
     {provide: BASE_URL, useValue: &#x27;&#x27;},
     {provide: REST_HANDLERS, useValue: [], multi: true},
-    {provide: BASE_HEADERS, useValue: [], multi: true}
+    {provide: BASE_HEADERS, useValue: [], multi: true},
+    {provide: BASE_WITH_CREDENTIALS, useValue: true}
   ],
   exports: [
     HttpClientModule
   ]
 })
 export class RestModule {
-  public static forRoot({ baseUrl &#x3D; &#x27;&#x27;, handlers &#x3D; [], baseHeaders &#x3D; [] }: RootConfiguration &#x3D; {}): ModuleWithProviders {
+  public static forRoot({
+    baseUrl &#x3D; &#x27;&#x27;,
+    handlers &#x3D; [],
+    baseHeaders &#x3D; [],
+    withCredentials &#x3D; true
+  }: RootConfiguration &#x3D; {} ): ModuleWithProviders {
     return {
       ngModule: RestModule,
       providers: [
         {provide: BASE_URL, useValue: baseUrl},
         {provide: REST_HANDLERS, useValue: handlers, multi: true},
-        {provide: BASE_HEADERS, useValue: baseHeaders, multi: true}
+        {provide: BASE_HEADERS, useValue: baseHeaders, multi: true},
+        {provide: BASE_WITH_CREDENTIALS, useValue: withCredentials}
       ]
     };
   }
