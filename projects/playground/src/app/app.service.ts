@@ -1,11 +1,20 @@
-import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady } from '@rest';
+import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard } from '@rest';
 import { HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Injector } from '@angular/core';
+import { Injector, Injectable } from '@angular/core';
+
+@Injectable()
+export class AGuard implements RestGuard {
+  canSend(req: HttpRequest<any>): boolean {
+    console.log(req);
+    return false;
+  }
+}
 
 @Client<AppService>({
   baseUrl: 'http://localhost:3000',
   baseHeaders: [{client: 'x'}],
-  withCredentials: false
+  withCredentials: false,
+  guards: [AGuard]
 })
 export class AppService {
   constructor(injector: Injector) {

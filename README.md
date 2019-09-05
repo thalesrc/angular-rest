@@ -187,16 +187,67 @@ To be determined
 To be determined
 ____________________________________________________________________________
 ### 3.4. Guards
-To be determined
+
+Guards run just before a request has been sent to check whether request should be sent or not
 
 #### 3.4.1. Guard Declaration Methods
-To be determined
+
+Guards can be a function, a method of a client or an injectable of `RestGuard`
 
 ##### 3.4.1.1 RestGuard
-To be developed
+
+Define an injectable as a rest guard and declare them as a guard ([Base Guard](#342-base-guards), [Client Guard](#343-client-guards), [Method Guard](#344-method-guards)) to check a request can be sent or not.
+
+__Don't forget to provide them in a module__
+
+*Example:*
+```ts
+@Injectable()
+export class PostTodoGuard implements RestGuard {
+ constructor(private session: SessionService) {}
+
+ async canSend(req: HttpRequest<any>): Promise<boolean> {
+   return await this.session.loggedIn$.pipe(first()).toPromise()
+ }
+}
+
+@Client()
+export class TodoClient {
+ @Post('todos')
+ @Guards([PostTodoGuard])
+ public async postTodos(todo: Todo): Promise<void> {
+   return null;
+ }
+}
+
+@NgModule({
+ providers: [
+   TodoClient,
+   PostTodoGuard
+ ]
+})
+export class TodoModule {}
+```
 
 ##### 3.4.1.2. Guard Function
-To be determined
+
+A single function can be a rest guard if it accepts first param as `HttpRequest<any>` and returns whether `boolean` or `Promise<boolean>`
+
+*Example:*
+```ts
+function postTodoGuard(req: HttpRequest<Todo>): boolean {
+  return req.body.canBeSent;
+}
+
+@Client()
+export class TodoClient {
+ @Post('todos')
+ @Guards([postTodoGuard])
+ public async postTodos(todo: Todo): Promise<void> {
+   return null;
+ }
+}
+```
 
 ##### 3.4.1.3. Guard Method
 To be determined

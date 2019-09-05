@@ -5,7 +5,7 @@ import 'reflect-metadata';
  */
 export { RestModule } from './lib/rest.module';
 
-export { Handler, HeadersInjector } from './lib/types';
+export { Handler, HeadersInjector, RestGuard } from './lib/types';
 export { BASE_URL, REST_HANDLERS, BASE_HEADERS, BASE_WITH_CREDENTIALS } from './lib/tokens';
 
 export { Client } from './lib/client.decorator';

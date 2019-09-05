@@ -3,7 +3,7 @@ import { NgModule, Injectable } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { RestModule, HeadersInjector, BASE_HEADERS, BASE_WITH_CREDENTIALS } from '@rest';
-import { AppService } from './app.service';
+import { AppService, AGuard } from './app.service';
 
 @Injectable()
 export class HeaderParser extends HeadersInjector {
@@ -32,7 +32,8 @@ export class HeaderParserAli extends HeadersInjector {
     {provide: BASE_HEADERS, useValue: [HeaderParser, {'ali': 'sahin'}], multi: true},
     { provide: BASE_WITH_CREDENTIALS, useValue: true },
     HeaderParser,
-    HeaderParserAli
+    HeaderParserAli,
+    AGuard
   ],
   bootstrap: [AppComponent]
 })

@@ -17,6 +17,9 @@ export const WITH_CREDENTIALS: unique symbol = Symbol('WITH_CREDENTIALS');
 export const CLIENT_WITH_CREDENTIALS: unique symbol = Symbol('CLIENT_WITH_CREDENTIALS');
 export const ON_CLIENT_READY: unique symbol = Symbol('ON_CLIENT_READY');
 
+/**
+ * Http Request Methods
+ */
 export enum RequestMethod {
   GET = 'GET',
   POST = 'POST',
@@ -28,15 +31,36 @@ export enum RequestMethod {
   JSONP = 'JSONP'
 }
 
+/**
+ * Returns specified type of method names of an interface/class
+ *
+ * @template T Class/Interface type
+ * @template U Method type
+ */
 type FunctionsOf<T, U> = {[P in keyof T]: T[P] extends U ? P : never}[keyof T];
 
+/**
+ * Returns a class-function type of an interface/class
+ */
+type ClassOf<T> = new (...args: any[]) => T;
+
+/**
+ * Use to define an injectable as a rest guard
+ */
+export interface RestGuard {
+  canSend(request: HttpRequest<any>): boolean | Promise<boolean>;
+}
 export type GuardFunction = <T = any>(request: HttpRequest<T>) => boolean | Promise<boolean>;
 export type GuardFunctionsOf<T> = FunctionsOf<T, GuardFunction>;
-export type Guard<T> = Array<GuardFunctionsOf<T> | GuardFunction> | GuardFunctionsOf<T> | GuardFunction;
+export type GuardType<T> = GuardFunctionsOf<T> | GuardFunction | ClassOf<RestGuard>;
+export type Guard<T> = GuardType<T>[] | GuardType<T>;
 
 export type HandlerFunction = (original: HttpResponse<any> | HttpErrorResponse, current: any) => any | Promise<any>;
 export type HandlerFunctionsOf<T> = FunctionsOf<T, HandlerFunction>;
 export type HandlersOf<T> = Array<HandlerFunctionsOf<T> | HandlerFunction | (new (...args: any[]) => Handler)>;
+export interface Handler {
+  handle: HandlerFunction;
+}
 
 export interface HeadersObject {
   [key: string]: string | string[];
@@ -48,13 +72,9 @@ export abstract class HeadersInjector {
   abstract inject(): HeaderInjectorResponse;
 }
 
-export type HeaderInjectorType = new (...args: any[]) => HeadersInjector;
+export type HeaderInjectorType = ClassOf<HeadersInjector>;
 export type HeadersParam = Array<HeadersObject | HeaderInjectorType>;
 export type HeadersClientParam<T> = Array<HeadersObject | HeaderInjectorType | FunctionsOf<T, () => HeaderInjectorResponse>>;
-
-export interface Handler {
-  handle: HandlerFunction;
-}
 
 export interface ClientInstance {
   [INJECTOR]: Injector;
