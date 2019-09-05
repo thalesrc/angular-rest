@@ -104,6 +104,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/RequestConfig.html" data-type="entity-link">RequestConfig</a>
                             </li>
                             <li class="link">
+                                <a href="interfaces/RestGuard.html" data-type="entity-link">RestGuard</a>
+                            </li>
+                            <li class="link">
                                 <a href="interfaces/RootConfiguration.html" data-type="entity-link">RootConfiguration</a>
                             </li>
                         </ul>

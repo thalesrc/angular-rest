@@ -168,14 +168,52 @@ export class TodoClient {
 <p>To be determined</p>
 <hr>
 <h3 id="34-guards">3.4. Guards</h3>
-<p>To be determined</p>
+<p>Guards run just before a request has been sent to check whether request should be sent or not</p>
 <h4 id="341-guard-declaration-methods">3.4.1. Guard Declaration Methods</h4>
-<p>To be determined</p>
+<p>Guards can be a function, a method of a client or an injectable of <code>RestGuard</code></p>
 <h5 id="3411-restguard">3.4.1.1 RestGuard</h5>
-<p>To be developed</p>
-<h5 id="3412-guard-function">3.4.1.2. Guard Function</h5>
-<p>To be determined</p>
-<h5 id="3413-guard-method">3.4.1.3. Guard Method</h5>
+<p>Define an injectable as a rest guard and declare them as a guard (<a href="#342-base-guards">Base Guard</a>, <a href="#343-client-guards">Client Guard</a>, <a href="#344-method-guards">Method Guard</a>) to check a request can be sent or not.</p>
+<p><strong>Don&#39;t forget to provide them in a module</strong></p>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">&#64;Injectable()
+export class PostTodoGuard implements RestGuard {
+ constructor(private session: SessionService) {}
+
+ async canSend(req: HttpRequest&lt;any&gt;): Promise&lt;boolean&gt; {
+   return await this.session.loggedIn$.pipe(first()).toPromise()
+ }
+}
+
+&#64;Client()
+export class TodoClient {
+ &#64;Post(&#39;todos&#39;)
+ &#64;Guards([PostTodoGuard])
+ public async postTodos(todo: Todo): Promise&lt;void&gt; {
+   return null;
+ }
+}
+
+&#64;NgModule({
+ providers: [
+   TodoClient,
+   PostTodoGuard
+ ]
+})
+export class TodoModule {}</code></pre></div><h5 id="3412-guard-function">3.4.1.2. Guard Function</h5>
+<p>A single function can be a rest guard if it accepts first param as <code>HttpRequest&lt;any&gt;</code> and returns whether <code>boolean</code> or <code>Promise&lt;boolean&gt;</code></p>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">function postTodoGuard(req: HttpRequest&lt;Todo&gt;): boolean {
+  return req.body.canBeSent;
+}
+
+&#64;Client()
+export class TodoClient {
+ &#64;Post(&#39;todos&#39;)
+ &#64;Guards([postTodoGuard])
+ public async postTodos(todo: Todo): Promise&lt;void&gt; {
+   return null;
+ }
+}</code></pre></div><h5 id="3413-guard-method">3.4.1.3. Guard Method</h5>
 <p>To be determined</p>
 <h4 id="342-base-guards">3.4.2. Base Guards</h4>
 <p>To be determined</p>

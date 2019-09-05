@@ -372,11 +372,21 @@ async function startGuardCheck(
 
   return await allGuards.reduce((prev, next) &#x3D;&gt; {
     return prev.then(passed &#x3D;&gt; {
+      let result;
+
       if (!passed) {
         throw false;
       }
 
-      let result &#x3D; typeof next &#x3D;&#x3D;&#x3D; &#x27;function&#x27; ? next(request) : (&lt;any&gt;context)[next](request);
+      if (typeof next &#x3D;&#x3D;&#x3D; &#x27;function&#x27;) {
+        if (next.prototype &amp;&amp; &#x27;canSend&#x27; in next.prototype) {
+          result &#x3D; context[INJECTOR].get(next).canSend(request);
+        } else {
+          result &#x3D; next(request);
+        }
+      } else {
+        result &#x3D; (&lt;any&gt;context)[next](request);
+      }
 
       if (result instanceof Observable) {
         result &#x3D; result.toPromise();
