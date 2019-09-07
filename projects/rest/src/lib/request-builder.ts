@@ -1,7 +1,7 @@
 import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
           CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf,
           ERROR_HANDLER, RequestMethod, PARAM_HEADERS, HeadersParam, HeadersInjector,
-          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS } from './types';
+          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS, PATHS } from './types';
 import { HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { REST_HANDLERS, BASE_HEADERS, BASE_WITH_CREDENTIALS } from './tokens';
@@ -20,9 +20,13 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
   return function (path?: string): RestPropertyDecorator {
     return function (target: ClientConstructor, methodName: string, descriptor: PropertyDescriptor): PropertyDescriptor {
       descriptor.value = async function(this: ClientInstance, ...args: any[]) {
-        // > Configure full url
+        // > Configure endpoint
         // _____________________________________________________________________________
-        const url = path !== undefined ? path : methodName;
+        let endpoint = path !== undefined ? path : methodName;
+
+        for (const [param, index] of Object.entries((target.constructor[PATHS] || {})[methodName] || {})) {
+          endpoint = endpoint.replace(':' + param, args[index]);
+        }
 
         // > Configure request body
         // _____________________________________________________________________________
@@ -97,21 +101,21 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
 
         // > Create request object
         // _____________________________________________________________________________
-        const request = requestFactory(type as any, `${this[BASE_URL]}/${url}`, { body, headers, withCredentials });
+        const request = requestFactory(type as any, `${this[BASE_URL]}/${endpoint}`, { body, headers, withCredentials });
 
         // > Run guard process
         // _____________________________________________________________________________
-        try {
-          const guardsResult = await startGuardCheck(target, methodName, request, this);
-          if (!guardsResult) { throw false; }
+        const guardsPromise = startGuardCheck(target, methodName, request, this)
+          .then(result => {
+            if (!result) { throw false; }
+          })
+          .catch(error => {
+            if (error === false) {
+              throw new GuardForbid(request);
+            }
 
-        } catch (error) {
-          if (error === false) {
-            throw new GuardForbid(request);
-          }
-
-          throw error;
-        }
+            throw error;
+          });
 
         // > Handlers
         // _____________________________________________________________________________
@@ -124,7 +128,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
         return await chainHandlers(
           [...globalHandlers, ...clientHandlers, ...methodHandlers],
           this,
-          <Promise<HttpResponse<any>>>this[HTTP_CLIENT].request(request).toPromise()
+          guardsPromise.then(() => <Promise<HttpResponse<any>>>this[HTTP_CLIENT].request(request).toPromise())
         );
       };
 

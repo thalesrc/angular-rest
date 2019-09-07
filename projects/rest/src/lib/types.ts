@@ -7,6 +7,7 @@ export const BASE_URL: unique symbol = Symbol('BASE_URL');
 export const GUARDS: unique symbol = Symbol('GUARDS');
 export const CLIENT_GUARDS: unique symbol = Symbol('CLIENT_GUARDS');
 export const BODIES: unique symbol = Symbol('BODIES');
+export const PATHS: unique symbol = Symbol('PATHS');
 export const HANDLERS: unique symbol = Symbol('HANDLERS');
 export const CLIENT_HANDLERS: unique symbol = Symbol('CLIENT_HANDLERS');
 export const ERROR_HANDLER: unique symbol = Symbol('ERROR_HANDLER');
@@ -91,6 +92,11 @@ export interface ClientConstructor<T = unknown> extends Object {
     };
     [BODIES]: {
       [key: string]: number;
+    };
+    [PATHS]: {
+      [key: string]: {
+        [key: string]: number;
+      };
     };
     [HANDLERS]: {
       [CLIENT_HANDLERS]: HandlersOf<T>;

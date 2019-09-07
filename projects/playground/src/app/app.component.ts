@@ -10,6 +10,7 @@ export class AppComponent {
   title = 'playground';
 
   constructor(a: AppService) {
-    a.login({email: 'dsa@dsa.com', password: '1234'}, 'Bearer Ali Sahin', 'dsadsadsa').then(console.log).catch(console.warn);
+    a.login({email: 'dsa@dsa.com', password: '1234'}, 'Bearer Ali Sahin', 'dsadsadsa', '1234', 'anahtar')
+      .then(console.log).catch(console.warn);
   }
 }

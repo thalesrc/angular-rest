@@ -6,7 +6,6 @@
 # @thalesrc/angular-rest
 Angular Rest Http Module with Typescript Declarative Annotations, Guards, Handlers and more
 
-_This package is under development. Use in caution!_
 ____________________________________________________________________________
 
 ## 1. Installation
@@ -115,7 +114,6 @@ interface ClientOptions<T> {
   handlers?: HandlersOf<T>;
   baseHeaders?: HeadersClientParam<T>;
   providedIn?: Type<any> | 'root';
-  onReady?: FunctionsOf<T, Function>;
 }
 ```
 
@@ -162,41 +160,110 @@ export class TodoClient {
 }
 ```
 ____________________________________________________________________________
-### 3.3. Headers
+### 3.3. Body Parameter Decorator
+
+Mark a parameter with `@Body()` decorator to fill body object with it.
+
+A `FormData` instance can be used for image uploads etc.
+
+*`Body` decorator can be used in only POST, PUT, PATCH requests*
+
+*Example:*
+```ts
+@Client()
+export class TodoClient {
+  @Post('todos')
+  public postTodo(@Body() todo: Todo): Promise<Todo> {
+    return null;
+  }
+
+  @Post('image')
+  public uploadImage(@Body() data: FormData): Promise<string> {
+    return null;
+  }
+}
+
+@Component({
+  ...
+})
+export class AComponent {
+  constructor(private client: TodoClient) {}
+
+  public async postTodo(todo: Todo): Promise<Todo> {
+    return await this.client.postTodo(todo);
+  }
+
+  public async uploadImage(image: Blob): Promise<string> {
+    const data = new FormData();
+    data.append('image', image);
+
+    return await this.client.uploadImage(data);
+  }
+}
+```
+____________________________________________________________________________
+### 3.3. Path Parameter Decorator
+
+Mark a parameter decorated with `Path` to replace the specified key in the url
+
+*Example:*
+```ts
+@Client()
+export class TodoClient {
+  @Patch('todos/:id')
+  public patchTodo(@Body() todo: Todo, @Path('id') id: string): Promise<Todo> {
+    return null;
+  }
+}
+
+@Component({
+  ...
+})
+export class AComponent {
+  constructor(private client: TodoClient) {}
+
+  public async postTodo(todo: Todo, todoId: string): Promise<Todo> {
+    return await this.client.patchTodo(todo, todoId);
+  }
+}
+```
+
+____________________________________________________________________________
+### 3.5. Headers
 To be determined
 
-#### 3.3.1. Header Declaration Methods
+#### 3.5.1. Header Declaration Methods
 To be determined
 
-##### 3.3.1.1 HeaderInjector
+##### 3.5.1.1 HeaderInjector
 To be determined
 
-##### 3.3.1.2 HeadersObject
+##### 3.5.1.2 HeadersObject
 To be determined
 
-##### 3.3.1.3 Headers as Client Method
+##### 3.5.1.3 Headers as Client Method
 To be determined
 
-#### 3.3.2. Base Headers
+#### 3.5.2. Base Headers
 To be determined
 
-#### 3.3.3. Client Headers
+#### 3.5.3. Client Headers
 To be determined
 
-#### 3.3.4. Parameter Headers
+#### 3.5.4. Parameter Headers
 To be determined
 ____________________________________________________________________________
-### 3.4. Guards
+### 3.6. Guards
 
 Guards run just before a request has been sent to check whether request should be sent or not
 
-#### 3.4.1. Guard Declaration Methods
+#### 3.6.1. Guard Declaration Methods
 
 Guards can be a function, a method of a client or an injectable of `RestGuard`
 
-##### 3.4.1.1 RestGuard
+##### 3.6.1.1 RestGuard
 
-Define an injectable as a rest guard and declare them as a guard ([Base Guard](#342-base-guards), [Client Guard](#343-client-guards), [Method Guard](#344-method-guards)) to check a request can be sent or not.
+Define an injectable as a rest guard and declare them as a guard ([Base Guard](#362-base-guards), [Client Guard](#363-client-guards), [Method Guard](#364-method-guards)) to check a request can be sent or not.
 
 __Don't forget to provide them in a module__
 
@@ -229,7 +296,7 @@ export class TodoClient {
 export class TodoModule {}
 ```
 
-##### 3.4.1.2. Guard Function
+##### 3.6.1.2. Guard Function
 
 A single function can be a rest guard if it accepts first param as `HttpRequest<any>` and returns whether `boolean` or `Promise<boolean>`
 
@@ -249,49 +316,49 @@ export class TodoClient {
 }
 ```
 
-##### 3.4.1.3. Guard Method
+##### 3.6.1.3. Guard Method
 To be determined
 
-#### 3.4.2. Base Guards
+#### 3.6.2. Base Guards
 To be determined
 
-#### 3.4.3. Client Guards
+#### 3.6.3. Client Guards
 To be determined
 
-#### 3.4.4. Method Guards
+#### 3.6.4. Method Guards
 To be determined
 ____________________________________________________________________________
-### 4.5. Handlers
+### 3.7. Handlers
 To be determined
 
-#### 4.5.1 ErrorHandlers
+#### 3.7.1 ErrorHandlers
 To be determined
 
-#### 4.5.2 Handler Declaration Methods
+#### 3.7.2 Handler Declaration Methods
 To be determined
 
-##### 4.5.2.1 Handler
+##### 3.7.2.1 Handler
 To be determined
 
-##### 4.5.2.2 Handler Function
+##### 3.7.2.2 Handler Function
 To be determined
 
-##### 4.5.2.3 Handler Method
+##### 3.7.2.3 Handler Method
 To be determined
 
-#### 4.5.3 Base Handlers
+#### 3.7.3 Base Handlers
 To be determined
 
-#### 4.5.4 Client Handlers
+#### 3.7.4 Client Handlers
 To be determined
 
-#### 4.5.5 Method Handlers
+#### 3.7.5 Method Handlers
 To be determined
 ____________________________________________________________________________
-### 4.6. RestModule
+### 3.8. RestModule
 To be determined
 ____________________________________________________________________________
-### 4.7 OnClientReady Decorator
+### 3.9. OnClientReady Decorator
 
 In client constructor functions, calling a rest call is forbidden. Because the client dependencies have not been set yet when the constructor function called.
 
@@ -322,10 +389,10 @@ export class TodoClient {
 }
 ```
 ____________________________________________________________________________
-### 4.8 WithCredentials Option
+### 3.10. WithCredentials Option
 Defines whether a request should be sent with outgoing credentials (cookies). Default `true`
 
-#### 4.8.1. As Module Config
+#### 3.10.1. As Module Config
 It can be set in module config as base option. That would configure for all requests unless it is declared especially by other methods.
 
 *Example:*
@@ -342,7 +409,7 @@ import { RestModule } from '@thalesrc/angular-rest';
 export class AppModule {}
 ```
 
-#### 4.8.2. As Provider
+#### 3.10.2. As Provider
 It can be provided with the `BASE_WITH_CREDENTIALS` token as base option. That would also configure for all requests like [As Module Config](#481-as-module-config) unless it is declared especially by other methods.
 
 *Example:*
@@ -363,7 +430,7 @@ import { RestModule, BASE_WITH_CREDENTIALS } from '@thalesrc/angular-rest';
 export class AppModule {}
 ```
 
-#### 4.8.3. As Client Config
+#### 3.10.3. As Client Config
 It can be set in `@Client()` decorator as an option. That would configure withCredentials option for all the calls in that client.
 
 *Example:*
@@ -378,7 +445,7 @@ export class TodoClient {
 }
 ```
 
-#### 4.8.4. WithCredentials Decorator
+#### 3.10.4. WithCredentials Decorator
 It can be set by `@WithCredentials()` decorator on top a rest call. That would configure withCredentials option for only that call.
 
 *Example:*
@@ -395,7 +462,7 @@ export class TodoClient {
 }
 ```
 
-#### 4.8.5. WithCredentialsParam Decorator
+#### 3.10.5. WithCredentialsParam Decorator
 to be developed
 
 ____________________________________________________________________________

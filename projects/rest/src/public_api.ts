@@ -12,6 +12,7 @@ export { Client } from './lib/client.decorator';
 export { Get, Post, Patch, Put, Delete, Head } from './lib/request.decorator';
 export { Guards } from './lib/guards.decorator';
 export { Body } from './lib/body.decorator';
+export { Path } from './lib/path.decorator';
 export { Handlers } from './lib/handlers.decorator';
 export { Header } from './lib/header.decorator';
 export { Headers } from './lib/headers.decorator';

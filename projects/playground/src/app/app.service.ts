@@ -1,4 +1,4 @@
-import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard } from '@rest';
+import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard, Path } from '@rest';
 import { HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Injector, Injectable } from '@angular/core';
 
@@ -6,7 +6,7 @@ import { Injector, Injectable } from '@angular/core';
 export class AGuard implements RestGuard {
   canSend(req: HttpRequest<any>): boolean {
     console.log(req);
-    return false;
+    return true;
   }
 }
 
@@ -32,14 +32,16 @@ export class AppService {
     return {'method': 'headers'};
   }
 
-  @Post('login')
+  @Post('login/:id/:key')
   @Handlers<AppService>(['handle400'])
   @Headers<AppService>(['setLoginHeaders'])
   @WithCredentials(false)
   async login(
     @Body() body: any,
     @Header('Authorization') token: string,
-    @Header('Test-Header') testHeader: string
+    @Header('Test-Header') testHeader: string,
+    @Path('id') id: string,
+    @Path('key') key: string
   ): Promise<string> {
     return null;
   }
