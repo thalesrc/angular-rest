@@ -200,7 +200,7 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
           CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf,
           ERROR_HANDLER, RequestMethod, PARAM_HEADERS, HeadersParam, HeadersInjector,
-          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS } from &#x27;./types&#x27;;
+          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS, PATHS } from &#x27;./types&#x27;;
 import { HttpRequest, HttpResponse, HttpHeaders } from &#x27;@angular/common/http&#x27;;
 import { Observable } from &#x27;rxjs&#x27;;
 import { REST_HANDLERS, BASE_HEADERS, BASE_WITH_CREDENTIALS } from &#x27;./tokens&#x27;;
@@ -219,9 +219,13 @@ export function requestBuilder(type: RequestMethod): (path?: string) &#x3D;&gt; 
   return function (path?: string): RestPropertyDecorator {
     return function (target: ClientConstructor, methodName: string, descriptor: PropertyDescriptor): PropertyDescriptor {
       descriptor.value &#x3D; async function(this: ClientInstance, ...args: any[]) {
-        // &gt; Configure full url
+        // &gt; Configure endpoint
         // _____________________________________________________________________________
-        const url &#x3D; path !&#x3D;&#x3D; undefined ? path : methodName;
+        let endpoint &#x3D; path !&#x3D;&#x3D; undefined ? path : methodName;
+
+        for (const [param, index] of Object.entries((target.constructor[PATHS] || {})[methodName] || {})) {
+          endpoint &#x3D; endpoint.replace(&#x27;:&#x27; + param, args[index]);
+        }
 
         // &gt; Configure request body
         // _____________________________________________________________________________
@@ -296,21 +300,21 @@ export function requestBuilder(type: RequestMethod): (path?: string) &#x3D;&gt; 
 
         // &gt; Create request object
         // _____________________________________________________________________________
-        const request &#x3D; requestFactory(type as any, &#x60;${this[BASE_URL]}/${url}&#x60;, { body, headers, withCredentials });
+        const request &#x3D; requestFactory(type as any, &#x60;${this[BASE_URL]}/${endpoint}&#x60;, { body, headers, withCredentials });
 
         // &gt; Run guard process
         // _____________________________________________________________________________
-        try {
-          const guardsResult &#x3D; await startGuardCheck(target, methodName, request, this);
-          if (!guardsResult) { throw false; }
+        const guardsPromise &#x3D; startGuardCheck(target, methodName, request, this)
+          .then(result &#x3D;&gt; {
+            if (!result) { throw false; }
+          })
+          .catch(error &#x3D;&gt; {
+            if (error &#x3D;&#x3D;&#x3D; false) {
+              throw new GuardForbid(request);
+            }
 
-        } catch (error) {
-          if (error &#x3D;&#x3D;&#x3D; false) {
-            throw new GuardForbid(request);
-          }
-
-          throw error;
-        }
+            throw error;
+          });
 
         // &gt; Handlers
         // _____________________________________________________________________________
@@ -323,7 +327,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) &#x3D;&gt; 
         return await chainHandlers(
           [...globalHandlers, ...clientHandlers, ...methodHandlers],
           this,
-          &lt;Promise&lt;HttpResponse&lt;any&gt;&gt;&gt;this[HTTP_CLIENT].request(request).toPromise()
+          guardsPromise.then(() &#x3D;&gt; &lt;Promise&lt;HttpResponse&lt;any&gt;&gt;&gt;this[HTTP_CLIENT].request(request).toPromise())
         );
       };
 

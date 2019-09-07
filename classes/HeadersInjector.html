@@ -128,8 +128,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="72"
-                            class="link-to-prism">projects/rest/src/lib/types.ts:72</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">projects/rest/src/lib/types.ts:73</a></div>
                 </td>
             </tr>
 
@@ -164,6 +164,7 @@ export const BASE_URL: unique symbol &#x3D; Symbol(&#x27;BASE_URL&#x27;);
 export const GUARDS: unique symbol &#x3D; Symbol(&#x27;GUARDS&#x27;);
 export const CLIENT_GUARDS: unique symbol &#x3D; Symbol(&#x27;CLIENT_GUARDS&#x27;);
 export const BODIES: unique symbol &#x3D; Symbol(&#x27;BODIES&#x27;);
+export const PATHS: unique symbol &#x3D; Symbol(&#x27;PATHS&#x27;);
 export const HANDLERS: unique symbol &#x3D; Symbol(&#x27;HANDLERS&#x27;);
 export const CLIENT_HANDLERS: unique symbol &#x3D; Symbol(&#x27;CLIENT_HANDLERS&#x27;);
 export const ERROR_HANDLER: unique symbol &#x3D; Symbol(&#x27;ERROR_HANDLER&#x27;);
@@ -248,6 +249,11 @@ export interface ClientConstructor&lt;T &#x3D; unknown&gt; extends Object {
     };
     [BODIES]: {
       [key: string]: number;
+    };
+    [PATHS]: {
+      [key: string]: {
+        [key: string]: number;
+      };
     };
     [HANDLERS]: {
       [CLIENT_HANDLERS]: HandlersOf&lt;T&gt;;

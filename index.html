@@ -37,7 +37,6 @@
 <a href="https://github.com/ellerbrock/typescript-badges/"><img src="https://badges.frapsoft.com/typescript/version/typescript-next.svg?v=101" alt="TypeScript" class="img-responsive"></a></p>
 <h1 id="thalesrcangular-rest">@thalesrc/angular-rest</h1>
 <p>Angular Rest Http Module with Typescript Declarative Annotations, Guards, Handlers and more</p>
-<p><em>This package is under development. Use in caution!</em></p>
 <hr>
 <h2 id="1-installation">1. Installation</h2>
 <div><pre class="line-numbers"><code class="language-sh">yarn add &#64;thalesrc/angular-rest</code></pre></div><p>or</p>
@@ -115,7 +114,6 @@ export class TodoComponent {
   handlers?: HandlersOf&lt;T&gt;;
   baseHeaders?: HeadersClientParam&lt;T&gt;;
   providedIn?: Type&lt;any&gt; | &#39;root&#39;;
-  onReady?: FunctionsOf&lt;T, Function&gt;;
 }</code></pre></div><div><pre class="line-numbers"><code class="language-ts">&#64;Client({
   baseUrl: &#39;http://localhost:3000&#39;,
   baseHeaders: [{&#39;Secret-Key&#39;: &#39;The best rest util is &#64;thalesrc/angular-rest&#39;}]
@@ -150,29 +148,85 @@ export class TodoClient {
     return null;
   }
 }</code></pre></div><hr>
-<h3 id="33-headers">3.3. Headers</h3>
+<h3 id="33-body-parameter-decorator">3.3. Body Parameter Decorator</h3>
+<p>Mark a parameter with <code>@Body()</code> decorator to fill body object with it.</p>
+<p>A <code>FormData</code> instance can be used for image uploads etc.</p>
+<p><em><code>Body</code> decorator can be used in only POST, PUT, PATCH requests</em></p>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">&#64;Client()
+export class TodoClient {
+  &#64;Post(&#39;todos&#39;)
+  public postTodo(&#64;Body() todo: Todo): Promise&lt;Todo&gt; {
+    return null;
+  }
+
+  &#64;Post(&#39;image&#39;)
+  public uploadImage(&#64;Body() data: FormData): Promise&lt;string&gt; {
+    return null;
+  }
+}
+
+&#64;Component({
+  ...
+})
+export class AComponent {
+  constructor(private client: TodoClient) {}
+
+  public async postTodo(todo: Todo): Promise&lt;Todo&gt; {
+    return await this.client.postTodo(todo);
+  }
+
+  public async uploadImage(image: Blob): Promise&lt;string&gt; {
+    const data = new FormData();
+    data.append(&#39;image&#39;, image);
+
+    return await this.client.uploadImage(data);
+  }
+}</code></pre></div><hr>
+<h3 id="33-path-parameter-decorator">3.3. Path Parameter Decorator</h3>
+<p>Mark a parameter decorated with <code>Path</code> to replace the specified key in the url</p>
+<p><em>Example:</em></p>
+<div><pre class="line-numbers"><code class="language-ts">&#64;Client()
+export class TodoClient {
+  &#64;Patch(&#39;todos/:id&#39;)
+  public patchTodo(&#64;Body() todo: Todo, &#64;Path(&#39;id&#39;) id: string): Promise&lt;Todo&gt; {
+    return null;
+  }
+}
+
+&#64;Component({
+  ...
+})
+export class AComponent {
+  constructor(private client: TodoClient) {}
+
+  public async postTodo(todo: Todo, todoId: string): Promise&lt;Todo&gt; {
+    return await this.client.patchTodo(todo, todoId);
+  }
+}</code></pre></div><hr>
+<h3 id="35-headers">3.5. Headers</h3>
 <p>To be determined</p>
-<h4 id="331-header-declaration-methods">3.3.1. Header Declaration Methods</h4>
+<h4 id="351-header-declaration-methods">3.5.1. Header Declaration Methods</h4>
 <p>To be determined</p>
-<h5 id="3311-headerinjector">3.3.1.1 HeaderInjector</h5>
+<h5 id="3511-headerinjector">3.5.1.1 HeaderInjector</h5>
 <p>To be determined</p>
-<h5 id="3312-headersobject">3.3.1.2 HeadersObject</h5>
+<h5 id="3512-headersobject">3.5.1.2 HeadersObject</h5>
 <p>To be determined</p>
-<h5 id="3313-headers-as-client-method">3.3.1.3 Headers as Client Method</h5>
+<h5 id="3513-headers-as-client-method">3.5.1.3 Headers as Client Method</h5>
 <p>To be determined</p>
-<h4 id="332-base-headers">3.3.2. Base Headers</h4>
+<h4 id="352-base-headers">3.5.2. Base Headers</h4>
 <p>To be determined</p>
-<h4 id="333-client-headers">3.3.3. Client Headers</h4>
+<h4 id="353-client-headers">3.5.3. Client Headers</h4>
 <p>To be determined</p>
-<h4 id="334-parameter-headers">3.3.4. Parameter Headers</h4>
+<h4 id="354-parameter-headers">3.5.4. Parameter Headers</h4>
 <p>To be determined</p>
 <hr>
-<h3 id="34-guards">3.4. Guards</h3>
+<h3 id="36-guards">3.6. Guards</h3>
 <p>Guards run just before a request has been sent to check whether request should be sent or not</p>
-<h4 id="341-guard-declaration-methods">3.4.1. Guard Declaration Methods</h4>
+<h4 id="361-guard-declaration-methods">3.6.1. Guard Declaration Methods</h4>
 <p>Guards can be a function, a method of a client or an injectable of <code>RestGuard</code></p>
-<h5 id="3411-restguard">3.4.1.1 RestGuard</h5>
-<p>Define an injectable as a rest guard and declare them as a guard (<a href="#342-base-guards">Base Guard</a>, <a href="#343-client-guards">Client Guard</a>, <a href="#344-method-guards">Method Guard</a>) to check a request can be sent or not.</p>
+<h5 id="3611-restguard">3.6.1.1 RestGuard</h5>
+<p>Define an injectable as a rest guard and declare them as a guard (<a href="#362-base-guards">Base Guard</a>, <a href="#363-client-guards">Client Guard</a>, <a href="#364-method-guards">Method Guard</a>) to check a request can be sent or not.</p>
 <p><strong>Don&#39;t forget to provide them in a module</strong></p>
 <p><em>Example:</em></p>
 <div><pre class="line-numbers"><code class="language-ts">&#64;Injectable()
@@ -199,7 +253,7 @@ export class TodoClient {
    PostTodoGuard
  ]
 })
-export class TodoModule {}</code></pre></div><h5 id="3412-guard-function">3.4.1.2. Guard Function</h5>
+export class TodoModule {}</code></pre></div><h5 id="3612-guard-function">3.6.1.2. Guard Function</h5>
 <p>A single function can be a rest guard if it accepts first param as <code>HttpRequest&lt;any&gt;</code> and returns whether <code>boolean</code> or <code>Promise&lt;boolean&gt;</code></p>
 <p><em>Example:</em></p>
 <div><pre class="line-numbers"><code class="language-ts">function postTodoGuard(req: HttpRequest&lt;Todo&gt;): boolean {
@@ -213,38 +267,38 @@ export class TodoClient {
  public async postTodos(todo: Todo): Promise&lt;void&gt; {
    return null;
  }
-}</code></pre></div><h5 id="3413-guard-method">3.4.1.3. Guard Method</h5>
+}</code></pre></div><h5 id="3613-guard-method">3.6.1.3. Guard Method</h5>
 <p>To be determined</p>
-<h4 id="342-base-guards">3.4.2. Base Guards</h4>
+<h4 id="362-base-guards">3.6.2. Base Guards</h4>
 <p>To be determined</p>
-<h4 id="343-client-guards">3.4.3. Client Guards</h4>
+<h4 id="363-client-guards">3.6.3. Client Guards</h4>
 <p>To be determined</p>
-<h4 id="344-method-guards">3.4.4. Method Guards</h4>
-<p>To be determined</p>
-<hr>
-<h3 id="45-handlers">4.5. Handlers</h3>
-<p>To be determined</p>
-<h4 id="451-errorhandlers">4.5.1 ErrorHandlers</h4>
-<p>To be determined</p>
-<h4 id="452-handler-declaration-methods">4.5.2 Handler Declaration Methods</h4>
-<p>To be determined</p>
-<h5 id="4521-handler">4.5.2.1 Handler</h5>
-<p>To be determined</p>
-<h5 id="4522-handler-function">4.5.2.2 Handler Function</h5>
-<p>To be determined</p>
-<h5 id="4523-handler-method">4.5.2.3 Handler Method</h5>
-<p>To be determined</p>
-<h4 id="453-base-handlers">4.5.3 Base Handlers</h4>
-<p>To be determined</p>
-<h4 id="454-client-handlers">4.5.4 Client Handlers</h4>
-<p>To be determined</p>
-<h4 id="455-method-handlers">4.5.5 Method Handlers</h4>
+<h4 id="364-method-guards">3.6.4. Method Guards</h4>
 <p>To be determined</p>
 <hr>
-<h3 id="46-restmodule">4.6. RestModule</h3>
+<h3 id="37-handlers">3.7. Handlers</h3>
+<p>To be determined</p>
+<h4 id="371-errorhandlers">3.7.1 ErrorHandlers</h4>
+<p>To be determined</p>
+<h4 id="372-handler-declaration-methods">3.7.2 Handler Declaration Methods</h4>
+<p>To be determined</p>
+<h5 id="3721-handler">3.7.2.1 Handler</h5>
+<p>To be determined</p>
+<h5 id="3722-handler-function">3.7.2.2 Handler Function</h5>
+<p>To be determined</p>
+<h5 id="3723-handler-method">3.7.2.3 Handler Method</h5>
+<p>To be determined</p>
+<h4 id="373-base-handlers">3.7.3 Base Handlers</h4>
+<p>To be determined</p>
+<h4 id="374-client-handlers">3.7.4 Client Handlers</h4>
+<p>To be determined</p>
+<h4 id="375-method-handlers">3.7.5 Method Handlers</h4>
 <p>To be determined</p>
 <hr>
-<h3 id="47-onclientready-decorator">4.7 OnClientReady Decorator</h3>
+<h3 id="38-restmodule">3.8. RestModule</h3>
+<p>To be determined</p>
+<hr>
+<h3 id="39-onclientready-decorator">3.9. OnClientReady Decorator</h3>
 <p>In client constructor functions, calling a rest call is forbidden. Because the client dependencies have not been set yet when the constructor function called.</p>
 <p>To run some code when client instance created, <code>@OnClientReady()</code> decorator can be used. It will mark a method of a client to be called right after construction.</p>
 <p><em>Example:</em></p>
@@ -269,9 +323,9 @@ export class TodoClient {
     return null;
   }
 }</code></pre></div><hr>
-<h3 id="48-withcredentials-option">4.8 WithCredentials Option</h3>
+<h3 id="310-withcredentials-option">3.10. WithCredentials Option</h3>
 <p>Defines whether a request should be sent with outgoing credentials (cookies). Default <code>true</code></p>
-<h4 id="481-as-module-config">4.8.1. As Module Config</h4>
+<h4 id="3101-as-module-config">3.10.1. As Module Config</h4>
 <p>It can be set in module config as base option. That would configure for all requests unless it is declared especially by other methods.</p>
 <p><em>Example:</em></p>
 <div><pre class="line-numbers"><code class="language-ts">import { NgModule } from &#39;&#64;angular/core&#39;;
@@ -283,7 +337,7 @@ import { RestModule } from &#39;&#64;thalesrc/angular-rest&#39;;
     ...
   ],
 })
-export class AppModule {}</code></pre></div><h4 id="482-as-provider">4.8.2. As Provider</h4>
+export class AppModule {}</code></pre></div><h4 id="3102-as-provider">3.10.2. As Provider</h4>
 <p>It can be provided with the <code>BASE_WITH_CREDENTIALS</code> token as base option. That would also configure for all requests like <a href="#481-as-module-config">As Module Config</a> unless it is declared especially by other methods.</p>
 <p><em>Example:</em></p>
 <div><pre class="line-numbers"><code class="language-ts">import { NgModule } from &#39;&#64;angular/core&#39;;
@@ -299,7 +353,7 @@ import { RestModule, BASE_WITH_CREDENTIALS } from &#39;&#64;thalesrc/angular-res
     ...
   ]
 })
-export class AppModule {}</code></pre></div><h4 id="483-as-client-config">4.8.3. As Client Config</h4>
+export class AppModule {}</code></pre></div><h4 id="3103-as-client-config">3.10.3. As Client Config</h4>
 <p>It can be set in <code>@Client()</code> decorator as an option. That would configure withCredentials option for all the calls in that client.</p>
 <p><em>Example:</em></p>
 <div><pre class="line-numbers"><code class="language-ts">import { Client } from &#39;&#64;thalesrc/angular-rest&#39;;
@@ -309,7 +363,7 @@ export class AppModule {}</code></pre></div><h4 id="483-as-client-config">4.8.3.
 })
 export class TodoClient {
   ...
-}</code></pre></div><h4 id="484-withcredentials-decorator">4.8.4. WithCredentials Decorator</h4>
+}</code></pre></div><h4 id="3104-withcredentials-decorator">3.10.4. WithCredentials Decorator</h4>
 <p>It can be set by <code>@WithCredentials()</code> decorator on top a rest call. That would configure withCredentials option for only that call.</p>
 <p><em>Example:</em></p>
 <div><pre class="line-numbers"><code class="language-ts">import { Client, WithCredentials } from &#39;&#64;thalesrc/angular-rest&#39;;
@@ -321,7 +375,7 @@ export class TodoClient {
   public todos(): Promise&lt;Todo[]&gt; {
     return null;
   }
-}</code></pre></div><h4 id="485-withcredentialsparam-decorator">4.8.5. WithCredentialsParam Decorator</h4>
+}</code></pre></div><h4 id="3105-withcredentialsparam-decorator">3.10.5. WithCredentialsParam Decorator</h4>
 <p>to be developed</p>
 <hr>
 <h2 id="4-aot-limitations">4. Aot Limitations</h2>
