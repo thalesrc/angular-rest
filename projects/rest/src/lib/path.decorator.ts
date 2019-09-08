@@ -15,7 +15,7 @@ export function Path(key: string): ParameterDecorator {
       ...target.constructor[PATHS],
       [propertyKey]: {
         ...target.constructor[PATHS][propertyKey],
-        [name]: parameterIndex
+        [key]: parameterIndex
       }
     };
   };
