@@ -114,7 +114,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/rest/src/lib/request-builder.ts:11</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/rest/src/lib/request-builder.ts:12</a></div>
                             </td>
                         </tr>
 
@@ -178,7 +178,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/rest/src/lib/request-builder.ts:13</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/rest/src/lib/request-builder.ts:14</a></div>
                             </td>
                         </tr>
 
@@ -200,8 +200,9 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
           CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf,
           ERROR_HANDLER, RequestMethod, PARAM_HEADERS, HeadersParam, HeadersInjector,
-          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS, PATHS } from &#x27;./types&#x27;;
-import { HttpRequest, HttpResponse, HttpHeaders } from &#x27;@angular/common/http&#x27;;
+          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS,
+          CLIENT_WITH_CREDENTIALS, PATHS, QUERIES } from &#x27;./types&#x27;;
+import { HttpRequest, HttpResponse, HttpHeaders, HttpParams } from &#x27;@angular/common/http&#x27;;
 import { Observable } from &#x27;rxjs&#x27;;
 import { REST_HANDLERS, BASE_HEADERS, BASE_WITH_CREDENTIALS } from &#x27;./tokens&#x27;;
 
@@ -234,6 +235,14 @@ export function requestBuilder(type: RequestMethod): (path?: string) &#x3D;&gt; 
 
         if (typeof bodyParamIndex &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
           body &#x3D; args[bodyParamIndex];
+        }
+
+        // &gt; Configure Queries
+        // _____________________________________________________________________________
+        let query &#x3D; new HttpParams();
+
+        for (const [param, index] of Object.entries((target.constructor[QUERIES] || {})[methodName] || {})) {
+          query &#x3D; query.append(param, args[index]);
         }
 
         // &gt; Configure Headers
@@ -300,7 +309,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) &#x3D;&gt; 
 
         // &gt; Create request object
         // _____________________________________________________________________________
-        const request &#x3D; requestFactory(type as any, &#x60;${this[BASE_URL]}/${endpoint}&#x60;, { body, headers, withCredentials });
+        const request &#x3D; requestFactory(type as any, &#x60;${this[BASE_URL]}/${endpoint}&#x60;, { body, headers, withCredentials, params: query });
 
         // &gt; Run guard process
         // _____________________________________________________________________________
@@ -339,6 +348,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) &#x3D;&gt; 
 interface RequestConfig {
   headers: HttpHeaders;
   withCredentials: boolean;
+  params: HttpParams;
 }
 
 function requestFactory&lt;T &#x3D; unknown&gt;(
