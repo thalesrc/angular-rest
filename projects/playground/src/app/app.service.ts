@@ -1,4 +1,4 @@
-import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard, Path } from '@rest';
+import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard, Path, Query } from '@rest';
 import { HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Injector, Injectable } from '@angular/core';
 
@@ -32,7 +32,7 @@ export class AppService {
     return {'method': 'headers'};
   }
 
-  @Post('login/:id/:key')
+  @Post('login/:id/:key?text=dsadsa')
   @Handlers<AppService>(['handle400'])
   @Headers<AppService>(['setLoginHeaders'])
   @WithCredentials(false)
@@ -41,7 +41,9 @@ export class AppService {
     @Header('Authorization') token: string,
     @Header('Test-Header') testHeader: string,
     @Path('id') id: string,
-    @Path('key') key: string
+    @Path('key') key: string,
+    @Query('search') search: string,
+    @Query('limit') limit: number
   ): Promise<string> {
     return null;
   }

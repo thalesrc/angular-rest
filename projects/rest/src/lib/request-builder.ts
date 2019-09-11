@@ -1,8 +1,9 @@
 import { ClientInstance, HTTP_CLIENT, BASE_URL, GUARDS, ClientConstructor,
           CLIENT_GUARDS, BODIES, INJECTOR, HANDLERS, CLIENT_HANDLERS, HandlersOf,
           ERROR_HANDLER, RequestMethod, PARAM_HEADERS, HeadersParam, HeadersInjector,
-          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS, PATHS } from './types';
-import { HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+          HeadersObject, HEADERS, CLIENT_HEADERS, HeadersClientParam, WITH_CREDENTIALS,
+          CLIENT_WITH_CREDENTIALS, PATHS, QUERIES } from './types';
+import { HttpRequest, HttpResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { REST_HANDLERS, BASE_HEADERS, BASE_WITH_CREDENTIALS } from './tokens';
 
@@ -35,6 +36,14 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
 
         if (typeof bodyParamIndex === 'number') {
           body = args[bodyParamIndex];
+        }
+
+        // > Configure Queries
+        // _____________________________________________________________________________
+        let query = new HttpParams();
+
+        for (const [param, index] of Object.entries((target.constructor[QUERIES] || {})[methodName] || {})) {
+          query = query.append(param, args[index]);
         }
 
         // > Configure Headers
@@ -101,7 +110,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
 
         // > Create request object
         // _____________________________________________________________________________
-        const request = requestFactory(type as any, `${this[BASE_URL]}/${endpoint}`, { body, headers, withCredentials });
+        const request = requestFactory(type as any, `${this[BASE_URL]}/${endpoint}`, { body, headers, withCredentials, params: query });
 
         // > Run guard process
         // _____________________________________________________________________________
@@ -140,6 +149,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
 interface RequestConfig {
   headers: HttpHeaders;
   withCredentials: boolean;
+  params: HttpParams;
 }
 
 function requestFactory<T = unknown>(

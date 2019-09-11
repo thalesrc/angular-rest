@@ -8,6 +8,7 @@ export const GUARDS: unique symbol = Symbol('GUARDS');
 export const CLIENT_GUARDS: unique symbol = Symbol('CLIENT_GUARDS');
 export const BODIES: unique symbol = Symbol('BODIES');
 export const PATHS: unique symbol = Symbol('PATHS');
+export const QUERIES: unique symbol = Symbol('QUERIES');
 export const HANDLERS: unique symbol = Symbol('HANDLERS');
 export const CLIENT_HANDLERS: unique symbol = Symbol('CLIENT_HANDLERS');
 export const ERROR_HANDLER: unique symbol = Symbol('ERROR_HANDLER');
@@ -94,6 +95,11 @@ export interface ClientConstructor<T = unknown> extends Object {
       [key: string]: number;
     };
     [PATHS]: {
+      [key: string]: {
+        [key: string]: number;
+      };
+    };
+    [QUERIES]: {
       [key: string]: {
         [key: string]: number;
       };
