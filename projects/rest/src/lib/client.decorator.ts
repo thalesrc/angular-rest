@@ -15,7 +15,7 @@ export function Client<T>(
     withCredentials
   }: ClientOptions<T> = {}
 ) {
-  return function(Target: new (...args: any[]) => T): new (...args: any[]) => T {
+  return function(Target: new (...args: any[]) => T): any {
     let originalArgs;
 
     Target[GUARDS] = {
