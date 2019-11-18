@@ -1,5 +1,5 @@
 import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard, Path, Query } from '@rest';
-import { HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpRequest, HttpResponse, HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Injector, Injectable } from '@angular/core';
 
 @Injectable()
@@ -14,11 +14,12 @@ export class AGuard implements RestGuard {
   baseUrl: 'http://localhost:3000',
   baseHeaders: [{client: 'x'}],
   withCredentials: false,
-  guards: [AGuard]
+  guards: [AGuard],
+  providedIn: 'root'
 })
 export class AppService {
-  constructor(injector: Injector) {
-    console.log(this);
+  constructor(http: HttpClient) {
+    console.log(http);
   }
 
   @ErrorHandler()

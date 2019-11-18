@@ -15,16 +15,8 @@ export function Client<T>(
     withCredentials
   }: ClientOptions<T> = {}
 ) {
-  return function ( Target: new (...args: any[]) => T ): any {
-    let params: Type<any>[];
-    let ctorParameters: () => {type: Type<any>}[];
-
-    if ('ctorParameters' in Target) {
-      ctorParameters = Target['ctorParameters'];
-      params = (ctorParameters() || []).map(p => p.type);
-    } else {
-      params = Reflect.getMetadata('design:paramtypes', Target) || [];
-    }
+  return function(Target: new (...args: any[]) => T): new (...args: any[]) => T {
+    let originalArgs;
 
     Target[GUARDS] = {
       ...Target[GUARDS],
@@ -48,30 +40,101 @@ export function Client<T>(
       };
     }
 
-    class RestClient {
-      constructor(injector: Injector) {
-        const newTarget = new (<any>Target)(...params.map(param => injector.get(param)));
+    const clientProxy = new Proxy(Target, {
+      construct(original, args) {
+        originalArgs = args;
 
-        newTarget[INJECTOR] = injector;
-        newTarget[HTTP_CLIENT] = injector.get(HttpClient);
-        newTarget[BASE_URL] = baseUrl || injector.get(BASE_URL_TOKEN);
+        return original['ngInjectableDef'].factory();
+      }
+    });
+
+    const targetProxy = new Proxy(class {}, {
+      construct(t, [injector]) {
+        const instance = new Target(...originalArgs) as any;
+
+        instance[INJECTOR] = injector;
+        instance[HTTP_CLIENT] = injector.get(HttpClient);
+        instance[BASE_URL] = baseUrl || injector.get(BASE_URL_TOKEN);
 
         if (Target[ON_CLIENT_READY]) {
-          newTarget[Target[ON_CLIENT_READY]]();
+          instance[Target[ON_CLIENT_READY]]();
         }
 
-        return newTarget;
+        return instance;
       }
-    }
+    });
 
-    for (const [key, value] of Object.entries(Target)) {
-      RestClient[key] = value;
-    }
-
-    Reflect.defineMetadata('design:paramtypes', [Injector], RestClient);
-
-    Injectable({ providedIn, deps: [...params, Injector]})(RestClient);
-
-    return <any>RestClient;
+    return Injectable({providedIn, deps: [Injector], useClass: targetProxy})(clientProxy);
   };
 }
+
+// export function Client<T>(
+//   {
+//     baseUrl,
+//     guards,
+//     providedIn,
+//     handlers = [],
+//     baseHeaders = [],
+//     withCredentials
+//   }: ClientOptions<T> = {}
+// ) {
+//   return function ( Target: new (...args: any[]) => T ): any {
+//     let params: Type<any>[];
+//     let ctorParameters: () => {type: Type<any>}[];
+
+//     if ('ctorParameters' in Target) {
+//       ctorParameters = Target['ctorParameters'];
+//       params = (ctorParameters() || []).map(function(p) {return p.type});
+//     } else {
+//       params = Reflect.getMetadata('design:paramtypes', Target) || [];
+//     }
+
+//     Target[GUARDS] = {
+//       ...Target[GUARDS],
+//       [CLIENT_GUARDS]: guards ? guards instanceof Array ? guards : [guards] : []
+//     };
+
+//     Target[HANDLERS] = {
+//       ...Target[HANDLERS],
+//       [CLIENT_HANDLERS]: [...handlers]
+//     };
+
+//     Target[HEADERS] = {
+//       ...Target[HEADERS],
+//       [CLIENT_HEADERS]: baseHeaders
+//     };
+
+//     if (typeof withCredentials !== undefined) {
+//       Target[WITH_CREDENTIALS] = {
+//         ...Target[WITH_CREDENTIALS],
+//         [CLIENT_WITH_CREDENTIALS]: withCredentials
+//       };
+//     }
+
+//     class RestClient {
+//       constructor(injector: Injector) {
+//         const newTarget = new (<any>Target)(...params.map(param => injector.get(param)));
+
+//         newTarget[INJECTOR] = injector;
+//         newTarget[HTTP_CLIENT] = injector.get(HttpClient);
+//         newTarget[BASE_URL] = baseUrl || injector.get(BASE_URL_TOKEN);
+
+//         if (Target[ON_CLIENT_READY]) {
+//           newTarget[Target[ON_CLIENT_READY]]();
+//         }
+
+//         return newTarget;
+//       }
+//     }
+
+//     for (const [key, value] of Object.entries(Target)) {
+//       RestClient[key] = value;
+//     }
+
+//     Reflect.defineMetadata('design:paramtypes', [Injector], RestClient);
+
+//     Injectable({ providedIn, deps: [...params, Injector]})(RestClient);
+
+//     return <any>RestClient;
+//   };
+// }

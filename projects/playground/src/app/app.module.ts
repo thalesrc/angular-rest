@@ -4,6 +4,7 @@ import { NgModule, Injectable } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RestModule, HeadersInjector, BASE_HEADERS, BASE_WITH_CREDENTIALS } from '@rest';
 import { AppService, AGuard } from './app.service';
+import { TestComponent } from './test/test.component';
 
 @Injectable()
 export class HeaderParser extends HeadersInjector {
@@ -21,11 +22,12 @@ export class HeaderParserAli extends HeadersInjector {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,
-    RestModule.forRoot({baseUrl: '', baseHeaders: [{'in-root': 'yep it works'}], withCredentials: false})
+    RestModule
   ],
   providers: [
     AppService,
