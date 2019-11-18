@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector, Type } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { INJECTOR, HTTP_CLIENT, BASE_URL, ClientOptions, GUARDS, CLIENT_GUARDS,
           HANDLERS, CLIENT_HANDLERS, HEADERS, CLIENT_HEADERS, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS, ON_CLIENT_READY } from './types';
@@ -16,8 +16,6 @@ export function Client<T>(
   }: ClientOptions<T> = {}
 ) {
   return function(Target: new (...args: any[]) => T): any {
-    let originalArgs;
-
     Target[GUARDS] = {
       ...Target[GUARDS],
       [CLIENT_GUARDS]: guards ? guards instanceof Array ? guards : [guards] : []
@@ -41,16 +39,8 @@ export function Client<T>(
     }
 
     const clientProxy = new Proxy(Target, {
-      construct(original, args) {
-        originalArgs = args;
-
-        return original['ngInjectableDef'].factory();
-      }
-    });
-
-    const targetProxy = new Proxy(class {}, {
-      construct(t, [injector]) {
-        const instance = new Target(...originalArgs) as any;
+      construct(original, [injector, ...args]) {
+        const instance = new Target(injector, ...args) as any;
 
         instance[INJECTOR] = injector;
         instance[HTTP_CLIENT] = injector.get(HttpClient);
@@ -64,7 +54,7 @@ export function Client<T>(
       }
     });
 
-    return Injectable({providedIn, deps: [Injector], useClass: targetProxy})(clientProxy);
+    return Injectable({providedIn})(clientProxy);
   };
 }
 

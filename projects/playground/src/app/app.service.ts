@@ -18,7 +18,7 @@ export class AGuard implements RestGuard {
   providedIn: 'root'
 })
 export class AppService {
-  constructor(http: HttpClient) {
+  constructor(injector: Injector, http: HttpClient) {
     console.log(http);
   }
 
