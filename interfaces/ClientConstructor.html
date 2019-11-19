@@ -153,6 +153,7 @@ export const CLIENT_HEADERS: unique symbol &#x3D; Symbol(&#x27;CLIENT_HEADERS&#x
 export const WITH_CREDENTIALS: unique symbol &#x3D; Symbol(&#x27;WITH_CREDENTIALS&#x27;);
 export const CLIENT_WITH_CREDENTIALS: unique symbol &#x3D; Symbol(&#x27;CLIENT_WITH_CREDENTIALS&#x27;);
 export const ON_CLIENT_READY: unique symbol &#x3D; Symbol(&#x27;ON_CLIENT_READY&#x27;);
+export const INJECTIONS: unique symbol &#x3D; Symbol(&#x27;INJECTIONS&#x27;);
 
 /**
  * Http Request Methods
@@ -257,6 +258,9 @@ export interface ClientConstructor&lt;T &#x3D; unknown&gt; extends Object {
       [key: string]: boolean;
     };
     [ON_CLIENT_READY]: string;
+    [INJECTIONS]: {
+      [key: string]: any;
+    }
   };
 }
 

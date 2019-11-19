@@ -81,7 +81,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">projects/rest/src/lib/types.ts:67</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">projects/rest/src/lib/types.ts:68</a></div>
                             </td>
                         </tr>
             </tbody>
@@ -112,6 +112,7 @@ export const CLIENT_HEADERS: unique symbol &#x3D; Symbol(&#x27;CLIENT_HEADERS&#x
 export const WITH_CREDENTIALS: unique symbol &#x3D; Symbol(&#x27;WITH_CREDENTIALS&#x27;);
 export const CLIENT_WITH_CREDENTIALS: unique symbol &#x3D; Symbol(&#x27;CLIENT_WITH_CREDENTIALS&#x27;);
 export const ON_CLIENT_READY: unique symbol &#x3D; Symbol(&#x27;ON_CLIENT_READY&#x27;);
+export const INJECTIONS: unique symbol &#x3D; Symbol(&#x27;INJECTIONS&#x27;);
 
 /**
  * Http Request Methods
@@ -216,6 +217,9 @@ export interface ClientConstructor&lt;T &#x3D; unknown&gt; extends Object {
       [key: string]: boolean;
     };
     [ON_CLIENT_READY]: string;
+    [INJECTIONS]: {
+      [key: string]: any;
+    }
   };
 }
 
