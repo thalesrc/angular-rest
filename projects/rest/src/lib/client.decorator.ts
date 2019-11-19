@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 
 import { INJECTOR, HTTP_CLIENT, BASE_URL, ClientOptions, GUARDS, CLIENT_GUARDS,
-          HANDLERS, CLIENT_HANDLERS, HEADERS, CLIENT_HEADERS, WITH_CREDENTIALS, CLIENT_WITH_CREDENTIALS, ON_CLIENT_READY } from './types';
+          HANDLERS, CLIENT_HANDLERS, HEADERS, CLIENT_HEADERS, WITH_CREDENTIALS,
+          CLIENT_WITH_CREDENTIALS, ON_CLIENT_READY, INJECTIONS } from './types';
 import { BASE_URL as BASE_URL_TOKEN } from './tokens';
 
 export function Client<T>(
@@ -38,13 +39,20 @@ export function Client<T>(
       };
     }
 
-    const clientProxy = new Proxy(Target, {
-      construct(original, [injector, ...args]) {
-        const instance = new Target(injector, ...args) as any;
+    @Injectable({
+      providedIn
+    })
+    class RestClient {
+      constructor(injector: Injector) {
+        const instance = new Target() as any;
 
         instance[INJECTOR] = injector;
         instance[HTTP_CLIENT] = injector.get(HttpClient);
         instance[BASE_URL] = baseUrl || injector.get(BASE_URL_TOKEN);
+
+        for (const [key, token] of Object.entries(Target[INJECTIONS] || {})) {
+          instance[key] = injector.get(token);
+        }
 
         if (Target[ON_CLIENT_READY]) {
           instance[Target[ON_CLIENT_READY]]();
@@ -52,9 +60,9 @@ export function Client<T>(
 
         return instance;
       }
-    });
+    }
 
-    return Injectable({providedIn})(clientProxy);
+    return RestClient;
   };
 }
 

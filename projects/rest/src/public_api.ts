@@ -20,3 +20,4 @@ export { Headers } from './lib/headers.decorator';
 export { ErrorHandler } from './lib/error-handler.decorator';
 export { WithCredentials } from './lib/with-credentials.decorator';
 export { OnClientReady } from './lib/on-client-ready.decorator';
+export { InjectToken } from './lib/inject-token.decorator';
