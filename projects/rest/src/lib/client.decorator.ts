@@ -62,7 +62,7 @@ export function Client<T>(
       }
     }
 
-    return RestClient;
+    return Injectable({ providedIn })(RestClient);
   };
 }
 
