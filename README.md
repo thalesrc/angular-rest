@@ -6,6 +6,54 @@
 # @thalesrc/angular-rest
 Angular Rest Http Module with Typescript Declarative Annotations, Guards, Handlers and more
 
+___________________________________________________________________________
+
+  - [1. Installation](#1-installation)
+  - [2. Basic Example](#2-basic-example)
+  - [3. API Docs](#3-api-docs)
+    - [3.1. Client Decorator](#31-client-decorator)
+      - [3.1.1. ClientOptions](#311-clientoptions)
+    - [3.2. Request Method Decorators](#32-request-method-decorators)
+    - [3.3. Body Parameter Decorator](#33-body-parameter-decorator)
+    - [3.3. Path Parameter Decorator](#33-path-parameter-decorator)
+    - [3.4. Query Parameter Decorator](#34-query-parameter-decorator)
+    - [3.5. Headers](#35-headers)
+      - [3.5.1. Header Declaration Methods](#351-header-declaration-methods)
+        - [3.5.1.1 HeaderInjector](#3511-headerinjector)
+        - [3.5.1.2 HeadersObject](#3512-headersobject)
+        - [3.5.1.3 Headers as Client Method](#3513-headers-as-client-method)
+      - [3.5.2. Base Headers](#352-base-headers)
+      - [3.5.3. Client Headers](#353-client-headers)
+      - [3.5.4. Parameter Headers](#354-parameter-headers)
+    - [3.6. Guards](#36-guards)
+      - [3.6.1. Guard Declaration Methods](#361-guard-declaration-methods)
+        - [3.6.1.1 RestGuard](#3611-restguard)
+        - [3.6.1.2. Guard Function](#3612-guard-function)
+        - [3.6.1.3. Guard Method](#3613-guard-method)
+      - [3.6.2. Base Guards](#362-base-guards)
+      - [3.6.3. Client Guards](#363-client-guards)
+      - [3.6.4. Method Guards](#364-method-guards)
+    - [3.7. Handlers](#37-handlers)
+      - [3.7.1 ErrorHandlers](#371-errorhandlers)
+      - [3.7.2 Handler Declaration Methods](#372-handler-declaration-methods)
+        - [3.7.2.1 Handler](#3721-handler)
+        - [3.7.2.2 Handler Function](#3722-handler-function)
+        - [3.7.2.3 Handler Method](#3723-handler-method)
+      - [3.7.3 Base Handlers](#373-base-handlers)
+      - [3.7.4 Client Handlers](#374-client-handlers)
+      - [3.7.5 Method Handlers](#375-method-handlers)
+    - [3.8. RestModule](#38-restmodule)
+    - [3.9. OnClientReady Decorator](#39-onclientready-decorator)
+    - [3.10. WithCredentials Option](#310-withcredentials-option)
+      - [3.10.1. As Module Config](#3101-as-module-config)
+      - [3.10.2. As Provider](#3102-as-provider)
+      - [3.10.3. As Client Config](#3103-as-client-config)
+      - [3.10.4. WithCredentials Decorator](#3104-withcredentials-decorator)
+      - [3.10.5. WithCredentialsParam Decorator](#3105-withcredentialsparam-decorator)
+  - [4. Aot Limitations](#4-aot-limitations)
+  - [5. Contributors](#5-contributors)
+  - [6. License](#6-license)
+
 ____________________________________________________________________________
 
 ## 1. Installation
@@ -473,16 +521,31 @@ ____________________________________________________________________________
 
 This package supports aot builds, however there are some limitations.
 
-* The `Injector` should have been defined as the first parameter for every `@Client` constructor.
+* Every `@Client` constructor should be defined as:
 
 ```ts
 import { Injector } from '@angular/core';
+import { Client } from '@thalesrc/angular-rest';
 
 @Client()
 export class TodoClient {
-  constructor(injector: Injector, otherServices: Etc) {
+  constructor(injector: Injector) {}
+}
+```
 
-  }
+* Injectables should be injected via `InjectToken` decorator
+
+```ts
+import { Injector } from '@angular/core';
+import { Client, InjectToken } from '@thalesrc/angular-rest';
+import { AuthService } from './auth.service';
+
+@Client()
+export class TodoClient {
+  @InjectToken(AuthService)
+  private authService: AuthService;
+
+  constructor(injector: Injector) {}
 }
 ```
 

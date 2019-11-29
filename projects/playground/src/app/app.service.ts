@@ -21,6 +21,8 @@ export class AppService {
   @InjectToken(HttpClient)
   private test: HttpClient;
 
+  constructor(injector: Injector) {}
+
   @ErrorHandler()
   public handle400(original: HttpErrorResponse, current: any): boolean {
     console.warn(original, current);

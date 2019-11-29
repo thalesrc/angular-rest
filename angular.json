@@ -75,6 +75,7 @@
                   "with": "projects/playground/src/environments/environment.prod.ts"
                 }
               ],
+              "tsConfig": "projects/playground/tsconfig.aot.json",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
