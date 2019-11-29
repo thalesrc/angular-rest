@@ -8,7 +8,6 @@ Angular Rest Http Module with Typescript Declarative Annotations, Guards, Handle
 
 ___________________________________________________________________________
 
-- [@thalesrc/angular-rest](#thalesrcangular-rest)
   - [1. Installation](#1-installation)
   - [2. Basic Example](#2-basic-example)
   - [3. API Docs](#3-api-docs)
