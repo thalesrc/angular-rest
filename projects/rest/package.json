@@ -9,6 +9,9 @@
     "email": "alisahinozcelik@gmail.com",
     "name": "Ali Şahin Özçelik"
   },
+  "scripts": {
+    "version-update": "npm version $PACKAGE_VERSION --no-git-tag-version"    
+  },
   "peerDependencies": {
     "@angular/common": "^8.2.3",
     "@angular/core": "^8.2.3"
