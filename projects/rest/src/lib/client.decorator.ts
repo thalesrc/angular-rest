@@ -22,7 +22,7 @@ export function Client<T>(
 
     if ('ctorParameters' in Target) {
       ctorParameters = Target['ctorParameters'];
-      params = (ctorParameters() || []).map(function(p) {return p.type});
+      params = (ctorParameters() || []).map(function(p) {return p.type; });
     } else {
       params = Reflect.getMetadata('design:paramtypes', Target) || [];
     }

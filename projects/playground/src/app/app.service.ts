@@ -1,4 +1,4 @@
-import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard, Path, Query, InjectToken } from '@rest';
+import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard, Path, Query, InjectToken, Delete } from '@rest';
 import { HttpRequest, HttpResponse, HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Injector, Injectable } from '@angular/core';
 
@@ -47,6 +47,11 @@ export class AppService {
     @Query('search') search: string,
     @Query('limit') limit: number
   ): Promise<string> {
+    return null;
+  }
+
+  @Delete()
+  async del(@Body() payload: any) {
     return null;
   }
 

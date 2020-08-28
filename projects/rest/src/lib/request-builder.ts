@@ -9,6 +9,17 @@ import { REST_HANDLERS, BASE_HEADERS, BASE_WITH_CREDENTIALS } from './tokens';
 
 type RestPropertyDecorator = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
 
+class MHttpRequest<T> extends HttpRequest<T> {
+  constructor(method: RequestMethod, url: string, body: any, init: any) {
+    super(method, url, init);
+
+    if (method === RequestMethod.DELETE && !!body) {
+      this['body' + ''] = body;
+      this['headers' + ''] = this.headers.set('Content-Type', 'application/json');
+    }
+  }
+}
+
 class GuardForbid extends Error {
   constructor(
     public request: HttpRequest<unknown>
@@ -153,12 +164,12 @@ interface RequestConfig {
 }
 
 function requestFactory<T = unknown>(
-  method: RequestMethod.POST | RequestMethod.PUT | RequestMethod.PATCH,
+  method: RequestMethod.POST | RequestMethod.PUT | RequestMethod.PATCH | RequestMethod.DELETE,
   url: string,
   config: RequestConfig
 ): HttpRequest<T>;
 function requestFactory<T = unknown>(
-  method: RequestMethod.GET | RequestMethod.DELETE | RequestMethod.HEAD | RequestMethod.JSONP | RequestMethod.OPTIONS,
+  method: RequestMethod.GET | RequestMethod.HEAD | RequestMethod.JSONP | RequestMethod.OPTIONS,
   url: string,
   config: RequestConfig & { body?: T }
 ): HttpRequest<T>;
@@ -172,6 +183,8 @@ function requestFactory<T = unknown>(
     case RequestMethod.PUT:
     case RequestMethod.PATCH:
       return new HttpRequest<T>(method, url, body, rest);
+    case RequestMethod.DELETE:
+      return new MHttpRequest<T>(method, url, body, rest);
     default:
       return new HttpRequest<T>(<'GET'>method, url, rest);
   }
