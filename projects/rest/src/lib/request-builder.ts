@@ -73,7 +73,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
               _headers = await instance.inject();
             }
 
-            for (const key of Object.keys(_headers)) {
+            for (const key of Object.keys(_headers || {})) {
               headers = headers.append(key, _headers[key]);
             }
           }
@@ -93,7 +93,7 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
             header = await this[header]();
           }
 
-          for (const key of Object.keys(header)) {
+          for (const key of Object.keys(header || {})) {
             headers = headers.append(key, header[key]);
           }
         }
