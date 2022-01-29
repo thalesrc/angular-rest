@@ -93,8 +93,8 @@ export interface ClientConstructor<T = unknown> extends Object {
   constructor: {
     new (...args: any[]): any;
     [GUARDS]: {
-      [CLIENT_GUARDS]: Guard<T>;
-      [key: string]: Guard<T>;
+      [CLIENT_GUARDS]: GuardType<T>[];
+      [key: string]: GuardType<T>[];
     };
     [BODIES]: {
       [key: string]: number;

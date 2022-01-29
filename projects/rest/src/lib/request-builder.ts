@@ -210,7 +210,7 @@ async function startGuardCheck(
         if (next.prototype && 'canSend' in next.prototype) {
           result = context[INJECTOR].get(next).canSend(request);
         } else {
-          result = next(request);
+          result = (next as any)(request);
         }
       } else {
         result = (<any>context)[next](request);

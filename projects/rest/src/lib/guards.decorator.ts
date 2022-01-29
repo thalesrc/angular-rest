@@ -1,4 +1,4 @@
-import { GUARDS, Guard, ClientConstructor } from './types';
+import { GUARDS, Guard } from './types';
 
 export function Guards<T extends new (...args: any[]) => any>(guardFunctions: Guard<T>): (target: T, property: string, descriptor: PropertyDescriptor) => PropertyDescriptor {
   return function(target: T, property: string, descriptor: PropertyDescriptor): PropertyDescriptor {
