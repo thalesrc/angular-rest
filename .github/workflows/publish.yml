@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Set env
-        run: echo ::set-env name=PACKAGE_VERSION::$(echo ${GITHUB_REF:10})
+        run: echo "PACKAGE_VERSION=${GITHUB_REF:10}" >> $GITHUB_ENV
       - uses: actions/setup-node@v1
         with:
           node-version: 14
