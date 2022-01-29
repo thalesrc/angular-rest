@@ -6,15 +6,15 @@ import { ClientConstructor, QUERIES } from './types';
  * @param key Request query name
  */
 export function Query(key: string): ParameterDecorator {
-  return function(target: {constructor: ClientConstructor} & Object, propertyKey: string | symbol, parameterIndex: number): void {
-    target.constructor[QUERIES] = {
-      ...target.constructor[QUERIES]
+  return function(target: Object, propertyKey: string | symbol, parameterIndex: number): void {
+    (target as any).constructor[QUERIES] = {
+      ...(target as any).constructor[QUERIES]
     };
 
-    target.constructor[QUERIES] = {
-      ...target.constructor[QUERIES],
+    (target as any).constructor[QUERIES] = {
+      ...(target as any).constructor[QUERIES],
       [propertyKey]: {
-        ...target.constructor[QUERIES][propertyKey],
+        ...(target as any).constructor[QUERIES][propertyKey],
         [key]: parameterIndex
       }
     };

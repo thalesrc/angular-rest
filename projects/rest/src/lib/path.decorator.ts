@@ -6,15 +6,15 @@ import { ClientConstructor, PATHS } from './types';
  * @param key Path placeholder key
  */
 export function Path(key: string): ParameterDecorator {
-  return function(target: {constructor: ClientConstructor} & Object, propertyKey: string | symbol, parameterIndex: number): void {
-    target.constructor[PATHS] = {
-      ...target.constructor[PATHS]
+  return function(target: Object, propertyKey: string | symbol, parameterIndex: number): void {
+    (target as any).constructor[PATHS] = {
+      ...(target as any).constructor[PATHS]
     };
 
-    target.constructor[PATHS] = {
-      ...target.constructor[PATHS],
+    (target as any).constructor[PATHS] = {
+      ...(target as any).constructor[PATHS],
       [propertyKey]: {
-        ...target.constructor[PATHS][propertyKey],
+        ...(target as any).constructor[PATHS][propertyKey],
         [key]: parameterIndex
       }
     };

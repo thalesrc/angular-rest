@@ -10,6 +10,7 @@ export class AGuard implements RestGuard {
   }
 }
 
+@Injectable()
 @Client<AppService>({
   baseUrl: 'http://localhost:3000',
   baseHeaders: [{client: 'x'}],
@@ -19,7 +20,7 @@ export class AGuard implements RestGuard {
 })
 export class AppService {
   @InjectToken(HttpClient)
-  private test: HttpClient;
+  private test: HttpClient = null!;
 
   constructor(injector: Injector) {}
 
@@ -35,7 +36,7 @@ export class AppService {
   }
 
   @Post('login/:id/:key?text=dsadsa')
-  @Handlers<AppService>(['handle400'])
+  @Handlers<AppService>(["handle400"])
   @Headers<AppService>(['setLoginHeaders'])
   @WithCredentials(false)
   async login(
@@ -47,7 +48,7 @@ export class AppService {
     @Query('search') search: string,
     @Query('limit') limit: number
   ): Promise<string> {
-    return null;
+    return null!;
   }
 
   @Delete()

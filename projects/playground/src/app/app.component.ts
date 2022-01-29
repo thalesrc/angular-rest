@@ -15,5 +15,6 @@ export class AppComponent {
     //   .then(console.log).catch(console.warn);
 
     a.del({test: 123});
+    a.login({bodyProp: 'dsa' }, 'tokenstr', 'testHeader', 'id', 'key', 'search', 100);
   }
 }

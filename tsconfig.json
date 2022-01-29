@@ -17,9 +17,8 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "paths": {
-      "rest": [
-        "dist/rest/rest",
-        "dist/rest"
+      "@rest": [
+        "projects/rest/src/public-api.ts"
       ]
     },
     "target": "es2017",
