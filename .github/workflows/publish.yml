@@ -13,11 +13,11 @@ jobs:
         run: echo ::set-env name=PACKAGE_VERSION::$(echo ${GITHUB_REF:10})
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
           registry-url: https://registry.npmjs.org/
       - run: npm install
       - run: npm run build
-      - run: cp ./README.md ./dist/rest
+      - run: cp ./README.md ./dist/rest && cp ./LICENSE ./dist/rest
       - run: cd ./dist/rest && npm run version-update && npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

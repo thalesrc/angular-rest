@@ -1,6 +1,7 @@
 {
   "name": "@thalesrc/angular-rest",
   "version": "0.0.0",
+  "description": "Angular HTTP client with Typescript Declarative Annotations, Guards, Handlers and more",
   "repository": {
     "type": "git",
     "url": "https://github.com/thalesrc/angular-rest.git"
@@ -9,14 +10,18 @@
     "email": "alisahinozcelik@gmail.com",
     "name": "Ali Şahin Özçelik"
   },
-  "scripts": {
-    "version-update": "npm version $PACKAGE_VERSION --no-git-tag-version"    
-  },
-  "peerDependencies": {
-    "@angular/common": "^8.2.3",
-    "@angular/core": "^8.2.3"
-  },
   "publishConfig": {
     "access": "public"
+  },
+  "scripts": {
+    "version-update": "npm version $PACKAGE_VERSION --no-git-tag-version"
+  },
+  "peerDependencies": {
+    "@angular/common": "^13.2.0",
+    "@angular/core": "^13.2.0"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^2.3.0"
   }
 }
