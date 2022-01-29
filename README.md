@@ -100,6 +100,7 @@ export class AppModule {}
 import { HttpRequest } from '@angular/common/http';
 import { Client, Get, Post, Body } from '@thalesrc/angular-rest';
 
+@Injectable()
 @Client()
 export class TodoClient {
 
@@ -147,8 +148,6 @@ ____________________________________________________________________________
 
 `@Client()` decorator marks a class as RestClient and provides functionality to make Http calls with its marked methods.
 
-This decorator also marks the class as `Injectable()` and makes it to function as an Angular Service.
-
 It can be configured by defining a `ClientOptions` object as a parameter
 
 #### 3.1.1. ClientOptions
@@ -166,6 +165,7 @@ interface ClientOptions<T> {
 ```
 
 ```ts
+@Injectable()
 @Client({
   baseUrl: 'http://localhost:3000',
   baseHeaders: [{'Secret-Key': 'The best rest util is @thalesrc/angular-rest'}]
@@ -194,6 +194,7 @@ The method return type should be defined as `Promise` and function should be emp
 
 *Example:*
 ```ts
+@Injectable()
 @Client()
 export class TodoClient {
   @Get()
@@ -218,6 +219,7 @@ A `FormData` instance can be used for image uploads etc.
 
 *Example:*
 ```ts
+@Injectable()
 @Client()
 export class TodoClient {
   @Post('todos')
@@ -256,6 +258,7 @@ Mark a parameter decorated with `Path` to replace the specified key in the url
 
 *Example:*
 ```ts
+@Injectable()
 @Client()
 export class TodoClient {
   @Patch('todos/:id')
@@ -329,6 +332,7 @@ export class PostTodoGuard implements RestGuard {
  }
 }
 
+@Injectable()
 @Client()
 export class TodoClient {
  @Post('todos')
@@ -357,6 +361,7 @@ function postTodoGuard(req: HttpRequest<Todo>): boolean {
   return req.body.canBeSent;
 }
 
+@Injectable()
 @Client()
 export class TodoClient {
  @Post('todos')
@@ -420,6 +425,7 @@ To run some code when client instance created, `@OnClientReady()` decorator can 
 import { Client, OnClientReady } from '@thalesrc/angular-rest';
 import { TodoCacheService } from './todo-cache.service';
 
+@Injectable()
 @Client()
 export class TodoClient {
   constructor(
@@ -488,6 +494,7 @@ It can be set in `@Client()` decorator as an option. That would configure withCr
 ```ts
 import { Client } from '@thalesrc/angular-rest';
 
+@Injectable()
 @Client({
   withCredentials: true
 })
@@ -503,6 +510,7 @@ It can be set by `@WithCredentials()` decorator on top a rest call. That would c
 ```ts
 import { Client, WithCredentials } from '@thalesrc/angular-rest';
 
+@Injectable()
 @Client()
 export class TodoClient {
   @Get()
@@ -527,6 +535,7 @@ This package supports aot builds, however there are some limitations.
 import { Injector } from '@angular/core';
 import { Client } from '@thalesrc/angular-rest';
 
+@Injectable()
 @Client()
 export class TodoClient {
   constructor(injector: Injector) {}

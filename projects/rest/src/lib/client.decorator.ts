@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector, Type } from '@angular/core';
+import { Injector, Type } from '@angular/core';
 
 import { INJECTOR, HTTP_CLIENT, BASE_URL, ClientOptions, GUARDS, CLIENT_GUARDS,
           HANDLERS, CLIENT_HANDLERS, HEADERS, CLIENT_HEADERS, WITH_CREDENTIALS,
-          CLIENT_WITH_CREDENTIALS, ON_CLIENT_READY, INJECTIONS } from './types';
+          CLIENT_WITH_CREDENTIALS, ON_CLIENT_READY, INJECTIONS, ClientConstructor } from './types';
 import { BASE_URL as BASE_URL_TOKEN } from './tokens';
 
 export function Client<T>(
@@ -16,36 +16,38 @@ export function Client<T>(
     withCredentials
   }: ClientOptions<T> = {}
 ) {
-  return function ( Target: new (...args: any[]) => T ): any {
+  return function (Target: new (...args: any[]) => T): any {
     let params: Type<any>[];
     let ctorParameters: () => {type: Type<any>}[];
 
+    const TTarget: ClientConstructor<T>['constructor'] = Target as any;
+
     if ('ctorParameters' in Target) {
-      ctorParameters = Target['ctorParameters'];
+      ctorParameters = (Target as any).ctorParameters;
       params = (ctorParameters() || []).map(function(p) {return p.type; });
     } else {
       params = Reflect.getMetadata('design:paramtypes', Target) || [];
     }
 
-    Target[GUARDS] = {
-      ...Target[GUARDS],
+    TTarget[GUARDS] = {
+      ...TTarget[GUARDS],
       [CLIENT_GUARDS]: guards ? guards instanceof Array ? guards : [guards] : []
     };
 
-    Target[HANDLERS] = {
-      ...Target[HANDLERS],
+    TTarget[HANDLERS] = {
+      ...TTarget[HANDLERS],
       [CLIENT_HANDLERS]: [...handlers]
     };
 
-    Target[HEADERS] = {
-      ...Target[HEADERS],
+    TTarget[HEADERS] = {
+      ...TTarget[HEADERS],
       [CLIENT_HEADERS]: baseHeaders
     };
 
     if (typeof withCredentials !== undefined) {
-      Target[WITH_CREDENTIALS] = {
-        ...Target[WITH_CREDENTIALS],
-        [CLIENT_WITH_CREDENTIALS]: withCredentials
+      TTarget[WITH_CREDENTIALS] = {
+        ...TTarget[WITH_CREDENTIALS],
+        [CLIENT_WITH_CREDENTIALS]: withCredentials!
       };
     }
 
@@ -57,12 +59,12 @@ export function Client<T>(
         newTarget[HTTP_CLIENT] = injector.get(HttpClient);
         newTarget[BASE_URL] = baseUrl || injector.get(BASE_URL_TOKEN);
 
-        for (const [key, token] of Object.entries(Target[INJECTIONS] || {})) {
+        for (const [key, token] of Object.entries(TTarget[INJECTIONS] || {})) {
           newTarget[key] = injector.get(token);
         }
 
-        if (Target[ON_CLIENT_READY]) {
-          newTarget[Target[ON_CLIENT_READY]]();
+        if (TTarget[ON_CLIENT_READY]) {
+          newTarget[TTarget[ON_CLIENT_READY]]();
         }
 
         return newTarget;
@@ -70,12 +72,10 @@ export function Client<T>(
     }
 
     for (const [key, value] of Object.entries(Target)) {
-      RestClient[key] = value;
+      (RestClient as any)[key] = value;
     }
 
     Reflect.defineMetadata('design:paramtypes', [Injector], RestClient);
-
-    Injectable({ providedIn, deps: [...params, Injector]})(RestClient);
 
     return <any>RestClient;
   };

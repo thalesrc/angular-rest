@@ -31,7 +31,7 @@ export class RestModule {
     handlers = [],
     baseHeaders = [],
     withCredentials = true
-  }: RootConfiguration = {} ): ModuleWithProviders {
+  }: RootConfiguration = {} ): ModuleWithProviders<RestModule> {
     return {
       ngModule: RestModule,
       providers: [

@@ -53,12 +53,16 @@ type ClassOf<T> = new (...args: any[]) => T;
 export interface RestGuard {
   canSend(request: HttpRequest<any>): boolean | Promise<boolean>;
 }
-export type GuardFunction = <T = any>(request: HttpRequest<T>) => boolean | Promise<boolean>;
+export type GuardFunction1 = <T = any>(request: HttpRequest<T>) => boolean;
+export type GuardFunction2 = <T = any>(request: HttpRequest<T>) => Promise<boolean>;
+export type GuardFunction = GuardFunction1 | GuardFunction2;
 export type GuardFunctionsOf<T> = FunctionsOf<T, GuardFunction>;
 export type GuardType<T> = GuardFunctionsOf<T> | GuardFunction | ClassOf<RestGuard>;
 export type Guard<T> = GuardType<T>[] | GuardType<T>;
 
-export type HandlerFunction = (original: HttpResponse<any> | HttpErrorResponse, current: any) => any | Promise<any>;
+export type HandlerFunction1 = (original: HttpResponse<any>, current: any) => any | Promise<any>;
+export type HandlerFunction2 = (original: HttpErrorResponse, current: any) => any | Promise<any>;
+export type HandlerFunction = HandlerFunction1 | HandlerFunction2;
 export type HandlerFunctionsOf<T> = FunctionsOf<T, HandlerFunction>;
 export type HandlersOf<T> = Array<HandlerFunctionsOf<T> | HandlerFunction | (new (...args: any[]) => Handler)>;
 export interface Handler {
@@ -89,8 +93,8 @@ export interface ClientConstructor<T = unknown> extends Object {
   constructor: {
     new (...args: any[]): any;
     [GUARDS]: {
-      [CLIENT_GUARDS]: Array<GuardFunctionsOf<T> | GuardFunction>;
-      [key: string]: Array<GuardFunctionsOf<T> | GuardFunction>
+      [CLIENT_GUARDS]: Guard<T>;
+      [key: string]: Guard<T>;
     };
     [BODIES]: {
       [key: string]: number;

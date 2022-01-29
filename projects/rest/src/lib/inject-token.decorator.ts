@@ -3,8 +3,8 @@ import { INJECTIONS } from './types';
 
 export function InjectToken(token: Type<any> | InjectionToken<any>): PropertyDecorator {
   return function(target: Object, key: string | symbol) {
-    target.constructor[INJECTIONS] = {
-      ...target.constructor[INJECTIONS],
+    (target as any).constructor[INJECTIONS] = {
+      ...(target as any).constructor[INJECTIONS],
       [key]: token
     };
   };

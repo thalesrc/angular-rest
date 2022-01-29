@@ -14,8 +14,8 @@ class MHttpRequest<T> extends HttpRequest<T> {
     super(method, url, init);
 
     if (method === RequestMethod.DELETE && !!body) {
-      this['body' + ''] = body;
-      this['headers' + ''] = this.headers.set('Content-Type', 'application/json');
+      (this as any).body = body;
+      (this as any).headers = this.headers.set('Content-Type', 'application/json');
     }
   }
 }
@@ -90,11 +90,11 @@ export function requestBuilder(type: RequestMethod): (path?: string) => RestProp
           }
 
           if (typeof header === 'string') {
-            header = await this[header]();
+            header = await (this as any)[header]();
           }
 
           for (const key of Object.keys(header || {})) {
-            headers = headers.append(key, header[key]);
+            headers = headers.append(key, (header as any)[key]);
           }
         }
 
@@ -182,7 +182,7 @@ function requestFactory<T = unknown>(
     case RequestMethod.POST:
     case RequestMethod.PUT:
     case RequestMethod.PATCH:
-      return new HttpRequest<T>(method, url, body, rest);
+      return new HttpRequest<T>(method, url, body!, rest);
     case RequestMethod.DELETE:
       return new MHttpRequest<T>(method, url, body, rest);
     default:
@@ -238,22 +238,22 @@ function chainHandlers<T>(
     original = error;
   });
 
-  return handlers.reduce((prev: PromiseLike<any>, next) => {
+  return handlers.reduce((prev: Promise<any>, next) => {
     let handler: Function;
     let method: 'then' | 'catch';
 
     if (typeof next === 'string') {
-      method = context[next][ERROR_HANDLER] ? 'catch' : 'then';
-      handler = (<Function>context[next]).bind(context);
+      method = (context as any)[next][ERROR_HANDLER] ? 'catch' : 'then';
+      handler = (<Function>(context as any)[next]).bind(context);
     } else if (next.prototype && 'handle' in next.prototype) {
       const injectable = context[INJECTOR].get(next);
       method = injectable.handle[ERROR_HANDLER] ? 'catch' : 'then';
       handler = injectable.handle.bind(injectable);
     } else {
-      method = next[ERROR_HANDLER] ? 'catch' : 'then';
+      method = (next as any)[ERROR_HANDLER] ? 'catch' : 'then';
       handler = next;
     }
 
-    return prev[method](res => handler(original, res));
+    return prev[method as 'then'](res => handler(original, res));
   }, source);
 }
