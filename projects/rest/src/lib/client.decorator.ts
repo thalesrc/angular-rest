@@ -10,7 +10,6 @@ export function Client<T>(
   {
     baseUrl,
     guards,
-    providedIn,
     handlers = [],
     baseHeaders = [],
     withCredentials

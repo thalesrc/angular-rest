@@ -138,7 +138,6 @@ export interface ClientOptions<T> {
   guards?: Guard<T>;
   handlers?: HandlersOf<T>;
   baseHeaders?: HeadersClientParam<T>;
-  providedIn?: Type<any> | 'root';
   withCredentials?: boolean;
 }
 

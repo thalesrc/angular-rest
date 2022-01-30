@@ -1,4 +1,4 @@
-import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard, Path, Query, InjectToken, Delete } from '@rest';
+import { Client, Get, Guards, Body, Post, Handlers, ErrorHandler, Header, Headers, WithCredentials, OnClientReady, RestGuard, Path, Query, InjectToken, Delete, Handler } from '@rest';
 import { HttpRequest, HttpResponse, HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Injector, Injectable } from '@angular/core';
 
@@ -7,6 +7,13 @@ export class AGuard implements RestGuard {
   canSend(req: HttpRequest<any>): boolean {
     console.log(req);
     return true;
+  }
+}
+
+@Injectable()
+export class AHandler implements Handler {
+  public handle(current: HttpResponse<any>) {
+
   }
 }
 
